@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/01 17:39:02 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/03 18:38:46 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,44 @@ int	main()
 
 	ft::vector<ClapTrap>	v;
 
-	for (size_t i = 0; i < 10; i++)
+
+	for (size_t i = 0; i < 100; i++)
 	{
-		v.push_back(ClapTrap());
+		std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
+		v.push_back(ClapTrap("Clap number " + std::to_string(i)));
 	}
 
-	for (size_t i = 0; i < v.size(); i++)
+	std::cout << "BEFORE" << std::endl;
+	v.resize(10);
+	std::cout << "AFTER" << std::endl;
+
+	std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
+
+	std::cout << "Empty ? " << v.empty() << std::endl;
+
+
+	std::cout << v.at(15) << std::endl;
+
+
+/*	for (size_t i = 0; i < v.size(); i++)
 	{
 		std::cout << v[i] << std::endl;
+	}*/
+
+//	std::vector<ClapTrap> v2(v);
+
+/*	for (size_t i = 0; i < v2.size(); i++)
+	{
+		std::cout << v2[i] << std::endl;
 	}
-	std::cout << "Capacity : " << v.capacity() << std::endl;
+	std::cout << "Capacity : " << v2.capacity() << std::endl;*/
+
+//	std::cout << "capacity of v : " << v.capacity() << std::endl;
+//	std::cout << "capacity of v2 : " << v2.capacity() << std::endl;
+
+
+
+
 
 //	system("leaks a.out");
 

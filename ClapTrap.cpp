@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:40:45 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/01 15:33:02 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/03 16:10:16 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,35 +60,47 @@ void	ClapTrap::set_attack_damage(unsigned int	amount)
 ClapTrap::ClapTrap(std::string name, unsigned int hit_points, unsigned int energy_points, unsigned int attack_damage, std::string type) :
 _name(name), _hit_points(hit_points), _energy_points(energy_points), _attack_damage(attack_damage), _type(type)
 {
+	#if CONTRUCTORMESSAGES
 	std::cout << "ClapTrap Inheritance constructor called" << std::endl;
+	#endif
 }
 
 ClapTrap::ClapTrap() :
 _name("[No Name]"), _hit_points(10), _energy_points(10), _attack_damage(0), _type("ClapTrap")
 {
+	#if CONTRUCTORMESSAGES
 	std::cout << "ClapTrap Default constructor called" << std::endl;
+	#endif
 }
 
 ClapTrap::ClapTrap(std::string name) :
 _name(name), _hit_points(10), _energy_points(10), _attack_damage(0), _type("ClapTrap")
 {
+	#if CONTRUCTORMESSAGES
 	std::cout << "ClapTrap String constructor called" << std::endl;
+	#endif
 }
 
 ClapTrap::ClapTrap(ClapTrap const & src) :
 _name(src._name + "_copy"), _hit_points(src._hit_points), _energy_points(src._energy_points), _attack_damage(src._attack_damage), _type("ClapTrap")
 {
+	#if CONTRUCTORMESSAGES
 	std::cout << "ClapTrap Copy constructor called" << std::endl;
+	#endif
 }
 
 ClapTrap::~ClapTrap()
 {
+	#if CONTRUCTORMESSAGES
 	std::cout << "ClapTrap Destructor called" << std::endl;
+	#endif
 }
 
 ClapTrap &	ClapTrap::operator=(ClapTrap const & rhs)
 {
+	#if CONTRUCTORMESSAGES
 	std::cout << "ClapTrap Copy assignment operator called" << std::endl;
+	#endif
 	if (&rhs != this)
 	{
 		this->_name = rhs._name;
