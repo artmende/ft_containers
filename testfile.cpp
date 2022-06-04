@@ -6,14 +6,15 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/03 18:38:46 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/04 15:14:20 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <memory>
 #include <vector>
-#include <array>
+
+#include <string>
 
 #include "vector.hpp"
 
@@ -24,13 +25,13 @@
 int	main()
 {
 
-	ft::vector<ClapTrap>	v;
+	std::vector<ClapTrap>	v;
 
 
 	for (size_t i = 0; i < 100; i++)
 	{
 		std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
-		v.push_back(ClapTrap("Clap number " + std::to_string(i)));
+		v.push_back(ClapTrap("Clap number " /* + std::to_string(i) */ ));
 	}
 
 	std::cout << "BEFORE" << std::endl;
@@ -42,7 +43,7 @@ int	main()
 	std::cout << "Empty ? " << v.empty() << std::endl;
 
 
-	std::cout << v.at(15) << std::endl;
+	std::cout << v.at(5) << std::endl;
 
 
 /*	for (size_t i = 0; i < v.size(); i++)

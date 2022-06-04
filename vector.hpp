@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/03 18:39:06 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/04 16:01:40 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 namespace	ft
 {
-	template<typename T, class Alloc = std::allocator<T> >
+	template<typename T, typename Alloc = std::allocator<T> >
 	class vector
 	{
 	public:
@@ -29,17 +29,20 @@ namespace	ft
 
 		typedef				size_t						size_type;
 
-
+/* 
 		////////////////////// CONSTRUCTORS - DESTRUCTOR \\\\\\\\\\\\\\\\\\\\\\\
-
+ */
 		explicit vector(const allocator_type& alloc = allocator_type()) // default constructor
 		: GROWING_FACTOR(2), _inner_array(NULL), _size(0), _capacity(0)
-		{}
+		{
+			(void)alloc;
+		}
 
 		explicit vector(size_type n, const value_type& val = value_type(), // fill constructor
 			const allocator_type& alloc = allocator_type())
 		: GROWING_FACTOR(2), _size(n), _capacity(n)
 		{
+			(void)alloc;
 			this->_inner_array = this->_al.allocate(n);
 			for (size_t i = 0; i < n; i++)
 			{
@@ -83,11 +86,11 @@ namespace	ft
 		}
 
 
-		////////////////////////////// ITERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/* 		////////////////////////////// ITERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 		/////////////////////////////// CAPACITY \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
+ */
 		size_type	size() const
 		{
 			return (this->_size);
@@ -143,8 +146,8 @@ namespace	ft
 		}
 
 
-		//////////////////////////// ELEMENT ACCESS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
+/* 		//////////////////////////// ELEMENT ACCESS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ */
 		reference	operator[](size_type n)
 		{
 			return (*(this->_inner_array + n));
@@ -157,19 +160,41 @@ namespace	ft
 
 		reference	at(size_type n)
 		{
-			if (n < 0 || n >= this->_size)
+			if (n >= this->_size)
 				throw std::out_of_range("Out of range");
 			return ((*this)[n]);
 		}
 
 		const_reference	at(size_type n) const
 		{
-			if (n < 0 || n >= this->_size)
+			if (n >= this->_size)
 				throw std::out_of_range("Out of range");
 			return ((*this)[n]);
 		}
 
+		reference	front()
+		{
+			return ((*this)[0]);
+		}
 
+		const_reference	front() const
+		{
+			return ((*this)[0]);
+		}
+
+		reference back()
+		{
+			return ((*this)[this->_size - 1]);
+		}
+
+		const_reference back() const
+		{
+			return ((*this)[this->_size - 1]);
+		}
+
+/* 
+		////////////////////////////////////////// Modifiers //////////////////
+ */
 
 		void	push_back(const value_type& val)
 		{
@@ -179,7 +204,13 @@ namespace	ft
 			++this->_size;
 		}
 
-
+		void	pop_back()
+		{
+			if (this->_size == 0)
+				return ;
+			this->_al.destroy(this->_inner_array + this->_size - 1);
+			--this->_size;
+		}
 
 
 
