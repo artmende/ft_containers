@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/04 15:14:20 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/09 18:40:22 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,9 @@
 int	main()
 {
 
-	std::vector<ClapTrap>	v;
+	ft::vector<ClapTrap>	v;
 
-
-	for (size_t i = 0; i < 100; i++)
+	for (ft::vector<ClapTrap>::size_type i = 0; i < 100; i++)
 	{
 		std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
 		v.push_back(ClapTrap("Clap number " /* + std::to_string(i) */ ));
@@ -44,6 +43,10 @@ int	main()
 
 
 	std::cout << v.at(5) << std::endl;
+
+
+
+
 
 
 /*	for (size_t i = 0; i < v.size(); i++)
