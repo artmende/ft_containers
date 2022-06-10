@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/09 18:40:22 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/10 17:58:29 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,38 @@
 int	main()
 {
 
-	ft::vector<ClapTrap>	v;
+	ft::vector<int>	v;
 
-	for (ft::vector<ClapTrap>::size_type i = 0; i < 100; i++)
+	//for (ft::vector<ClapTrap>::size_type i = 0; i < 100; i++)
+	//{
+	//	std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
+	//	v.push_back(ClapTrap("Clap number " /* + std::to_string(i) */ ));
+	//}
+
+	//std::cout << "BEFORE" << std::endl;
+	//v.resize(10);
+	//std::cout << "AFTER" << std::endl;
+
+	//std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
+
+	//std::cout << "Empty ? " << v.empty() << std::endl;
+
+
+	//std::cout << v.at(5) << std::endl;
+
+	//ft::vector<ClapTrap>::iterator	it = v.begin();
+
+	//std::cout << *it << std::endl;
+
+
+	for (size_t i = 0; i < 10; i++)
 	{
-		std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
-		v.push_back(ClapTrap("Clap number " /* + std::to_string(i) */ ));
+		v.push_back(i);
 	}
 
-	std::cout << "BEFORE" << std::endl;
-	v.resize(10);
-	std::cout << "AFTER" << std::endl;
-
-	std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
-
-	std::cout << "Empty ? " << v.empty() << std::endl;
+	ft::vector<int>::const_iterator it = v.begin();
 
 
-	std::cout << v.at(5) << std::endl;
 
 
 
