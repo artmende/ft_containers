@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/10 18:05:07 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/10 18:46:20 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ namespace	ft
 		typedef typename	allocator_type::const_pointer						const_pointer;
 		typedef				std::ptrdiff_t										difference_type;
 		typedef				std::size_t											size_type;
-		typedef				ft::vector_random_access_iterator<vector<value_type> >		iterator;
-		typedef				ft::vector_random_access_iterator<vector<const value_type> >	const_iterator;
+		typedef				ft::vector_random_access_iterator<value_type>		iterator;
+		typedef				ft::vector_random_access_iterator<const value_type>	const_iterator;
 
 /* 
 		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////

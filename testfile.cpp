@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/10 17:58:29 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/10 18:51:11 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,25 @@ int	main()
 	//std::cout << *it << std::endl;
 
 
-	for (size_t i = 0; i < 10; i++)
+	for (size_t i = 5; i < 10; i++)
 	{
 		v.push_back(i);
 	}
 
-	ft::vector<int>::const_iterator it = v.begin();
 
+	//ft::vector<int>::iterator it = v.begin();
 
+	//ft::vector<int>::iterator it2(it);
 
+	//it2 = it;
+
+	ft::vector<int>::iterator it = v.begin();
+
+	std::cout << *it << std::endl;
+
+	*it = 7;
+
+	std::cout << *it << std::endl;
 
 
 
