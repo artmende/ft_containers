@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/11 17:54:56 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/11 18:28:24 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,18 @@ int	main()
 		v.push_back(std::to_string(i));
 	}
 
+	ft::vector<ClapTrap>	v2(5);
+
+	v2.reserve(20);
+
+	ft::vector<ClapTrap>::iterator			it = v2.begin();
+
+	v2.push_back(ClapTrap("coucou"));
+
+	ft::vector<ClapTrap>::const_iterator	cit = v2.begin();
+
+	std::cout << it.base() << std::endl;
+	std::cout << cit.base() << std::endl;
 
 	//ft::vector<int>::iterator it = v.begin();
 
@@ -61,18 +73,15 @@ int	main()
 
 	//it2 = it;
 
-	ft::vector<ClapTrap>::iterator			it = v.begin();
-	ft::vector<ClapTrap>::const_iterator	cit = v.end();
+	
 
-	while (it != cit)
+
+
+	for (auto i : v2)
 	{
-		std::cout << *it << std::endl;
-		it->beRepaired(5);
-		++it;
+		std::cout << i << std::endl;
 	}
-
-	auto f = (it - it);
-	std::cout << std::endl << v.begin()[5] << std::endl;
+	
 
 
 

@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/11 17:53:01 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/11 18:33:39 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ namespace	ft
 		: GROWING_FACTOR(2), _size(n), _capacity(n)
 		{
 			(void)alloc;
-			this->_inner_array = this->_al.allocate(n);
-//			this->_inner_array = alloc.allocate(n); // like this better ?
+//			this->_inner_array = this->_al.allocate(n);
+			this->_inner_array = ((allocator_type&)alloc).allocate(n); // like this better ?
 			for (size_t i = 0; i < n; i++)
 			{
 				this->_al.construct(this->_inner_array + i, val);
@@ -61,7 +61,7 @@ namespace	ft
 			vector(InputIterator first, InputIterator last, // range constructor
 				const allocator_type& alloc = allocator_type())
 		{
-
+			
 		}*/
 
 		vector(const vector& x) // copy constructor
