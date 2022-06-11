@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:53:49 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/10 18:58:38 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/11 17:48:51 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,63 +18,32 @@
 # include "vector.hpp"
 /*# include <type_traits>*/
 
-/*
-		typedef				T													iterator_type;
-		typedef typename	iterator_traits<iterator_type>::iterator_category	iterator_category;
-		typedef typename	iterator_traits<iterator_type>::value_type			value_type;
-		typedef typename	iterator_traits<iterator_type>::difference_type		difference_type;
-		typedef typename	iterator_traits<iterator_type>::pointer				pointer;
-		typedef typename	iterator_traits<iterator_type>::reference			reference;
-*/
-
-/*
-	template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T *, class Reference = T &>
-	struct iterator
-	{
-		typedef	T			value_type;
-		typedef	Distance	difference_type;
-		typedef	Pointer		pointer;
-		typedef	Reference	reference;
-		typedef	Category	iterator_category;
-	};
-*/
-
-
 namespace ft
 {
-
 	template< class T2 > struct remove_const{typedef T2 type; };	
 	template< class T2 > struct remove_const<const T2>{ typedef T2 type; };
 
-	template <typename T> // can T be my container ? no
+	template <typename T> // can T be my container ? no. T is the type contained. From there all other type will be derived : pointer, reference, difference_type etc
 	class vector_random_access_iterator
 	{
-	public: // should i use iterator traits instead ?
+	public:
 
-		//typedef				T									iterator_type;
-		//typedef typename	std::random_access_iterator_tag		iterator_category;
-		//typedef				T						value_type;
-		//typedef typename	std::ptrdiff_t					difference_type;
-		//typedef				T*							pointer;
-		//typedef				T&						reference;
-
-		typedef				T*													iterator_type;
+		typedef				T*														iterator_type;
 		typedef typename	std::iterator_traits<iterator_type>::iterator_category	iterator_category;
 		typedef typename	std::iterator_traits<iterator_type>::value_type			value_type;
-		typedef typename	std::iterator_traits<iterator_type>::difference_type		difference_type;
-		typedef typename	std::iterator_traits<iterator_type>::pointer				pointer;
+		typedef typename	std::iterator_traits<iterator_type>::difference_type	difference_type;
+		typedef typename	std::iterator_traits<iterator_type>::pointer			pointer;
 		typedef typename	std::iterator_traits<iterator_type>::reference			reference;
 
 	private:
 		pointer	_ptr;
 	public:
-		/////////////// CONSTRUCTORS - DESTRUCTOR - ASSIGNATION ////////////////
+		///////////////	CONSTRUCTORS - DESTRUCTOR - ASSIGNATION	////////////////
+
 		vector_random_access_iterator() : _ptr(NULL) {} // default
 		vector_random_access_iterator(const vector_random_access_iterator<typename remove_const<T>::type > & x) : _ptr(x.base()) {} // copy
 		vector_random_access_iterator(pointer p) : _ptr(p) {}
 		~vector_random_access_iterator() {}
-
-//	operator vector_random_access_iterator<const T>() const { return this->_ptr; }
 
 		vector_random_access_iterator<typename remove_const<T>::type > &	operator=(const vector_random_access_iterator<typename remove_const<T>::type > & x)
 		{ if (this != &x) { this->_ptr = x._ptr; } return (*this); }
@@ -84,33 +53,73 @@ namespace ft
 			return (this->_ptr);
 		}
 
+		//////////////////////	DEREFERENCE OPERATORS	////////////////////////
+
 		reference	operator*() const
 		{
 			return (*this->_ptr);
 		}
 
-		vector_random_access_iterator<T> &	operator++()
+		reference	operator[](int i) const
+		{
+			return (*(this->_ptr + i));
+		}
+
+		pointer	operator->() const
+		{
+			return (this->_ptr);
+		}
+
+		////////////////////////	INCREMENT OPERATORS	////////////////////////
+
+		vector_random_access_iterator<T> &	operator++() // ++it
 		{
 			this->_ptr++;
 			return (*this);
 		}
 
+		vector_random_access_iterator<T> &	operator++(int) // it++
+		{
+			vector_random_access_iterator<T>	temp(*this);
+			this->_ptr++;
+			return (temp);
+		}
+
+		vector_random_access_iterator<T> &	operator--() // ++it
+		{
+			this->_ptr--;
+			return (*this);
+		}
+
+		vector_random_access_iterator<T> &	operator--(int) // it++
+		{
+			vector_random_access_iterator<T>	temp(*this);
+			this->_ptr--;
+			return (temp);
+		}
+
+		//////////////////////	ARITHMETIC OPERATORS	////////////////////////
+
+		vector_random_access_iterator<T>	operator+(difference_type n) const
+		{
+			return (this->_ptr + n);
+		}
+
+		vector_random_access_iterator<T>	operator-(difference_type n) const
+		{
+			return (this->_ptr - n);
+		}
+
+		difference_type	operator-(vector_random_access_iterator<T> & x) const
+		{
+			return (this->_ptr - x._ptr);
+		}
 	};
 
-	template <typename T>
-	bool	operator==(vector_random_access_iterator<T> const & a, vector_random_access_iterator<T> const & b)
-	{
-		return (a.base() == b.base());
-	}
 
-	template <typename T>
-	bool	operator!=(vector_random_access_iterator<T> const & a, vector_random_access_iterator<T> const & b)
-	{
-		return (a.base() != b.base());
-	}
+	////////////////////////	COMPARISON OPERATORS	////////////////////////
 
-
-/*	template <typename T, typename U>
+	template <typename T, typename U> // 2 different types because it could be const and non const
 	bool	operator==(vector_random_access_iterator<T> const & a, vector_random_access_iterator<U> const & b)
 	{
 		return (a.base() == b.base());
@@ -120,12 +129,39 @@ namespace ft
 	bool	operator!=(vector_random_access_iterator<T> const & a, vector_random_access_iterator<U> const & b)
 	{
 		return (a.base() != b.base());
-	}*/
+	}
 
+	template <typename T, typename U>
+	bool	operator<(vector_random_access_iterator<T> const & a, vector_random_access_iterator<U> const & b)
+	{
+		return (a.base() < b.base());
+	}
 
+	template <typename T, typename U>
+	bool	operator>(vector_random_access_iterator<T> const & a, vector_random_access_iterator<U> const & b)
+	{
+		return (a.base() > b.base());
+	}
 
+	template <typename T, typename U>
+	bool	operator<=(vector_random_access_iterator<T> const & a, vector_random_access_iterator<U> const & b)
+	{
+		return (a.base() <= b.base());
+	}
 
+	template <typename T, typename U>
+	bool	operator>=(vector_random_access_iterator<T> const & a, vector_random_access_iterator<U> const & b)
+	{
+		return (a.base() >= b.base());
+	}
+
+	////////////////////////	ARITHMETIC NON MEMBER	////////////////////////
+
+	template <typename T>
+	vector_random_access_iterator<T>	operator+(typename ft::vector_random_access_iterator<T>::difference_type n, vector_random_access_iterator<T> const & it)
+	{
+		return (it.base() + n);
+	}
 }
-
 
 # endif

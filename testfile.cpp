@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/10 18:51:11 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/11 17:54:56 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 int	main()
 {
 
-	ft::vector<int>	v;
+	ft::vector<ClapTrap>	v;
 
 	//for (ft::vector<ClapTrap>::size_type i = 0; i < 100; i++)
 	//{
@@ -51,7 +51,7 @@ int	main()
 
 	for (size_t i = 5; i < 10; i++)
 	{
-		v.push_back(i);
+		v.push_back(std::to_string(i));
 	}
 
 
@@ -61,13 +61,18 @@ int	main()
 
 	//it2 = it;
 
-	ft::vector<int>::iterator it = v.begin();
+	ft::vector<ClapTrap>::iterator			it = v.begin();
+	ft::vector<ClapTrap>::const_iterator	cit = v.end();
 
-	std::cout << *it << std::endl;
+	while (it != cit)
+	{
+		std::cout << *it << std::endl;
+		it->beRepaired(5);
+		++it;
+	}
 
-	*it = 7;
-
-	std::cout << *it << std::endl;
+	auto f = (it - it);
+	std::cout << std::endl << v.begin()[5] << std::endl;
 
 
 
