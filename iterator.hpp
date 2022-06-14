@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:53:49 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/11 17:48:51 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/14 16:56:33 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 
 namespace ft
 {
-	template< class T2 > struct remove_const{typedef T2 type; };	
-	template< class T2 > struct remove_const<const T2>{ typedef T2 type; };
+//	template< class T2 > struct remove_const{typedef T2 type; };	
+//	template< class T2 > struct remove_const<const T2>{ typedef T2 type; };
 
 	template <typename T> // can T be my container ? no. T is the type contained. From there all other type will be derived : pointer, reference, difference_type etc
 	class vector_random_access_iterator
@@ -41,12 +41,16 @@ namespace ft
 		///////////////	CONSTRUCTORS - DESTRUCTOR - ASSIGNATION	////////////////
 
 		vector_random_access_iterator() : _ptr(NULL) {} // default
-		vector_random_access_iterator(const vector_random_access_iterator<typename remove_const<T>::type > & x) : _ptr(x.base()) {} // copy
+//		vector_random_access_iterator(const vector_random_access_iterator<typename remove_const<T>::type > & x) : _ptr(x.base()) {} // copy // use with remove const
+		vector_random_access_iterator(const vector_random_access_iterator<T> & x) : _ptr(x.base()) {} // instead of remove const
 		vector_random_access_iterator(pointer p) : _ptr(p) {}
 		~vector_random_access_iterator() {}
 
-		vector_random_access_iterator<typename remove_const<T>::type > &	operator=(const vector_random_access_iterator<typename remove_const<T>::type > & x)
+//		vector_random_access_iterator<typename remove_const<T>::type > &	operator=(const vector_random_access_iterator<typename remove_const<T>::type > & x) // use with remove const
+		vector_random_access_iterator<T> &	operator=(const vector_random_access_iterator<T> & x) // instead of remove const
 		{ if (this != &x) { this->_ptr = x._ptr; } return (*this); }
+
+		operator vector_random_access_iterator<const T>() const { return this->_ptr; } // can use instead of remove_const
 
 		pointer	base() const
 		{

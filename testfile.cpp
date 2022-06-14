@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/11 18:28:24 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/14 17:10:43 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,33 +20,31 @@
 
 #include "ClapTrap.hpp"
 #include "Array.hpp"
+#include <list>
 
+#include "enable_if.hpp"
+
+void	foo(unsigned int u)
+{
+	(void)u;
+	std::cout << "fct du haut" << std::endl;
+}
+
+template <class T/*, typename std::enable_if< std::is_class<T>::value , T>::type* = nullptr */>
+void	foo(T u, typename ft::enable_if< std::is_class<T>::value , T>::type* = NULL)
+{
+	(void)u;
+	std::cout << "fct du bas" << std::endl;
+}
 
 int	main()
 {
 
+
+
 	ft::vector<ClapTrap>	v;
 
-	//for (ft::vector<ClapTrap>::size_type i = 0; i < 100; i++)
-	//{
-	//	std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
-	//	v.push_back(ClapTrap("Clap number " /* + std::to_string(i) */ ));
-	//}
-
-	//std::cout << "BEFORE" << std::endl;
-	//v.resize(10);
-	//std::cout << "AFTER" << std::endl;
-
-	//std::cout << "Capacity : " << v.capacity() << " | Size : " << v.size() << std::endl;
-
-	//std::cout << "Empty ? " << v.empty() << std::endl;
-
-
-	//std::cout << v.at(5) << std::endl;
-
-	//ft::vector<ClapTrap>::iterator	it = v.begin();
-
-	//std::cout << *it << std::endl;
+	foo(v);
 
 
 	for (size_t i = 5; i < 10; i++)
@@ -54,35 +52,25 @@ int	main()
 		v.push_back(std::to_string(i));
 	}
 
-	ft::vector<ClapTrap>	v2(5);
+	ft::vector<ClapTrap>::const_iterator			it = v.begin();
+	ft::vector<ClapTrap>::const_iterator	cit = v.end();
 
-	v2.reserve(20);
+	ft::vector<ClapTrap>	v2(it, cit);
 
-	ft::vector<ClapTrap>::iterator			it = v2.begin();
-
-	v2.push_back(ClapTrap("coucou"));
-
-	ft::vector<ClapTrap>::const_iterator	cit = v2.begin();
-
-	std::cout << it.base() << std::endl;
-	std::cout << cit.base() << std::endl;
-
-	//ft::vector<int>::iterator it = v.begin();
-
-	//ft::vector<int>::iterator it2(it);
-
-	//it2 = it;
-
+	for (size_t i = 0; i < v2.size(); i++)
+	{
+		std::cout << v2[i] << std::endl;
+	}
 	
 
 
-
+/*
 	for (auto i : v2)
 	{
 		std::cout << i << std::endl;
 	}
 	
-
+*/
 
 
 

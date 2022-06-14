@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/11 18:33:39 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/14 17:55:01 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <iostream>
 # include <memory>
 # include "iterator.hpp"
+# include "enable_if.hpp"
 /*# include <cstddef>*/
 
 namespace	ft
@@ -57,12 +58,24 @@ namespace	ft
 			}
 		}
 
-/*		template <class InputIterator>
+		template <class InputIterator>
 			vector(InputIterator first, InputIterator last, // range constructor
-				const allocator_type& alloc = allocator_type())
+				const allocator_type& alloc = allocator_type(), typename ft::enable_if< std::is_class<InputIterator>::value , InputIterator>::type* = NULL)
+		: GROWING_FACTOR(2), _inner_array(NULL), _size(0), _capacity(0)
 		{
-			
-		}*/
+			if (first >= last)
+				return ;
+			this->_inner_array = ((allocator_type&)alloc).allocate(last - first);
+			size_t	i = 0;
+			while (first != last)
+			{
+				((allocator_type&)alloc).construct(this->_inner_array + i, *first);
+				++first;
+				++i;
+			}
+			this->_capacity = i;
+			this->_size = i;
+		}
 
 		vector(const vector& x) // copy constructor
 		: GROWING_FACTOR(2), _size(x._size), _capacity(x._capacity)
