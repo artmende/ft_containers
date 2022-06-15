@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/15 16:27:09 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/15 19:30:16 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "iterator.hpp"
 # include "reverse_iterator.hpp"
 # include "enable_if.hpp"
+# include "is_integral.hpp"
 /*# include <cstddef>*/
 
 namespace	ft
@@ -61,9 +62,10 @@ namespace	ft
 			}
 		}
 
+
 		template <class InputIterator>
 			vector(InputIterator first, InputIterator last, // range constructor
-				const allocator_type& alloc = allocator_type(), typename ft::enable_if< std::is_class<InputIterator>::value , InputIterator>::type* = NULL)
+				const allocator_type& alloc = allocator_type(), typename ft::enable_if< !(ft::is_integral<InputIterator>::value) , InputIterator>::type* = NULL)
 		: GROWING_FACTOR(2), _inner_array(NULL), _size(0), _capacity(0)
 		{
 			if (first >= last)
@@ -123,7 +125,12 @@ namespace	ft
 			return (const_iterator(this->_inner_array));
 		}
 
-		iterator	end() const // should i add the const iterator one ?
+		iterator	end() // should i add the const iterator one ?
+		{
+			return (iterator(this->_inner_array + this->_size));
+		}
+
+		const_iterator	end() const // should i add the const iterator one ?
 		{
 			return (iterator(this->_inner_array + this->_size));
 		}

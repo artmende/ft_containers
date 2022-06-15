@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 14:37:25 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/15 16:55:16 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/15 19:51:18 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,9 @@ namespace ft
 			return (this->_it + n);
 		}
 
-		difference_type operator-(reverse_iterator<iterator_type> & x) const
+		difference_type operator-(reverse_iterator<iterator_type> const & x) const
 		{
-			return (this->_it - x._it);
+			return (x._it - this->_it);
 		}
 	};
 
@@ -159,6 +159,13 @@ namespace ft
 	{
 		return (rit.base() + n);
 	}
+
+/*	template <typename T, typename U>
+	typename reverse_iterator<T>::difference_type	operator-(reverse_iterator<T> const & a, reverse_iterator<U> const & b)
+	{
+		return (b.base() - a.base());
+	}*/
+
 }
 
 # endif
