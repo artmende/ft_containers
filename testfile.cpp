@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/14 18:03:17 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/15 16:37:08 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,41 @@ int	main()
 
 
 
-	ft::vector<ClapTrap>	v;
+	ft::vector<int>	v;
 
-	foo(v);
+	//foo(v);
 
 
-	for (size_t i = 5; i < 10; i++)
+	//for (size_t i = 5; i < 10; i++)
+	//{
+	//	v.push_back(std::to_string(i));
+	//}
+
+	//ft::vector<ClapTrap>::const_iterator			it = v.begin();
+	//ft::vector<ClapTrap>::const_iterator	cit = v.end();
+
+
+	//ft::vector<ClapTrap>	v2(it, cit);
+
+	//for (size_t i = 0; i < v2.size(); i++)
+	//{
+	//	std::cout << v2[i] << std::endl;
+	//}
+
+	for (size_t i = 0; i < 10; i++)
 	{
-		v.push_back(std::to_string(i));
-	}
-
-	ft::vector<ClapTrap>::const_iterator			it = v.begin();
-	ft::vector<ClapTrap>::const_iterator	cit = v.end();
-
-	ft::vector<ClapTrap>	v2(it, cit);
-
-	for (size_t i = 0; i < v2.size(); i++)
-	{
-		std::cout << v2[i] << std::endl;
+		v.push_back(i);
 	}
 	
+
+	ft::vector<int>::reverse_iterator	revtestend = v.rbegin();
+	ft::vector<int>::iterator			fortestbeg = v.begin();
+
+	while (revtestend.base().base() != fortestbeg.base())
+	{
+		std::cout << *revtestend << std::endl;
+		++revtestend;
+	}
 
 
 /*

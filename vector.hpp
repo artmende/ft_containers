@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/14 17:55:01 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/15 16:27:09 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <iostream>
 # include <memory>
 # include "iterator.hpp"
+# include "reverse_iterator.hpp"
 # include "enable_if.hpp"
 /*# include <cstddef>*/
 
@@ -35,6 +36,8 @@ namespace	ft
 		typedef				std::size_t											size_type;
 		typedef				ft::vector_random_access_iterator<value_type>		iterator;
 		typedef				ft::vector_random_access_iterator<const value_type>	const_iterator;
+		typedef				ft::reverse_iterator<iterator>						reverse_iterator;
+		typedef				ft::reverse_iterator<const_iterator>				const_reverse_iterator;
 
 /* 
 		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
@@ -120,9 +123,19 @@ namespace	ft
 			return (const_iterator(this->_inner_array));
 		}
 
-		iterator	end() const
+		iterator	end() const // should i add the const iterator one ?
 		{
 			return (iterator(this->_inner_array + this->_size));
+		}
+
+		reverse_iterator	rbegin() const
+		{
+			return (reverse_iterator(iterator(this->_inner_array + this->_size - 1)));
+		}
+
+		reverse_iterator	rend() const
+		{
+			return (reverse_iterator(iterator(this->_inner_array - 1)));
 		}
 
 		/////////////////////////////// CAPACITY ///////////////////////////////

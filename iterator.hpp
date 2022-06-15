@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:53:49 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/14 16:56:33 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/15 16:55:05 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <iostream>
 # include <iterator>
-# include "vector.hpp"
+/*# include "vector.hpp"*/
 /*# include <type_traits>*/
 
 namespace ft
@@ -82,7 +82,7 @@ namespace ft
 			return (*this);
 		}
 
-		vector_random_access_iterator<T> &	operator++(int) // it++
+		vector_random_access_iterator<T>	operator++(int) // it++
 		{
 			vector_random_access_iterator<T>	temp(*this);
 			this->_ptr++;
@@ -95,7 +95,7 @@ namespace ft
 			return (*this);
 		}
 
-		vector_random_access_iterator<T> &	operator--(int) // it++
+		vector_random_access_iterator<T>	operator--(int) // it++
 		{
 			vector_random_access_iterator<T>	temp(*this);
 			this->_ptr--;
