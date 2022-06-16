@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/15 19:30:16 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/16 10:34:19 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,13 @@ namespace	ft
 				const allocator_type& alloc = allocator_type(), typename ft::enable_if< !(ft::is_integral<InputIterator>::value) , InputIterator>::type* = NULL)
 		: GROWING_FACTOR(2), _inner_array(NULL), _size(0), _capacity(0)
 		{
-			if (first >= last)
-				return ;
-			this->_inner_array = ((allocator_type&)alloc).allocate(last - first);
-			size_t	i = 0;
+			size_type	size_to_allocate = 0;
+			for (InputIterator it = first; it != last; ++it)
+			{
+				++size_to_allocate;
+			}
+			this->_inner_array = ((allocator_type&)alloc).allocate(size_to_allocate);
+			size_type	i = 0;
 			while (first != last)
 			{
 				((allocator_type&)alloc).construct(this->_inner_array + i, *first);

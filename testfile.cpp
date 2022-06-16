@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/15 16:37:08 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/16 10:13:01 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	foo(unsigned int u)
 }
 
 template <class T/*, typename std::enable_if< std::is_class<T>::value , T>::type* = nullptr */>
-void	foo(T u, typename ft::enable_if< std::is_class<T>::value , T>::type* = NULL)
+void	foo(T u, typename ft::enable_if< !(ft::is_integral<T>::value) , T>::type* = NULL)
 {
 	(void)u;
 	std::cout << "fct du bas" << std::endl;
@@ -44,7 +44,7 @@ int	main()
 
 	ft::vector<int>	v;
 
-	//foo(v);
+	foo(-3);
 
 
 	//for (size_t i = 5; i < 10; i++)
