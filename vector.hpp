@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/17 18:04:35 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/19 18:36:14 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include "enable_if.hpp"
 # include "is_integral.hpp"
 /*# include <cstddef>*/
+
+
 
 namespace	ft
 {
@@ -47,7 +49,6 @@ namespace	ft
 		value_type*		_inner_array;
 		size_type		_size;
 		size_type		_capacity;
-		
 
 		void	delete_all_data_and_deallocate()
 		{
@@ -57,19 +58,6 @@ namespace	ft
 			}
 			if (this->_capacity)
 				this->_al.deallocate(this->_inner_array, this->_capacity);
-		}
-		value_type*	reallocate_array_with_capacity(size_t new_capacity)
-		{
-			if (new_capacity <= this->_capacity)
-				return (this->_inner_array);
-			value_type*	newarray = this->_al.allocate(new_capacity);
-			for (size_t i = 0; i < this->_size; i++)
-			{
-				this->_al.construct(newarray + i, *(this->_inner_array + i));
-			}
-			delete_all_data_and_deallocate();
-			this->_capacity = new_capacity;
-			return (newarray);
 		}
 
 	public:
@@ -207,7 +195,7 @@ namespace	ft
 			}
 			else // allocate at least twice the capacity and add elements 
 			{
-				this->_inner_array = reallocate_array_with_capacity(n > this->_capacity * this->GROWING_FACTOR ? n : this->_capacity * this->GROWING_FACTOR);
+				reserve(n > this->_capacity * this->GROWING_FACTOR ? n : this->_capacity * this->GROWING_FACTOR);
 				for (size_t i = this->_size; i < n; i++)
 				{
 					this->_al.construct(this->_inner_array + i, val);
@@ -228,7 +216,16 @@ namespace	ft
 
 		void	reserve(size_type n)
 		{
-			this->_inner_array = reallocate_array_with_capacity(n);
+			if (n <= this->_capacity)
+				return ;
+			value_type*	newarray = this->_al.allocate(n);
+			for (size_t i = 0; i < this->_size; i++)
+			{
+				this->_al.construct(newarray + i, *(this->_inner_array + i));
+			}
+			delete_all_data_and_deallocate();
+			this->_inner_array = newarray;
+			this->_capacity = n;
 		}
 
 
@@ -268,12 +265,12 @@ namespace	ft
 			return ((*this)[0]);
 		}
 
-		reference back()
+		reference	back()
 		{
 			return ((*this)[this->_size - 1]);
 		}
 
-		const_reference back() const
+		const_reference	back() const
 		{
 			return ((*this)[this->_size - 1]);
 		}
@@ -283,7 +280,7 @@ namespace	ft
 
 
 		template <class InputIterator>
-		void assign(InputIterator first, InputIterator last, typename ft::enable_if< !(ft::is_integral<InputIterator>::value) , InputIterator>::type* = NULL) // range
+		void	assign(InputIterator first, InputIterator last, typename ft::enable_if< !(ft::is_integral<InputIterator>::value) , InputIterator>::type* = NULL) // range
 		{
 			for (size_t i = 0; i < this->_size; i++)
 				this->_al.destroy(this->_inner_array + i);
@@ -305,7 +302,7 @@ namespace	ft
 			this->_size = size_to_copy;
 		}
 
-		void assign(size_type n, const value_type& val) // fill
+		void	assign(size_type n, const value_type& val) // fill
 		{
 			for (size_t i = 0; i < this->_size; i++)
 				this->_al.destroy(this->_inner_array + i);
@@ -323,7 +320,7 @@ namespace	ft
 		void	push_back(const value_type& val)
 		{
 			if (this->_size == this->_capacity) // need to allocate more
-				this->_inner_array = reallocate_array_with_capacity(this->_capacity == 0 ? 1 : this->_capacity * this->GROWING_FACTOR);
+				reserve(this->_capacity == 0 ? 1 : this->_capacity * this->GROWING_FACTOR);
 			this->_al.construct(this->_inner_array + this->_size, val);
 			++this->_size;
 		}
@@ -336,15 +333,40 @@ namespace	ft
 			--this->_size;
 		}
 
-		iterator insert(iterator position, const value_type& val) // single element
+		iterator	insert(iterator position, const value_type& val) // single element
 		{
-			iterator	it = this->end();
+			if (this->_size == this->_capacity) // need to allocate more, growing factor applied
+			{
+				value_type*	newarray = this->_al.allocate(this->_capacity * this->GROWING_FACTOR);
+				for (iterator it = this->begin(); it != position; ++it)
+					this->_al.construct(newarray + (it - this->begin()), *it);
+				this->_al.construct(newarray + (position - this->begin()), val);
+				for (iterator it = position; it != this->end(); ++it)
+					this->_al.construct(newarray + 1 + (it - this->begin()), *it);
+				delete_all_data_and_deallocate();
+				this->_inner_array = newarray;
+				this->_capacity *= this->GROWING_FACTOR;
+			}
+			else // we have enough space allocated
+			{
+				for (iterator it = this->end(); it != position; --it)
+					*it = *(it - 1);
+				this->_al.construct(position.base(), val);
+			}
+			++this->_size;
+			return position; // no, it might not be valid anymore !!
 			//either we have to reallocate (change all and simply add the new one)
 			// or we have space ready. Then we have to move all others
 			// construct one element at the end, then use assignment operator from end until reaching insertion spot
 		}
 
-//		void insert (iterator position, size_type n, const value_type& val); // fill
+		//void	insert(iterator position, size_type n, const value_type& val) // fill
+		//{
+		//	if (this->_size + n > this->_capacity) // need to allocate more, growing factor applied
+		//	{
+		//		value_type*	newarray = this->_al.allocate(std::max(this->_capacity * this->GROWING_FACTOR, this->_size + n));
+		//	}
+		//}
 
 //		template <class InputIterator>
 //		void insert (iterator position, InputIterator first, InputIterator last); // range

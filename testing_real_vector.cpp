@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:03:40 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/17 18:00:28 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/19 18:36:33 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,31 @@
 
 #define current b
 
+
+
 int	main()
 {
-	ft::vector<ClapTrap>	a(5);
-	a.reserve(20);
 
-	std::cout << "About to insert..." << std::endl;
+	ft::vector<int>	v;
 
-	a.insert(a.end() - 2, ClapTrap("coucou"));
+	v.insert(v.begin(), 8);
 
-	std::cout << "Insert is done\n";
 
-	for (size_t i = 0; i < a.size(); i++)
+	std::cout << "capacity : " << v.capacity() << std::endl;
+
+	for (size_t i = 0; i < v.size(); i++)
 	{
-		std::cout << a[i] << std::endl;
+		std::cout << v[i] << std::endl;
 	}
 	
+
+	//std::cout << "About to insert..." << std::endl;
+
+	//a.insert(a.end() - 2, ClapTrap("coucou"));
+
+	//std::cout << "Insert is done\n";
+
+	//std::cout << "capacity : " << a.capacity() << std::endl;
 
 	return (0);
 }
