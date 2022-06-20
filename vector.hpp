@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/19 18:36:14 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/20 02:46:08 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include <memory>
+# include <algorithm>
 # include "iterator.hpp"
 # include "reverse_iterator.hpp"
 # include "enable_if.hpp"
@@ -335,41 +336,42 @@ namespace	ft
 
 		iterator	insert(iterator position, const value_type& val) // single element
 		{
-			if (this->_size == this->_capacity) // need to allocate more, growing factor applied
-			{
-				value_type*	newarray = this->_al.allocate(this->_capacity * this->GROWING_FACTOR);
-				for (iterator it = this->begin(); it != position; ++it)
-					this->_al.construct(newarray + (it - this->begin()), *it);
-				this->_al.construct(newarray + (position - this->begin()), val);
-				for (iterator it = position; it != this->end(); ++it)
-					this->_al.construct(newarray + 1 + (it - this->begin()), *it);
-				delete_all_data_and_deallocate();
-				this->_inner_array = newarray;
-				this->_capacity *= this->GROWING_FACTOR;
-			}
-			else // we have enough space allocated
-			{
-				for (iterator it = this->end(); it != position; --it)
-					*it = *(it - 1);
-				this->_al.construct(position.base(), val);
-			}
-			++this->_size;
-			return position; // no, it might not be valid anymore !!
-			//either we have to reallocate (change all and simply add the new one)
-			// or we have space ready. Then we have to move all others
-			// construct one element at the end, then use assignment operator from end until reaching insertion spot
+			size_type	index_position = position - this->begin();
+			insert(position, 1, val);
+			return (this->begin() + index_position);
 		}
 
-		//void	insert(iterator position, size_type n, const value_type& val) // fill
-		//{
-		//	if (this->_size + n > this->_capacity) // need to allocate more, growing factor applied
-		//	{
-		//		value_type*	newarray = this->_al.allocate(std::max(this->_capacity * this->GROWING_FACTOR, this->_size + n));
-		//	}
-		//}
+		void	insert(iterator position, size_type n, const value_type& val) // fill
+		{
+			if (this->_size + n > this->_capacity) // need to allocate more, growing factor applied
+			{
+				size_type	newcapacity = std::max<size_type>(this->_capacity * this->GROWING_FACTOR, this->_size + n);
+				value_type*	newarray = this->_al.allocate(newcapacity);
+				for (iterator it = this->begin(); it != position; ++it)
+					this->_al.construct(newarray + (it - this->begin()), *it);
+				for (size_type i = 0; i < n; i++)
+					this->_al.construct(newarray + i + (position - this->begin()), val);
+				for (iterator it = position; it != this->end(); ++it)
+					this->_al.construct(newarray + n + (it - this->begin()), *it);
+				delete_all_data_and_deallocate();
+				this->_inner_array = newarray;
+				this->_capacity = newcapacity;
+			}
+			else // no need to allocate more
+			{
+				for (iterator it = this->end() + n - 1; it != position + n - 1; --it)
+					*it = *(it - n);
+				for (size_type i = 0; i < n; i++)
+					this->_al.construct(position.base() + i, val);
+			}
+			this->_size += n;
+		}
 
-//		template <class InputIterator>
-//		void insert (iterator position, InputIterator first, InputIterator last); // range
+/* 		template <class InputIterator>
+		void	insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if< !(ft::is_integral<InputIterator>::value) , InputIterator>::type* = NULL) // range
+		{
+			
+		} */
 
 //		iterator erase (iterator position);
 
