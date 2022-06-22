@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:03:40 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/21 19:27:11 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/22 11:30:31 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,30 +30,31 @@ int	main()
 //	ft::vector<int>::iterator	it;
 
 
-	std::list<ClapTrap>	l;
+/*	std::list<ClapTrap>	l;
 	for (size_t i = 0; i < 10; i++)
 	{
 		l.push_back(std::to_string(i));
 	}
 	ft::vector<ClapTrap>	v(l.begin(), l.end());
-	v.reserve(100);
 
-	std::list<ClapTrap>::iterator	itl = l.begin();
-	for (size_t i = 0; i < 6; i++)
-	{
-		++itl;
-	}
-	
-
-	std::cout << "BEFORE INSERTING\n";
-	v.insert(v.begin() + 3, l.begin(), itl);
-	std::cout << "AFTER INSERTING\n";
+	std::cout << "BEFORE ERASING '" << *(v.begin() + 5) << "'" << std::endl;
+	ft::vector<ClapTrap>::iterator	ittest = v.erase(v.begin() + 5);
+	std::cout << "AFTER ERASING - pointing to '" << *ittest << "'" << std::endl;
 
 	for (size_t i = 0; i < v.size(); i++)
 	{
 		std::cout << v[i] << std::endl;
-	}
-	
+	}*/
+
+
+	std::vector<ClapTrap>	v;
+
+	std::cout << v.begin().base() << std::endl;
+
+	std::vector<ClapTrap>::iterator	it = v.erase(v.begin());
+
+	std::cout << it.base() << std::endl;
+
 
 /*	std::cout << "iserting... : " << *(it = v.insert(v.begin(), 8)) << " : " << it - v.begin() << std::endl;
 

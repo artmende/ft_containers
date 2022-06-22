@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/21 19:19:25 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/22 11:32:10 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -403,7 +403,16 @@ namespace	ft
 			this->_size += n;
 		}
 
-//		iterator erase (iterator position);
+		iterator	erase(iterator position)
+		{
+			for (iterator it = position; it != this->end() - 1; ++it)
+			{
+				*it = *(it + 1);
+			}
+			this->_al.destroy(this->_inner_array + this->_size - 1); // erasing from a empty vector segfault also with real vector
+			--this->_size;
+			return (position);
+		}
 
 //		iterator erase (iterator first, iterator last);
 
