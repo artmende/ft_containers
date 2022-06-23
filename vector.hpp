@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/23 19:03:40 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/23 23:28:46 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,9 @@ namespace	ft
 			{
 				this->_al.construct(newarray + i, *(this->_inner_array + i));
 			}
-			delete_all_data_and_deallocate();
+			size_type	save_size = this->_size;
+			delete_all_data_and_deallocate(); // problem fixed line above
+			this->_size = save_size;
 			this->_inner_array = newarray;
 			this->_capacity = n;
 		}
@@ -357,7 +359,9 @@ namespace	ft
 					this->_al.construct(newarray + i + (position - this->begin()), val);
 				for (iterator it = position; it != this->end(); ++it)
 					this->_al.construct(newarray + n + (it - this->begin()), *it);
-				delete_all_data_and_deallocate();
+				size_type	save_size = this->_size;
+				delete_all_data_and_deallocate(); // problem fixed line above
+				this->_size = save_size;
 				this->_inner_array = newarray;
 				this->_capacity = newcapacity;
 			}
@@ -390,7 +394,9 @@ namespace	ft
 				}
 				for (iterator it = position; it != this->end(); ++it)
 					this->_al.construct(newarray + n + (it - this->begin()), *it);
-				delete_all_data_and_deallocate();
+				size_type	save_size = this->_size;
+				delete_all_data_and_deallocate(); // problem fixed line above
+				this->_size = save_size;
 				this->_inner_array = newarray;
 				this->_capacity = newcapacity;
 			}

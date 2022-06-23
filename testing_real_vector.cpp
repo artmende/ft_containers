@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:03:40 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/23 19:11:08 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/23 23:32:06 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <list>
 #include <stdlib.h>
 
-/*#define ft std*/
+// #define ft std
 
 #define current b
 
