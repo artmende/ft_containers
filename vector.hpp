@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/22 11:32:10 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/23 18:41:48 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "reverse_iterator.hpp"
 # include "enable_if.hpp"
 # include "is_integral.hpp"
+# include "lexicographical_compare_equal.hpp"
 /*# include <cstddef>*/
 
 
@@ -53,12 +54,14 @@ namespace	ft
 
 		void	delete_all_data_and_deallocate()
 		{
-			for (size_t i = 0; i < this->_size; i++)
-			{
-				this->_al.destroy(this->_inner_array + i);
-			}
+			//for (size_t i = 0; i < this->_size; i++)
+			//{
+			//	this->_al.destroy(this->_inner_array + i);
+			//}
+			this->clear();
 			if (this->_capacity)
 				this->_al.deallocate(this->_inner_array, this->_capacity);
+			this->_capacity = 0;
 		}
 
 	public:
@@ -414,41 +417,96 @@ namespace	ft
 			return (position);
 		}
 
-//		iterator erase (iterator first, iterator last);
+		iterator	erase(iterator first, iterator last)
+		{
+			size_type	n = last - first;
+			for (iterator it = first; it != this->end() - n; ++it)
+			{
+				*it = *(it + n);
+			}
+			for (size_type i = 0; i < n; i++)
+			{
+				this->_al.destroy(this->_inner_array + this->_size - (1 + i));
+			}
+			this->_size -= n;
+			return (first);
+		}
 
-//		void swap (vector& x);
+		void	swap(vector& x)
+		{
+			value_type*	current_inner_array = this->_inner_array;
+			size_type	current_size = this->_size;
+			size_type	current_capacity = this->_capacity;
 
-//		void clear();
+			this->_inner_array = x._inner_array;
+			this->_size = x._size;
+			this->_capacity = x._capacity;
 
-//		allocator_type get_allocator() const;
+			x._inner_array = current_inner_array;
+			x._size = current_size;
+			x._capacity = current_capacity;
+		}
 
+		void	clear()
+		{
+			for (size_type i = 0; i < this->_size; i++)
+			{
+				this->_al.destroy(this->_inner_array + i);
+			}
+			this->_size = 0;
+		}
+
+		allocator_type	get_allocator() const
+		{
+			return (this->_al);
+		}
 	};
 
 
 
 ////////////////////	NON-MEMBER FUNCTION OVERLOADS	////////////////////////
 
-//	template <class T, class Alloc>
-//	bool	operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
 
-//	template <class T, class Alloc>
-//	bool	operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!(lhs == rhs));
+	}
 
-//	template <class T, class Alloc>
-//	bool	operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
 
-//	template <class T, class Alloc>
-//	bool	operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (lhs == rhs || lhs < rhs);
+	}
 
-//	template <class T, class Alloc>
-//	bool	operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!(lhs < rhs) && lhs != rhs);
+	}
 
-//	template <class T, class Alloc>
-//	bool	operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (lhs == rhs || lhs > rhs);
+	}
 
-//	template <class T, class Alloc>
-//	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
-
+	template <class T, class Alloc>
+	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+	{
+		x.swap(y);
+	}
 }
 
 #endif
