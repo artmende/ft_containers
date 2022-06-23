@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:53:49 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/15 19:42:49 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/23 18:58:42 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,18 @@ namespace ft
 		difference_type	operator-(vector_random_access_iterator<T> & x) const
 		{
 			return (this->_ptr - x._ptr);
+		}
+	
+		vector_random_access_iterator<T> &	operator+=(difference_type n)
+		{
+			this->_ptr += n;
+			return (*this);
+		}
+
+		vector_random_access_iterator<T> &	operator-=(difference_type n)
+		{
+			this->_ptr -= n;
+			return (*this);
 		}
 	};
 
