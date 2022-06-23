@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/23 18:41:48 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/23 19:03:40 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ namespace	ft
 					this->_al.construct(this->_inner_array + i, *(x._inner_array + i));
 				}
 			}
+			return (*this);
 		}
 
 

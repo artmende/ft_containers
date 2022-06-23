@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:03:40 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/23 18:53:25 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/23 19:11:08 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <list>
 #include <stdlib.h>
 
-#define ft std
+/*#define ft std*/
 
 #define current b
 
@@ -26,19 +26,30 @@
 int	main()
 {
 
+	std::list<int> lst;
+	for (int i = 1; i < 5; ++i)
+		lst.push_back(i * 3);
 
-
-	ft::vector<int>	v(10, 5);
-	ft::vector<int>	y(10, -6);
-	ft::vector<int>	z(8, -2);
-
-	int	*ptr = (v.begin().base()) - 10;
-
-	for (size_t i = 0; i < 50; i++)
-	{
-		std::cout << *(ptr + i) << std::endl;
-	}
+	ft::vector<int> vct(lst.begin(), lst.end());
 	
+	for (auto value : vct)
+		std::cout << value << std::endl;
+	std::cout << "\n";
+
+	std::list<int>::iterator lst_it = lst.begin();
+	for (int i = 1; lst_it != lst.end(); ++i)
+		*lst_it++ = i * 5;
+	vct.assign(lst.begin(), lst.end());
+
+	for (auto value : vct)
+		std::cout << value << std::endl;
+	std::cout << "\n";
+
+	vct.insert(vct.end(), lst.rbegin(), lst.rend());
+
+	for (auto value : vct)
+		std::cout << value << std::endl;
+	std::cout << "\n";
 
 	return (0);
 }
