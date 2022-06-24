@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:03:40 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/23 23:32:06 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/24 18:03:17 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,40 +16,46 @@
 #include "ClapTrap.hpp"
 #include <list>
 #include <stdlib.h>
+#include <stack>
+#include "stack.hpp"
 
-// #define ft std
+#include <iomanip>
+#include <math.h>
 
-#define current b
-
-
+//#define ft std
 
 int	main()
 {
+	ft::stack<int, ft::vector<int> > s1, s2;
 
-	std::list<int> lst;
-	for (int i = 1; i < 5; ++i)
-		lst.push_back(i * 3);
+	for (size_t i = 0; i < 10; i++)
+	{
+		s1.push(pow(-1, i) * i);
+		s2.push(i);
+	}
+	s2.pop();
 
-	ft::vector<int> vct(lst.begin(), lst.end());
-	
-	for (auto value : vct)
-		std::cout << value << std::endl;
-	std::cout << "\n";
+	std::cout << "Comparison operators : \n" << std::boolalpha;
+	std::cout << "s1 == s2 : " << (s1 == s2) << '\n';
+	std::cout << "s1 != s2 : " << (s1 != s2) << '\n';
+	std::cout << "s1 < s2 : " << (s1 < s2) << '\n';
+	std::cout << "s1 <= s2 : " << (s1 <= s2) << '\n';
+	std::cout << "s1 > s2 : " << (s1 > s2) << '\n';
+	std::cout << "s1 >= s2 : " << (s1 >= s2) << "\n\n";
 
-	std::list<int>::iterator lst_it = lst.begin();
-	for (int i = 1; lst_it != lst.end(); ++i)
-		*lst_it++ = i * 5;
-	vct.assign(lst.begin(), lst.end());
+	std::cout << "s1 (size " << s1.size() << " ) : \n";
+	while (!(s1.empty()))
+	{
+		std::cout << s1.top() << '\n';
+		s1.pop();
+	}
 
-	for (auto value : vct)
-		std::cout << value << std::endl;
-	std::cout << "\n";
-
-	vct.insert(vct.end(), lst.rbegin(), lst.rend());
-
-	for (auto value : vct)
-		std::cout << value << std::endl;
-	std::cout << "\n";
+	std::cout << "\ns2 (size " << s2.size() << " ) : \n";
+	while (!(s2.empty()))
+	{
+		std::cout << s2.top() << '\n';
+		s2.pop();
+	}
 
 	return (0);
 }

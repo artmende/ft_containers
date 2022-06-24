@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/23 23:28:46 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/24 16:40:25 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ namespace	ft
 	private:
 		double const	GROWING_FACTOR;
 //		allocator_type	_al;
-		std::allocator<T>	_al;
+		std::allocator<T>	_al; // delete later
 		value_type*		_inner_array;
 		size_type		_size;
 		size_type		_capacity;
@@ -274,7 +274,7 @@ namespace	ft
 
 		reference	back()
 		{
-			return ((*this)[this->_size - 1]);
+			return ((*this)[this->_size - 1]); // what happens if vector is empty ?
 		}
 
 		const_reference	back() const
