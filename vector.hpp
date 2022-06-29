@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/24 16:40:25 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/29 11:28:01 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -476,7 +476,10 @@ namespace	ft
 	template <class T, class Alloc>
 	bool	operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+		if (lhs.size() != rhs.size())
+			return (false);
+		else
+			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template <class T, class Alloc>

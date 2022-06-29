@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:53:49 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/23 18:58:42 by artmende         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:01:42 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,11 @@ namespace ft
 	}
 
 	////////////////////////	ARITHMETIC NON MEMBER	////////////////////////
+
+	// it1 + it2 -> return it -> nope
+	// n + it -> return it
+	// it1 - it2 -> return n
+	// n - it -> exist ? -> nope
 
 	template <typename T>
 	vector_random_access_iterator<T>	operator+(typename ft::vector_random_access_iterator<T>::difference_type n, vector_random_access_iterator<T> const & it)
