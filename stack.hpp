@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 15:07:29 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/24 18:02:50 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/01 18:42:21 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ namespace ft
 	{
 	public:
 		typedef				T							value_type;
-	//	typedef typename	Container					container_type;
-		typedef typename	ft::vector<T>				container_type; // delete later
+		typedef /*typename*/	Container					container_type;
+	//	typedef typename	ft::vector<T>				container_type; // delete later
 		typedef typename	container_type::size_type	size_type;
 
 	protected:
