@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/29 11:28:01 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/01 18:09:57 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,12 +160,16 @@ namespace	ft
 
 		reverse_iterator	rbegin() const
 		{
-			return (reverse_iterator(iterator(this->_inner_array + this->_size - 1)));
+//			return (reverse_iterator(iterator(this->_inner_array + this->_size - 1))); //////////////
+//			return (reverse_iterator(this->end()));
+			return (reverse_iterator(iterator(this->_inner_array + this->_size)));
 		}
 
 		reverse_iterator	rend() const
 		{
-			return (reverse_iterator(iterator(this->_inner_array - 1)));
+//			return (reverse_iterator(iterator(this->_inner_array - 1))); ///////////////
+//			return (reverse_iterator(this->begin()));
+			return (reverse_iterator(iterator(this->_inner_array)));
 		}
 
 		/////////////////////////////// CAPACITY ///////////////////////////////

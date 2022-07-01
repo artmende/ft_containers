@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:03:40 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/29 16:03:07 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/01 18:28:10 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,50 +22,75 @@
 #include <iomanip>
 #include <math.h>
 
-#define ft std
+//#define ft std
+
+//int	main()
+//{
+//	ft::vector<int>	v(5, -7);
+
+//	ft::vector<int>::iterator	it = v.begin();
+
+//	std::cout << it.base() << std::endl;
+//	std::cout << (it += 2).base() << std::endl;
+//	return 0;
+//}
 
 
+template <typename T>
+void	printSize(ft::vector<T> const &vct, bool print_content = true)
+{
+	const size_t size = vct.size();
+	const size_t capacity = vct.capacity();
+	const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
+	// Cannot limit capacity's max value because it's implementation dependent
 
+	std::cout << "size: " << size << std::endl;
+	std::cout << "capacity: " << isCapacityOk << std::endl;
+	std::cout << "max_size: " << vct.max_size() << std::endl;
+	if (print_content)
+	{
+		typename ft::vector<T>::const_iterator it = vct.begin();
+		typename ft::vector<T>::const_iterator ite = vct.end();
+		std::cout << std::endl << "Content is:" << std::endl;
+		for (; it != ite; ++it)
+			std::cout << "- " << *it << std::endl;
+	}
+	std::cout << "###############################################" << std::endl;
+}
 
 
 int		main(void)
 {
 	const int size = 5;
 	ft::vector<int> vct(size);
-	ft::vector<int>::iterator it_ = vct.begin();
-	ft::vector<int>::reverse_iterator it(it_);
-
-	it_ - (it_ + 3);
-	3 + it_;
-	it_ - 3;
-	ft::vector<int>::const_iterator	cit_ = it_ - 2;
-
-	cit_ - it_;
+	ft::vector<int>::reverse_iterator it = vct.rbegin();
+//	ft::vector<int>::const_reverse_iterator ite = vct.rbegin();
 
 	for (int i = 0; i < size; ++i)
-		vct[i] = (i + 1) * 5;
-//	printSize(vct);
+		it[i] = (size - i) * 5;
 
-//	ft::vector<int>::iterator	test = (ft::vector<int>::iterator)(it_ + 3).base();
+	for (size_t i = 0; i < vct.size(); i++)
+	{
+		std::cout << vct[i] << std::endl;
+	}
+	
 
-	std::cout << (it_ == it.base()) << std::endl;
-	std::cout << (it_ == (3 + it).base()) << std::endl;
+	//it = it + 5;
+	//it = 1 + it;
+	//it = it - 4;
+	//std::cout << *(it += 2) << std::endl;
+	//std::cout << *(it -= 1) << std::endl;
 
-	std::cout << *(it_ + 3) << std::endl;
+	//*(it -= 2) = 42;
+	//*(it += 2) = 21;
 
-	//std::cout << *(it.base() + 1) << std::endl;
-	//std::cout << *(it - 3) << std::endl;
-	//std::cout << *(it - 3).base() << std::endl;
-	//it -= 3;
-	//std::cout << *it.base() << std::endl;
+	//std::cout << "const_ite +=/-=: " << *(ite += 2) << " | " << *(ite -= 2) << std::endl;
 
-	//std::cout << "TEST OFFSET" << std::endl;
-	//std::cout << *(it) << std::endl;
-	//std::cout << *(it).base() << std::endl;
-	//std::cout << *(it - 0) << std::endl;
-	//std::cout << *(it - 0).base() << std::endl;
-	//std::cout << *(it - 1).base() << std::endl;
+	//std::cout << "(it == const_it): " << (ite == it) << std::endl;
+	//std::cout << "(const_ite - it): " << (ite - it) << std::endl;
+	//std::cout << "(ite + 3 == it): " << (ite + 3 == it) << std::endl;
 
+	//printSize(vct, true);
 	return (0);
 }
 

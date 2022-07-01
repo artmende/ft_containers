@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 14:37:25 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/29 15:42:48 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/01 18:32:45 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,19 @@ namespace ft
 
 		reference	operator*() const
 		{
-			return (*(this->_it));
+//			return (*(this->_it));///////////
+			return (*(this->_it - 1));
 		}
 
 		reference	operator[](int i) const
 		{
-			return (this->_it[i]);
+		//	return (this->_it[i]);
+			return (*(this->_it - (i + 1)));
 		}
 
 		pointer	operator->() const
 		{
-			return (this->_it.base());
+			return (this->_it.base() - 1);
 		}
 
 		////////////////////////	INCREMENT OPERATORS	////////////////////////
@@ -169,14 +171,15 @@ namespace ft
 	template <typename T>
 	reverse_iterator<T>	operator+(typename ft::reverse_iterator<T>::difference_type n, reverse_iterator<T> const & rit)
 	{
-		return (reverse_iterator<T>(rit.base() + n));
+		return (reverse_iterator<T>(rit.base() - n));
 	}
 
-/*	template <typename T, typename U>
+	template <typename T, typename U>
 	typename reverse_iterator<T>::difference_type	operator-(reverse_iterator<T> const & a, reverse_iterator<U> const & b)
 	{
 		return (b.base() - a.base());
-	}*/
+	}
+	// need to test those arithmetic non member
 
 }
 
