@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 13:52:27 by artmende          #+#    #+#             */
-/*   Updated: 2022/06/16 10:13:01 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/04 08:24:34 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include "vector.hpp"
 
 #include "ClapTrap.hpp"
-#include "Array.hpp"
 #include <list>
 
 #include "enable_if.hpp"

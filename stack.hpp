@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 15:07:29 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/01 18:42:21 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/04 08:24:11 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ namespace ft
 	{
 	public:
 		typedef				T							value_type;
-		typedef /*typename*/	Container					container_type;
-	//	typedef typename	ft::vector<T>				container_type; // delete later
+		typedef				Container					container_type;
 		typedef typename	container_type::size_type	size_type;
 
 	protected:
@@ -81,8 +80,6 @@ namespace ft
 		template <class Type, class Cont>
 		friend bool	operator>=(const stack<Type,Cont>& lhs, const stack<Type,Cont>& rhs);
 	};
-
-
 
 	template <class T, class Container>
 	bool	operator==(const stack<T,Container>& lhs, const stack<T,Container>& rhs)

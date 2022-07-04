@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/01 18:09:57 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/04 09:19:27 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@
 # include "enable_if.hpp"
 # include "is_integral.hpp"
 # include "lexicographical_compare_equal.hpp"
-/*# include <cstddef>*/
-
-
 
 namespace	ft
 {
@@ -46,8 +43,8 @@ namespace	ft
 
 	private:
 		double const	GROWING_FACTOR;
-//		allocator_type	_al;
-		std::allocator<T>	_al; // delete later
+		allocator_type	_al;
+//		std::allocator<T>	_al; // delete later
 		value_type*		_inner_array;
 		size_type		_size;
 		size_type		_capacity;
@@ -158,17 +155,23 @@ namespace	ft
 			return (iterator(this->_inner_array + this->_size));
 		}
 
-		reverse_iterator	rbegin() const
+		reverse_iterator	rbegin()
 		{
-//			return (reverse_iterator(iterator(this->_inner_array + this->_size - 1))); //////////////
-//			return (reverse_iterator(this->end()));
 			return (reverse_iterator(iterator(this->_inner_array + this->_size)));
 		}
 
-		reverse_iterator	rend() const
+		const_reverse_iterator	rbegin() const
 		{
-//			return (reverse_iterator(iterator(this->_inner_array - 1))); ///////////////
-//			return (reverse_iterator(this->begin()));
+			return (reverse_iterator(iterator(this->_inner_array + this->_size)));
+		}
+
+		reverse_iterator	rend()
+		{
+			return (reverse_iterator(iterator(this->_inner_array)));
+		}
+
+		const_reverse_iterator	rend() const
+		{
 			return (reverse_iterator(iterator(this->_inner_array)));
 		}
 

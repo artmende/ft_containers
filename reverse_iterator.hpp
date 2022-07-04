@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 14:37:25 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/01 18:32:45 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/04 08:23:46 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,6 @@ namespace ft
 	{
 		return (b.base() - a.base());
 	}
-	// need to test those arithmetic non member
 
 }
 
