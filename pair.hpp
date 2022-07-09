@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:22:33 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/09 15:37:28 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/09 15:54:45 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 namespace ft
 {
-	template <class T1, class T2> struct pair
+	template <class T1, class T2>
+	struct pair
 	{
 		typedef	T1	first_type;
 		typedef	T2	second_type;

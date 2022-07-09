@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/09 14:50:19 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/09 15:51:14 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@
 # include <memory>
 # include <utility>
 
-# define pair std::pair // delete when ft::pair is done
+# include "pair.hpp"
+# include "red_black_tree.hpp"
+
+
 
 
 namespace ft
