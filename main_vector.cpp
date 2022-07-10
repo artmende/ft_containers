@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 08:37:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/04 11:30:49 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/10 10:36:49 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 #include <list>
 #include <algorithm>
 
-//#define ft std
+// #define ft std
 
 int	main()
 {
-	std::srand(time(NULL));
+//	std::srand(time(NULL));
+	std::srand(19); // use a constant seed to have the same results with ft and std
+
 	{	// CONSTRUCTORS - ASSIGNMENT OPERATOR
 		std::cout << "\nTESTING CONSTRUCTORS AND ASSIGMENT OPERATOR\n";
 
