@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/09 15:45:39 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/10 11:52:50 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@
 #include "ClapTrap.hpp"
 #include "pair.hpp"
 
-#define ft std
+#ifdef USE_STD
+# define ft std
+#endif
 
 int	main()
 {

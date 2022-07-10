@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 08:37:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/10 10:36:49 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/10 10:45:24 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 #include <list>
 #include <algorithm>
 
-// #define ft std
+#ifdef USE_STD
+# define ft std
+#endif
 
 int	main()
 {
