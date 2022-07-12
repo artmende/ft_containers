@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/09 15:51:14 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/12 15:48:02 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,143 @@ namespace ft
 
 	private:
 
-		// some tree
+		red_black_tree<Key, T, Compare, Alloc>	_tree;
 
 	public:
-		// public member functions
+		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
+		explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) // empty (1)
+		{}
+
+		//template <class InputIterator> // range (2)
+		//map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+		//{}
+		
+		map(const map& x) // copy (3)
+		{}
+
+		~map()
+		{}
+
+		map& operator=(const map& x)
+		{
+			return (*this);
+		}
+
+		////////////////////////////// ITERATORS ///////////////////////////////
+
+		//iterator	begin()
+		//{}
+
+		//const_iterator	begin() const
+		//{}
+
+		//iterator	end()
+		//{}
+
+		//const_iterator	end() const
+		//{}
+
+		//reverse_iterator	rbegin()
+		//{}
+
+		//const_reverse_iterator	rbegin() const
+		//{}
+
+		//reverse_iterator	rend()
+		//{}
+
+		//const_reverse_iterator	rend() const
+		//{}
+
+		/////////////////////////////// CAPACITY ///////////////////////////////
+
+		//bool	empty() const
+		//{}
+
+		//size_type	size() const
+		//{}
+
+		//size_type	max_size() const
+		//{}
+
+		///////////////////////////	ELEMENT ACCESS	////////////////////////////
+
+		//mapped_type&	operator[](const key_type& k)
+		//{}
+
+		///////////////////////////	MODIFIERS	////////////////////////////////
+
+		//pair<iterator,bool>	insert(const value_type& val)
+		//{}
+
+		//iterator	insert(iterator position, const value_type& val)
+		//{}
+
+		//template <class InputIterator>
+		//void	insert(InputIterator first, InputIterator last)
+		//{}
+
+		//void	erase(iterator position)
+		//{}
+
+		//size_type	erase(const key_type& k)
+		//{}
+
+		//void	erase(iterator first, iterator last)
+		//{}
+
+		//void	swap(map& x)
+		//{}
+
+		//void	clear()
+		//{}
+
+		///////////////////////////	OBSERVERS	////////////////////////////////
+
+		//key_compare	key_comp() const
+		//{}
+
+		//value_compare	value_comp() const
+		//{}
+
+		///////////////////////////	OPERATIONS	////////////////////////////////
+
+		//iterator	find(const key_type& k)
+		//{}
+
+		//const_iterator	find(const key_type& k) const
+		//{}
+
+		//size_type	count(const key_type& k) const
+		//{}
+
+		//iterator	lower_bound(const key_type& k)
+		//{}
+
+		//const_iterator	lower_bound(const key_type& k) const
+		//{}
+
+		//iterator	upper_bound(const key_type& k)
+		//{}
+
+		//const_iterator	upper_bound(const key_type& k) const
+		//{}
+
+		//pair<const_iterator,const_iterator>	equal_range(const key_type& k) const
+		//{}
+
+		//pair<iterator,iterator>	equal_range(const key_type& k)
+		//{}
+
+		///////////////////////////	ALLOCATOR	////////////////////////////////
+
+		//allocator_type	get_allocator() const
+		//{}
+
 	};
 
 }
+
+// creating a default object, then using assignment to give it the right value
 
 #endif

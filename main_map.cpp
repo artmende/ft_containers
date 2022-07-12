@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/10 11:52:50 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/12 14:30:20 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,20 @@
 #include "ClapTrap.hpp"
 #include "pair.hpp"
 
-#ifdef USE_STD
+#ifndef USE_STD
 # define ft std
 #endif
 
 int	main()
 {
-	ft::pair<char, int>	p = ft::make_pair<char, int>('g', 42);
 
-	ft::pair<char, int>	f(p);
+	ft::map<int, ClapTrap>	g;
 
-	p.first = 'h';
-	
+	ClapTrap	t("bary");
 
-	std::cout << f.first << std::endl;
-	std::cout << f.second << std::endl;
+	g[4] = t;
+
+	std::cout << g[4] << std::endl;
 
 	return 0;
 }
