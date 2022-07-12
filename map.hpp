@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/12 15:48:02 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/12 17:40:52 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include "red_black_tree.hpp"
 
 
-
+// iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
 
 namespace ft
 {
@@ -121,7 +121,7 @@ namespace ft
 
 		///////////////////////////	MODIFIERS	////////////////////////////////
 
-		//pair<iterator,bool>	insert(const value_type& val)
+		//pair<iterator,bool>	insert(const value_type& val) // value_type is a pair (reference to a pair)
 		//{}
 
 		//iterator	insert(iterator position, const value_type& val)
