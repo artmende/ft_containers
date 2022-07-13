@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/13 11:39:42 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/13 11:48:11 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,19 @@ namespace ft
 	{
 	private:
 		red_black_node<Key, T>	*root;
+
+		red_black_tree(red_black_tree const & x);
+		red_black_tree &	operator=(red_black_tree const & x);
 	public:
 		red_black_tree() : root(NULL) {}
 
-		
+		~red_black_tree() {}
+	
+		void	insert(pair<const Key, T> & p); // do i need a function to insert only a key ?
+
+		pair<const Key, T> &	search(Key const & k);
+
+		void	delete_node(Key const & k);
 
 	};
 
