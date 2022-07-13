@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/12 18:16:33 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/12 19:29:13 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/13 10:55:57 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,30 @@ public:
 	Test(Test const &x) : _name(x._name), _some_nbr(this->gen_nbr()) { std::cout << "copy constructor " << this->_name << std::endl; }
 	~Test() {}
 
-	Test &operator=(Test const &x)
+	Test &	operator=(Test const &x)
 	{
 		this->_name = x._name;
 		std::cout << "assignment operator " << this->_name << std::endl;
 		return (*this);
 	}
 
-	bool operator<(Test const &x) const
+	bool	operator<(Test const &x) const
 	{
 		return (this->_name < x._name);
 	}
 
-	std::string get_name() const { return this->_name; }
+	std::string const &	get_name() const
+	{
+		return (this->_name);
+	}
 
 	int	gen_nbr() const {return 6;} // very random
 };
 
 int main()
 {
+
+	
 	std::map<Test, Test> m;
 
 	Test k("Key");
