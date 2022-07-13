@@ -6,12 +6,13 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/12 18:16:33 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/13 10:55:57 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/13 15:08:26 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClapTrap.hpp"
 #include <map>
+#include <memory>
 
 class Test
 {
@@ -48,16 +49,26 @@ public:
 int main()
 {
 
-	
+	std::allocator<Test>	al;
+
 	std::map<Test, Test> m;
 
-	Test k("Key");
-	Test v("Value");
+	Test	*k = al.allocate(sizeof(Test));
+	Test	*v = al.allocate(sizeof(Test));
+
+	al.construct(k, "Key");
+	al.construct(v, "Value");
+
+	//Test k("Key");
+	//Test v("Value");
 
 	std::cout << "\n\n";
 
-	m[k] = v;
-	m[v] = k;
+	m[*k] = *v;
+	m[*v] = *k;
+
+	//m[k] = v;
+	//m[v] = k;
 
 	std::cout << "\n\n";
 
@@ -65,7 +76,7 @@ int main()
 	{
 		std::cout << (*it).first.get_name() << std::endl;
 	}
-	
+
 
 	return 0;
 }
