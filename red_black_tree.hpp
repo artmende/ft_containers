@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/13 15:20:06 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/14 16:01:32 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "pair.hpp"
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
+// https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
 
 namespace ft
 {
@@ -80,14 +81,16 @@ namespace ft
 
 
 
-	//template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > > // probably no need to put = because the type is given by map
-	template <class Key, class T, class Compare, class Alloc>
+	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > > // probably no need to put = because the type is given by map
+//	template <class Key, class T, class Compare, class Alloc>
 	class red_black_tree
 	{
+	public:
+	red_black_node<Key, T>	*_root;
 	private:
-		red_black_node<Key, T>	*_root;
+		
 	//	Alloc	_al;
-		std::allocator<red_black_node>	_al;
+		std::allocator<red_black_node<Key, T> >	_al;
 
 		red_black_tree(red_black_tree const & x);
 		red_black_tree &	operator=(red_black_tree const & x);
@@ -102,7 +105,7 @@ namespace ft
 			{
 				this->_root = this->_al.allocate(sizeof(red_black_node<Key, T>));
 				this->_al.construct(this->_root, p); // no need to set the parent ptr in the new node, because its the root. it remains NULL
-				return ;
+				return this->_root->p;
 			}
 
 			red_black_node<Key, T>	*browse = this->_root;
@@ -130,12 +133,14 @@ namespace ft
 				parent->left = this->_al.allocate(sizeof(red_black_node<Key, T>));
 				this->_al.construct(parent->left, p);
 				parent->left->parent = parent;
+				return parent->left->p;
 			}
 			else
 			{
 				parent->right = this->_al.allocate(sizeof(red_black_node<Key, T>));
 				this->_al.construct(parent->right, p);
 				parent->right->parent = parent;
+				return parent->right->p;
 			}
 		}
 
