@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/14 16:01:32 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/15 16:35:58 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ namespace ft
 			return (*this);
 		}
 
-		pair<const Key, T>		p;
+		pair<const Key, T>		p; // p is a real object that is part of the node. Deleting the node will delete p, no need to worry about something else
 		red_black_node<Key, T>	*left;
 		red_black_node<Key, T>	*right;
 		red_black_node<Key, T>	*parent;
@@ -166,7 +166,64 @@ namespace ft
 			return NULL;
 		}
 
-		void	delete_node(Key const & k);
+		void	delete_node(Key const & k)
+		{
+			// 3 cases : 
+			// if delete leaf node, just delete it and put parent ptr to NULL
+			// if delete node with only 1 child, connect the child to the parent and delete
+			// if delete node with 2 children, take the smallest in the right subtree and make it replace the node to delete
+
+
+			red_black_node<Key, T>	*browse = this->_root;
+
+			while (browse)
+			{
+				if (k < browse->p.first)
+				{
+					browse = browse->left;
+					continue;
+				}
+				else if (browse->p.first < k)
+				{
+					browse = browse->right;
+					continue;
+				}
+				else
+				{
+					if (browse->left == NULL && browse->right == NULL) // what if we delete the last node
+					{
+						if (browse->parent == NULL)
+						{
+							this->_root = NULL;
+							this->_al.destroy(browse);
+							this->_al.deallocate(browse, sizeof(red_black_node<Key, T>));
+							return ;
+						}
+						if (browse->parent->left == browse)
+						{
+							browse->parent->left = NULL;
+							this->_al.destroy(browse);
+							this->_al.deallocate(browse, sizeof(red_black_node<Key, T>));
+							return ;
+						}
+						if (browse->parent->right == browse)
+						{
+							browse->parent->right = NULL;
+							this->_al.destroy(browse);
+							this->_al.deallocate(browse, sizeof(red_black_node<Key, T>));
+							return ;
+						}
+					}
+					if (browse->left == NULL && browse->right)
+					{
+						
+					}
+				}
+			}
+			// k is not in the tree. Nothing to do.
+
+
+		}
 
 	};
 
