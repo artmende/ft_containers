@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/12 17:40:52 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/18 23:03:07 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ namespace ft
 
 	private:
 
-		red_black_tree<Key, T, Compare, Alloc>	_tree;
+		red_black_tree<Key, T, Compare, Alloc>	_tree; // tree must take only one param
 
 	public:
 		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////

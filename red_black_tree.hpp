@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/18 16:08:49 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/18 23:34:53 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
 // https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
+
+
 
 namespace ft
 {

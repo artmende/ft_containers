@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 15:54:25 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/18 16:07:31 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/18 23:16:13 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 template <typename Key, typename T>
 void printBT(const std::string& prefix, const ft::red_black_node<Key, T>* node, bool isLeft)
 {
-    if( node != nullptr )
+    if( node != NULL )
     {
         std::cout << prefix;
 
