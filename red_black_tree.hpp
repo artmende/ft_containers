@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/15 17:46:46 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/18 16:08:49 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,8 @@ namespace ft
 					if ((browse->left == NULL && browse->right) || (browse->left && browse->right == NULL)) // deleting node with only one child
 					{
 						red_black_node<Key, T>	*subtree = (browse->left ? browse->left : browse->right);
+
+						subtree->parent = browse->parent;
 						if (browse->parent == NULL)
 						{
 							this->_root = subtree;
