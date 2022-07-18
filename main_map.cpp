@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/12 16:31:59 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/18 22:10:32 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,37 +17,32 @@
 #include "ClapTrap.hpp"
 #include "pair.hpp"
 
-#ifndef USE_STD
+
+#ifdef USE_STD
 # define ft std
 #endif
 
 int	main()
 {
+	ft::pair<int, char>	p1;
 
-	// 8 -7 12 5 0 1 13 20 2 7
+	ft::pair<int, char>	p2 = ft::pair<int, char>(6, 'j');
 
-	// in the order : 
-	// -7 0 1 2 5 7 8 12 13 20 
+	p1.first = 4;
+	p1.second = 'b';
 
-	ft::map<int, int>	g;
+	p2.first = 4;
+	p2.second = 'a';
 
+(void)p2;
 
-	g[5] = 5;
-	g[3] = 3;
+	std::cout << ft::make_pair(9, 'h').first << std::endl;
 
-	g[2] = 2;
-	g[1] = 1;
+	std::cout << "(p1 < p2) ? " << (p1 < ft::pair<int, char>(7, 'h')) << std::endl;
 
+	std::cout << "(p1 > p2) ? " << (p1 > p2) << std::endl;
 
-	g[6] = 6;
-	g[4] = 4;
-// 0 2 12 5 8 7 1 20 -7 13
-
-	for (ft::map<int, int>::iterator it = g.begin(); it != g.end(); ++it)
-	{
-		std::cout << (*it).first << std::endl;
-	}
-	
+	std::cout << "a < b ? " << ('a' < 'b') << std::endl; 
 
 	return 0;
 }
