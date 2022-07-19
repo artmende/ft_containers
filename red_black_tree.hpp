@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/18 23:34:53 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/19 11:30:38 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 namespace ft
 {
-	template <typename Key, typename T>
+	template <typename T>
 	class red_black_node
 	{
 	private:
@@ -39,26 +39,29 @@ namespace ft
 
 	public:
 
-		red_black_node(Key const & k)
-		: p(pair<const Key, T>(k, T())), left(NULL), right(NULL), parent(NULL), color(false)
+		//red_black_node(Key const & k)
+		//: p(pair<const Key, T>(k, T())), left(NULL), right(NULL), parent(NULL), color(false)
+		//{}
+
+		//red_black_node(Key const & k, T & value)
+		//: p(pair<const Key, T>(k, T())), left(NULL), right(NULL), parent(NULL), color(false)
+		//{
+		//	this->p.second = value;
+		//}
+
+		//red_black_node(pair<const Key, T> & p_param)
+		//: /*p(this->init_pair(p)),*/ p(pair<const Key, T>(p_param.first, T())), left(NULL), right(NULL), parent(NULL), color(false)
+		//{
+		//	this->p.second = p_param.second;
+		//	// node constructor receives a reference to an existing pair. The node doesn't care if that pair is allocated or not.
+		//	// it just initialize the exisiting pair inside the node, to the same value as the reference received
+		//}
+
+		red_black_node(T const & value) : v(value), left(NULL), right(NULL), parent(NULL), color(false)
 		{}
 
-		red_black_node(Key const & k, T & value)
-		: p(pair<const Key, T>(k, T())), left(NULL), right(NULL), parent(NULL), color(false)
-		{
-			this->p.second = value;
-		}
-
-		red_black_node(pair<const Key, T> & p_param)
-		: /*p(this->init_pair(p)),*/ p(pair<const Key, T>(p_param.first, T())), left(NULL), right(NULL), parent(NULL), color(false)
-		{
-			this->p.second = p_param.second;
-			// node constructor receives a reference to an existing pair. The node doesn't care if that pair is allocated or not.
-			// it just initialize the exisiting pair inside the node, to the same value as the reference received
-		}
-
 		red_black_node(red_black_node const & x) // template? different template type ?
-		: p(x.p), left(NULL), right(NULL), parent(NULL), color(x.color)
+		: v(x.v), left(NULL), right(NULL), parent(NULL), color(x.color)
 		{}
 
 		~red_black_node() {}
@@ -72,27 +75,28 @@ namespace ft
 			return (*this);
 		}
 
-		pair<const Key, T>		p; // p is a real object that is part of the node. Deleting the node will delete p, no need to worry about something else
-		red_black_node<Key, T>	*left;
-		red_black_node<Key, T>	*right;
-		red_black_node<Key, T>	*parent;
-		bool					color; // true is black, false is red
+		T					v; // v is a real object that is part of the node. Deleting the node will delete p, no need to worry about something else
+		red_black_node<T>	*left;
+		red_black_node<T>	*right;
+		red_black_node<T>	*parent;
+		bool				color; // true is black, false is red
 	};
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
 
-	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > > // probably no need to put = because the type is given by map
+//	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > > // probably no need to put = because the type is given by map
 //	template <class Key, class T, class Compare, class Alloc>
+	template <typename T, typename Compare = std::less<T>, typename Alloc = std::allocator<red_black_node<T> > >
 	class red_black_tree
 	{
 	public:
-	red_black_node<Key, T>	*_root;
+	red_black_node<T>	*_root;
 	private:
 		
 	//	Alloc	_al;
-		std::allocator<red_black_node<Key, T> >	_al;
+		std::allocator<T>	_al;
 
 		red_black_tree(red_black_tree const & x);
 		red_black_tree &	operator=(red_black_tree const & x);
@@ -101,41 +105,41 @@ namespace ft
 
 		~red_black_tree() {}
 	
-		pair<const Key, T> &	insert(pair<const Key, T> & p) // do i need a function to insert only a key ?
+		red_black_node<T>	*insert(T & v) // returns a pointer to the newly added node
 		{
 			if (this->_root == NULL)
 			{
-				this->_root = this->_al.allocate(sizeof(red_black_node<Key, T>));
-				this->_al.construct(this->_root, p); // no need to set the parent ptr in the new node, because its the root. it remains NULL
-				return this->_root->p;
+				this->_root = this->_al.allocate(1);
+				this->_al.construct(this->_root, v); // no need to set the parent ptr in the new node, because its the root. it remains NULL
+				return this->_root;
 			}
 
-			red_black_node<Key, T>	*browse = this->_root;
-			red_black_node<Key, T>	*parent;
+			red_black_node<T>	*browse = this->_root;
+			red_black_node<T>	*parent;
 
 			while (browse)
 			{
 				parent = browse; // keeping the parent node
-				if (p.first < browse->p.first)
+				if (v < browse->v)
 				{
 					browse = browse->left;
 					continue;
 				}
-				else if (browse->p.first < p.first)
+				else if (browse->v < v)
 				{
 					browse = browse->right;
 					continue;
 				}
 				else
-					return (browse->p);
+					return (browse); // this means what we want to insert already exist in the tree. We just return the already existing node
 			}
 			// here browse is a NULL pointer. It means its parent is the node that we have to insert under
-			if (p.first < parent->p.first)
+			if (v < parent->v)
 			{
-				parent->left = this->_al.allocate(sizeof(red_black_node<Key, T>));
-				this->_al.construct(parent->left, p);
+				parent->left = this->_al.allocate(1);
+				this->_al.construct(parent->left, v);
 				parent->left->parent = parent;
-				return parent->left->p;
+				return parent->left;
 			}
 			else
 			{
