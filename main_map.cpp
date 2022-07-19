@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/18 22:10:32 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/19 14:40:26 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@
 #include "pair.hpp"
 
 
-#ifdef USE_STD
+#ifndef USE_STD
 # define ft std
 #endif
 
 int	main()
 {
+
+	ft::map<int, int> mm;
 	ft::pair<int, char>	p1;
 
 	ft::pair<int, char>	p2 = ft::pair<int, char>(6, 'j');

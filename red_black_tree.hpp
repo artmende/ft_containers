@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/19 11:30:38 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/19 16:11:04 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ namespace ft
 	private:
 		
 	//	Alloc	_al;
-		std::allocator<T>	_al;
+		std::allocator<red_black_node<T> >	_al;
 
 		red_black_tree(red_black_tree const & x);
 		red_black_tree &	operator=(red_black_tree const & x);
@@ -105,7 +105,7 @@ namespace ft
 
 		~red_black_tree() {}
 	
-		red_black_node<T>	*insert(T & v) // returns a pointer to the newly added node
+		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
 		{
 			if (this->_root == NULL)
 			{
@@ -143,36 +143,36 @@ namespace ft
 			}
 			else
 			{
-				parent->right = this->_al.allocate(sizeof(red_black_node<Key, T>));
-				this->_al.construct(parent->right, p);
+				parent->right = this->_al.allocate(1);
+				this->_al.construct(parent->right, v);
 				parent->right->parent = parent;
-				return parent->right->p;
+				return parent->right;
 			}
 		}
 
-		pair<const Key, T>	*find(Key const & k)
+		red_black_node<T>	*find(T const & v) // not const because returned ptr can be used to edit the node
 		{
-			red_black_node<Key, T>	*browse = this->_root;
+			red_black_node<T>	*browse = this->_root;
 
 			while (browse)
 			{
-				if (k < browse->p.first)
+				if (v < browse->v)
 				{
 					browse = browse->left;
 					continue;
 				}
-				else if (browse->p.first < k)
+				else if (browse->v < v)
 				{
 					browse = browse->right;
 					continue;
 				}
-				else
-					return (&(browse->p));
+				else // means we found it
+					return (browse);
 			}
-			return NULL;
+			return NULL; // means we didnt find it
 		}
 
-		void	delete_node(Key const & k)
+		void	delete_node(T const & v)
 		{
 			// 3 cases : 
 			// if delete leaf node, just delete it and put parent ptr to NULL
@@ -180,78 +180,106 @@ namespace ft
 			// if delete node with 2 children, take the smallest in the right subtree and make it replace the node to delete
 
 
-			red_black_node<Key, T>	*browse = this->_root;
+			red_black_node<T>	*to_delete = this->find(v);
 
-			while (browse)
+			if (to_delete == NULL) // if the node was not in the tree, nothing to do
+				return;
+
+			if (to_delete->left == NULL && to_delete->right == NULL) // deleting leaf node
 			{
-				if (k < browse->p.first)
+				if (to_delete->parent == NULL) // deleting root node
 				{
-					browse = browse->left;
-					continue;
+					this->_root = NULL;
+					this->_al.destroy(to_delete);
+					this->_al.deallocate(to_delete, 1);
+					return;
 				}
-				else if (browse->p.first < k)
+				if (to_delete->parent->left == to_delete)
 				{
-					browse = browse->right;
-					continue;
+					to_delete->parent->left = NULL;
+					this->_al.destroy(to_delete);
+					this->_al.deallocate(to_delete, 1);
+					return;
 				}
-				else
+				if (to_delete->parent->right == to_delete)
 				{
-					if (browse->left == NULL && browse->right == NULL) // deleting leaf node
-					{
-						if (browse->parent == NULL)
-						{
-							this->_root = NULL;
-							this->_al.destroy(browse);
-							this->_al.deallocate(browse, sizeof(red_black_node<Key, T>));
-							return ;
-						}
-						if (browse->parent->left == browse)
-						{
-							browse->parent->left = NULL;
-							this->_al.destroy(browse);
-							this->_al.deallocate(browse, sizeof(red_black_node<Key, T>));
-							return ;
-						}
-						if (browse->parent->right == browse)
-						{
-							browse->parent->right = NULL;
-							this->_al.destroy(browse);
-							this->_al.deallocate(browse, sizeof(red_black_node<Key, T>));
-							return ;
-						}
-					}
-					if ((browse->left == NULL && browse->right) || (browse->left && browse->right == NULL)) // deleting node with only one child
-					{
-						red_black_node<Key, T>	*subtree = (browse->left ? browse->left : browse->right);
-
-						subtree->parent = browse->parent;
-						if (browse->parent == NULL)
-						{
-							this->_root = subtree;
-							this->_al.destroy(browse);
-							this->_al.deallocate(browse, sizeof(red_black_node<Key, T>));
-							return ;
-						}
-						if (browse->parent->left == browse)
-						{
-							browse->parent->left = subtree;
-							this->_al.destroy(browse);
-							this->_al.deallocate(browse, sizeof(red_black_node<Key, T>));
-							return ;
-						}
-						if (browse->parent->right == browse)
-						{
-							browse->parent->right = subtree;
-							this->_al.destroy(browse);
-							this->_al.deallocate(browse, sizeof(red_black_node<Key, T>));
-							return ;
-						}
-					}
+					to_delete->parent->right = NULL;
+					this->_al.destroy(to_delete);
+					this->_al.deallocate(to_delete, 1);
+					return;
 				}
 			}
-			// k is not in the tree. Nothing to do.
+			else if ((to_delete->left == NULL && to_delete->right) || (to_delete->left && to_delete->right == NULL)) // deleting node with only one child
+			{
+				red_black_node<T>	*subtree = (to_delete->left ? to_delete->left : to_delete->right);
 
+				subtree->parent = to_delete->parent;
+				if (to_delete->parent == NULL)
+				{
+					this->_root = subtree;
+					this->_al.destroy(to_delete);
+					this->_al.deallocate(to_delete, 1);
+					return;
+				}
+				if (to_delete->parent->left == to_delete)
+				{
+					to_delete->parent->left = subtree;
+					this->_al.destroy(to_delete);
+					this->_al.deallocate(to_delete, 1);
+					return;
+				}
+				if (to_delete->parent->right == to_delete)
+				{
+					to_delete->parent->right = subtree;
+					this->_al.destroy(to_delete);
+					this->_al.deallocate(to_delete, 1);
+					return;
+				}
+			}
+			else // deleting node with 2 children
+			{
+				red_black_node<T>	*smallest_in_right_subtree = to_delete->right;
 
+				while (smallest_in_right_subtree->left)
+					smallest_in_right_subtree = smallest_in_right_subtree->left; // finding smallest in right sub
+			
+				if (smallest_in_right_subtree->right)
+					smallest_in_right_subtree->right->parent = smallest_in_right_subtree->parent; // connecting his child to the parent
+
+				if (smallest_in_right_subtree->parent->left == smallest_in_right_subtree)
+					smallest_in_right_subtree->parent->left = smallest_in_right_subtree->right;
+				else
+					smallest_in_right_subtree->parent->right = smallest_in_right_subtree->right; // connecting new parent to child
+
+				smallest_in_right_subtree->parent = to_delete->parent;
+				smallest_in_right_subtree->left = to_delete->left;
+				smallest_in_right_subtree->right = to_delete->right;
+
+				if (to_delete->parent)
+				{
+					if (to_delete->parent->left == to_delete)
+						to_delete->parent->left = smallest_in_right_subtree;
+					else
+						to_delete->parent->right = smallest_in_right_subtree;
+				}
+				else
+					this->_root = smallest_in_right_subtree;
+
+				if (to_delete->left)
+					to_delete->left->parent = smallest_in_right_subtree;
+				if (to_delete->right)
+					to_delete->right->parent = smallest_in_right_subtree;
+
+				this->_al.destroy(to_delete);
+				this->_al.deallocate(to_delete, 1);
+				return;
+
+				// smallest in right subtree can only have 1 child max, and it has to be right child (because left would be smaller)
+				// right child has to become child of parent of smallest (can be NULL but doesnt matter)
+				// parent and children of to_delete has to become parent and children of smallest
+
+				
+			}
 		}
 
 	};
