@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 15:54:25 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/19 16:12:51 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/20 16:10:25 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,14 @@ int	main()
 
 	rbt.find(44)->v = 45;
 
-	rbt.delete_node(173);
-	rbt.delete_node(198);
-	rbt.delete_node(106);
-	rbt.delete_node(51);
-	rbt.delete_node(181);
-	rbt.delete_node(180);
-	rbt.delete_node(133);
-	rbt.delete_node(37);
+	rbt.remove(173);
+	rbt.remove(198);
+	rbt.remove(106);
+	rbt.remove(51);
+	rbt.remove(181);
+	rbt.remove(180);
+	rbt.remove(133);
+	rbt.remove(37);
 
 
 //std::cout << rbt._root->right->p.first << std::endl;

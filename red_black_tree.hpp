@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/19 16:11:04 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/20 16:20:42 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,29 @@ namespace ft
 	public:
 		red_black_tree() : _root(NULL) {}
 
-		~red_black_tree() {}
-	
+		~red_black_tree()
+		{
+			// destroy and deallocate all nodes
+			red_black_node<T>	*browse = this->_root;
+
+			while (browse->left)
+				browse = browse->left; // browse points now to the node with the smallest value
+
+			while (this->_root)
+			{
+				red_black_node<T>	*successor = this->find_successor(browse);
+				this->remove(browse);
+				browse = successor;
+				// remove browse (keep copy ?)
+				// get successor
+			}
+		}
+
+		red_black_node<T>	*find_successor(red_black_node<T> *node)
+		{
+			
+		}
+
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
 		{
 			if (this->_root == NULL)
@@ -172,15 +193,18 @@ namespace ft
 			return NULL; // means we didnt find it
 		}
 
-		void	delete_node(T const & v)
+		void	remove(T const & v)
 		{
-			// 3 cases : 
+			this->remove(this->find(v));
+		}
+
+		void	remove(red_black_node<T> *to_delete)
+		{
+
+						// 3 cases : 
 			// if delete leaf node, just delete it and put parent ptr to NULL
 			// if delete node with only 1 child, connect the child to the parent and delete
 			// if delete node with 2 children, take the smallest in the right subtree and make it replace the node to delete
-
-
-			red_black_node<T>	*to_delete = this->find(v);
 
 			if (to_delete == NULL) // if the node was not in the tree, nothing to do
 				return;
@@ -281,6 +305,9 @@ namespace ft
 				
 			}
 		}
+
+
+
 
 	};
 
