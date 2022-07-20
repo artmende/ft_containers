@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 15:54:25 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/20 16:10:25 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/20 18:55:11 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,25 +81,39 @@ int	main()
 
 	printBT(rbt._root);
 
-	std::cout << "\ndeleting 173, 198, 106, 51, 181, 180\n" << std::endl;
 
-	std::cout << rbt.find(44)->v << "\n\n";
 
-	rbt.find(44)->v = 45;
+	ft::red_black_node<int>	*browse = rbt._root;
+	while (browse->left)
+		browse = browse->left;
 
-	rbt.remove(173);
-	rbt.remove(198);
-	rbt.remove(106);
-	rbt.remove(51);
-	rbt.remove(181);
-	rbt.remove(180);
-	rbt.remove(133);
-	rbt.remove(37);
+	while (browse)
+	{
+		std::cout << browse->v << std::endl;
+		browse = rbt.find_successor(browse);
+	}
+
+
+
+	//std::cout << "\ndeleting 173, 198, 106, 51, 181, 180\n" << std::endl;
+
+	//std::cout << rbt.find(44)->v << "\n\n";
+
+	//rbt.find(44)->v = 45;
+
+	//rbt.remove(173);
+	//rbt.remove(198);
+	//rbt.remove(106);
+	//rbt.remove(51);
+	//rbt.remove(181);
+	//rbt.remove(180);
+	//rbt.remove(133);
+	//rbt.remove(37);
 
 
 //std::cout << rbt._root->right->p.first << std::endl;
 
-	printBT(rbt._root);
+//	printBT(rbt._root);
 
 //	std::cout << rbt.find(181)->first << std::endl;
 

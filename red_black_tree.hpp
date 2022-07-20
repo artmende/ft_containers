@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/20 16:20:42 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/20 18:57:27 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,24 +106,60 @@ namespace ft
 		~red_black_tree()
 		{
 			// destroy and deallocate all nodes
-			red_black_node<T>	*browse = this->_root;
+			//red_black_node<T>	*browse = this->_root;
 
-			while (browse->left)
-				browse = browse->left; // browse points now to the node with the smallest value
+			//while (browse->left)
+			//	browse = browse->left; // browse points now to the node with the smallest value
+
+			//while (this->_root)
+			//{
+			//	red_black_node<T>	*successor = this->find_successor(browse);
+			//	this->remove(browse);
+			//	browse = successor;
+			//}
 
 			while (this->_root)
-			{
-				red_black_node<T>	*successor = this->find_successor(browse);
-				this->remove(browse);
-				browse = successor;
-				// remove browse (keep copy ?)
-				// get successor
-			}
+				this->remove(this->_root);
+
 		}
 
 		red_black_node<T>	*find_successor(red_black_node<T> *node)
 		{
-			
+/*
+			Next rule: The successor of a node is:
+Next-R rule: If it has a right subtree, the leftmost node in the right subtree.
+Next-U rule: Otherwise, traverse up the tree
+If you make a right turn (i.e. this node was a left child), then that parent node is the successor
+If you make a left turn (i.e. this node was a right child), continue going up.
+If you can't go up anymore, then there's no successor
+*/
+
+			if (node == NULL)
+				return (NULL);
+			if (node->right)
+			{
+				red_black_node<T>	*ret = node->right;
+				while (ret->left)
+					ret = ret->left;
+				return (ret);
+			}
+			else // no right subtree
+			{
+				red_black_node<T>	*ret = node->parent;
+				while (ret)
+				{
+					if (ret->right == node) // we did a left turn
+					{
+						node = ret;
+						ret = ret->parent;
+					}
+					else // we did a right turn
+					{
+						return (ret);
+					}
+				}
+				return (NULL);
+			}
 		}
 
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
