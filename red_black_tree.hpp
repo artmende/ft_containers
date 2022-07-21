@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/20 18:57:27 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/21 15:07:24 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <iostream>
 # include <memory>
-# include "pair.hpp"
+
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
 // https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
@@ -91,12 +91,13 @@ namespace ft
 	template <typename T, typename Compare = std::less<T>, typename Alloc = std::allocator<red_black_node<T> > >
 	class red_black_tree
 	{
+		typedef typename Alloc::template rebind<red_black_node<T> >::other	allocator_type;
 	public:
-	red_black_node<T>	*_root;
+		red_black_node<T>	*_root;
 	private:
 		
-	//	Alloc	_al;
-		std::allocator<red_black_node<T> >	_al;
+		allocator_type	_al;
+	//	std::allocator<red_black_node<T> >	_al;
 
 		red_black_tree(red_black_tree const & x);
 		red_black_tree &	operator=(red_black_tree const & x);
@@ -105,22 +106,8 @@ namespace ft
 
 		~red_black_tree()
 		{
-			// destroy and deallocate all nodes
-			//red_black_node<T>	*browse = this->_root;
-
-			//while (browse->left)
-			//	browse = browse->left; // browse points now to the node with the smallest value
-
-			//while (this->_root)
-			//{
-			//	red_black_node<T>	*successor = this->find_successor(browse);
-			//	this->remove(browse);
-			//	browse = successor;
-			//}
-
 			while (this->_root)
 				this->remove(this->_root);
-
 		}
 
 		red_black_node<T>	*find_successor(red_black_node<T> *node)
@@ -154,6 +141,36 @@ If you can't go up anymore, then there's no successor
 						ret = ret->parent;
 					}
 					else // we did a right turn
+					{
+						return (ret);
+					}
+				}
+				return (NULL);
+			}
+		}
+
+		red_black_node<T>	*find_predecessor(red_black_node<T> *node)
+		{
+			if (node == NULL)
+				return (NULL);
+			if (node->left)
+			{
+				red_black_node<T>	*ret = node->left;
+				while (ret->right)
+					ret = ret->right;
+				return (ret);
+			}
+			else
+			{
+				red_black_node<T>	*ret = node->parent;
+				while (ret)
+				{
+					if (ret->left == node)
+					{
+						node = ret;
+						ret = ret->parent;
+					}
+					else
 					{
 						return (ret);
 					}

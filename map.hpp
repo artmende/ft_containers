@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/18 23:03:07 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/21 15:26:11 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ namespace ft
 	public:
 		typedef				Key									key_type;
 		typedef				T									mapped_type;
-		typedef				pair<const key_type,mapped_type>	value_type;
+		typedef				pair<const key_type, mapped_type>	value_type;
 		typedef				Compare								key_compare;
 	//	typedef				/* something */						value_compare;
 		typedef				Alloc								allocator_type;
@@ -55,11 +55,14 @@ namespace ft
 
 	private:
 
-		red_black_tree<Key, T, Compare, Alloc>	_tree; // tree must take only one param
+		red_black_tree<value_type, Compare, Alloc>			_tree;
+		key_compare											_comp;
+		allocator_type										_alloc;
 
 	public:
 		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
 		explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) // empty (1)
+		: _comp(comp), _alloc(alloc)
 		{}
 
 		//template <class InputIterator> // range (2)
@@ -67,13 +70,16 @@ namespace ft
 		//{}
 		
 		map(const map& x) // copy (3)
-		{}
+		{
+			(void)x;
+		}
 
 		~map()
 		{}
 
 		map& operator=(const map& x)
 		{
+			(void)x;
 			return (*this);
 		}
 

@@ -6,13 +6,15 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 15:54:25 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/20 18:55:11 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/21 15:08:07 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include "red_black_tree.hpp"
 #include "stack.hpp"
+#include <algorithm>
+#include "pair.hpp"
 
 
 
@@ -61,10 +63,10 @@ int	main()
 
 
 
-	ft::red_black_tree<int>	rbt;
+	ft::red_black_tree<int, std::less<int>, std::allocator<ft::pair<const int, int> > >	rbt;
 
 
-
+//	ft::red_black_tree<int>	rbt;
 
 
 
@@ -93,6 +95,17 @@ int	main()
 		browse = rbt.find_successor(browse);
 	}
 
+	std::cout << "--------------------------------------\n";
+
+	browse = rbt._root;
+	while (browse->right)
+		browse = browse->right;
+
+	while (browse)
+	{
+		std::cout << browse->v << std::endl;
+		browse = rbt.find_predecessor(browse);
+	}
 
 
 	//std::cout << "\ndeleting 173, 198, 106, 51, 181, 180\n" << std::endl;
