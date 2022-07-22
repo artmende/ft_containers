@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/21 15:07:24 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/22 15:38:51 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include <memory>
+# include <functional>
 
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
@@ -97,6 +98,7 @@ namespace ft
 	private:
 		
 		allocator_type	_al;
+		Compare			_c;
 	//	std::allocator<red_black_node<T> >	_al;
 
 		red_black_tree(red_black_tree const & x);
@@ -194,12 +196,14 @@ If you can't go up anymore, then there's no successor
 			while (browse)
 			{
 				parent = browse; // keeping the parent node
-				if (v < browse->v)
+//				if (v < browse->v)
+				if (this->_c(v, browse->v)) //////////////////////////
 				{
 					browse = browse->left;
 					continue;
 				}
-				else if (browse->v < v)
+//				else if (browse->v < v)
+				else if (this->_c(browse->v, v))
 				{
 					browse = browse->right;
 					continue;
@@ -208,7 +212,8 @@ If you can't go up anymore, then there's no successor
 					return (browse); // this means what we want to insert already exist in the tree. We just return the already existing node
 			}
 			// here browse is a NULL pointer. It means its parent is the node that we have to insert under
-			if (v < parent->v)
+//			if (v < parent->v)
+			if (this->_c(v, parent->v))
 			{
 				parent->left = this->_al.allocate(1);
 				this->_al.construct(parent->left, v);
@@ -230,12 +235,14 @@ If you can't go up anymore, then there's no successor
 
 			while (browse)
 			{
-				if (v < browse->v)
+//				if (v < browse->v)
+				if (this->_c(v, browse->v))
 				{
 					browse = browse->left;
 					continue;
 				}
-				else if (browse->v < v)
+//				else if (browse->v < v)
+				else if (this->_c(browse->v, v))
 				{
 					browse = browse->right;
 					continue;

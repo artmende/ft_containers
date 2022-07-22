@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/21 15:31:41 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/22 15:23:01 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ int	main()
 (void)p2;
 
 
-	std::cout << "(p1 > p2) ? " << (p1 > p2) << std::endl;
+
+//	std::cout << "(p1 > p2) ? " << (p1 > p2) << std::endl;
 
 	std::cout << "a < b ? " << ('a' < 'b') << std::endl; 
 
