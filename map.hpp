@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/21 15:26:11 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/24 13:40:04 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,6 @@ namespace ft
 
 	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > >
 	class map
-	// Key :  map::key_type
-	// T : map::mapped_type
-	// Compare : map::key_compare
-	// Alloc : map::allocator_type
 	{
 	public:
 		typedef				Key									key_type;
@@ -59,10 +55,25 @@ namespace ft
 		key_compare											_comp;
 		allocator_type										_alloc;
 
-	public:
-		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
-		explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) // empty (1)
-		: _comp(comp), _alloc(alloc)
+
+
+		class value_compare : public std::binary_function<value_type, value_type, bool> // it compares the pairs by looking only at the key
+		{
+			friend class map;
+			protected:
+				Compare	comp;
+			public:
+				value_compare(Compare c) : comp(c) {}
+				bool	operator() (const value_type& x, const value_type& y) const // value_type is the pair
+				{
+					return (comp(x.first, y.first));
+				}
+		};
+
+		public :
+			////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
+			explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) // empty (1)
+			: _comp(comp), _alloc(alloc)
 		{}
 
 		//template <class InputIterator> // range (2)

@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/22 15:23:01 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/24 13:37:20 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "map.hpp"
 
 
-#ifdef USE_STD
+#ifndef USE_STD
 # define ft std
 #endif
 

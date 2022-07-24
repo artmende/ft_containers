@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 08:37:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/10 10:45:24 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/24 12:43:01 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	main()
 		ft::vector<int>::const_reverse_iterator	crit(it1); // const reverse iterator can be constructed from const or non const iterator
 		std::cout << "Displaying last element one more time : " << *crit << std::endl;
 
-	//	ft::vector<int>::reverse_iterator	critnon(it2); // non const reverse iterator cannot be constructed from non const iterator (This line does not compile)
+	//	ft::vector<int>::reverse_iterator	critnon(it2); // non const reverse iterator cannot be constructed from const iterator (This line does not compile)
 	//	*crit = 7; // cannot assign with a const iterator (This line does not compile)
 		std::sort(v.begin(), v.end());
 		std::cout << "\nDisplaying elements after applying standard algorithm 'std::sort' :\n";
