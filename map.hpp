@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/24 13:40:04 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/25 12:12:33 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,37 @@ namespace ft
 
 	private:
 
-		red_black_tree<value_type, Compare, Alloc>			_tree;
+//		red_black_tree<value_type, Compare, Alloc>			_tree;
+
 		key_compare											_comp;
 		allocator_type										_alloc;
 
 
 
+
+// line 913 in <map>
+
+// 497 543
+
+public:
 		class value_compare : public std::binary_function<value_type, value_type, bool> // it compares the pairs by looking only at the key
 		{
 			friend class map;
-			protected:
-				Compare	comp;
-			public:
-				value_compare(Compare c) : comp(c) {}
-				bool	operator() (const value_type& x, const value_type& y) const // value_type is the pair
-				{
-					return (comp(x.first, y.first));
-				}
+		protected:
+			key_compare	comp;
+
+			
+		public:
+			value_compare(key_compare c) : comp(c) {}
+			bool	operator()(const value_type& x, const value_type& y) const // value_type is the pair
+			{
+				return (comp(x.first, y.first));
+			}
 		};
+
+
+		red_black_tree<value_type, value_compare, Alloc>			_tree;
+
 
 		public :
 			////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
@@ -93,6 +106,13 @@ namespace ft
 			(void)x;
 			return (*this);
 		}
+
+
+		red_black_tree<value_type, value_compare, Alloc>	*base()
+		{
+			return (&(this->_tree));
+		}
+
 
 		////////////////////////////// ITERATORS ///////////////////////////////
 

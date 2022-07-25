@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:40:59 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/11 11:58:48 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/25 12:00:46 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <iostream>
 
-# define CONTRUCTORMESSAGES 1
+# define CONTRUCTORMESSAGES 0
 
 class ClapTrap
 {

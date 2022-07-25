@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/24 13:37:20 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/25 12:10:51 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,24 @@
 #include "map.hpp"
 
 
-#ifndef USE_STD
+#ifdef USE_STD
 # define ft std
 #endif
 
 int	main()
 {
 
-	ft::map<int, int> mm;
+	std::less<int>	ll;
+
+	std::cout << ll(8, 7) << std::endl;
+
+	ft::map<int, int>::value_compare	vc(ll);
+
+	ft::red_black_tree<int, ft::map<int, int>::value_compare >	rbt;
+
+//	ft::map<int, int> mm;
 	ft::pair<int, ClapTrap>	p1;
+
 
 	ft::pair<int, ClapTrap>	p2;
 
