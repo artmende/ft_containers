@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/25 17:27:48 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/25 18:38:15 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,29 @@ namespace ft
 		Compare			_c;
 	//	std::allocator<red_black_node<T> >	_al;
 
-//		red_black_tree(red_black_tree const & x);
+
 		red_black_tree &	operator=(red_black_tree const & x);
 	public:
 		red_black_tree() : _root(NULL) {}
 
-		red_black_tree(Compare comp) : _root(NULL), _c(comp) {}
+
+		//red_black_tree(red_black_tree const & x) : _c(x._c)
+		//{
+		//	std::cout << "copy constructor called\n";
+		//	if (x._root == NULL)
+		//		this->_root = NULL;
+		//	else
+		//	{
+		//		red_black_node<T>	*node = x.find_first_node();
+		//		while (node)
+		//		{
+		//			this->insert(node->v);
+		//			node = x.find_successor(node);
+		//		}
+		//	}
+		//}
+
+		red_black_tree(Compare comp) : _root(NULL), _c(comp) {std::cout << "comp constructor called\n";}
 
 		~red_black_tree()
 		{
@@ -184,6 +201,16 @@ If you can't go up anymore, then there's no successor
 				return (NULL);
 			}
 		}
+
+		red_black_node<T>	*find_first_node()
+		{
+			red_black_node<T>	*ret = this->_root;
+
+			while (this->find_predecessor(ret))
+				ret = find_predecessor(ret);
+			return (ret);
+		}
+
 
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
 		{
