@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:40:59 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/25 12:00:46 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:23:45 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ public:
 	void 	beRepaired(unsigned int amount);
 
 	std::string		get_name() const;
+
+	bool	operator<(ClapTrap const & rhs) const {return (this->_name < rhs._name);} /////////////////////////////
+
 };
 
 std::ostream &	operator<<(std::ostream & o, ClapTrap const & i);

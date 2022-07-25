@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/25 12:10:51 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:30:37 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,11 @@ int	main()
 
 	ft::map<int, int>::value_compare	vc(ll);
 
-	ft::red_black_tree<int, ft::map<int, int>::value_compare >	rbt;
 
-//	ft::map<int, int> mm;
+
+
+
+
 	ft::pair<int, ClapTrap>	p1;
 
 
@@ -46,9 +48,42 @@ int	main()
 	p2.first = 8;
 	p2.second = ClapTrap("Max");
 
+
+	ft::red_black_tree<const ClapTrap>	rbtclap;
+
+	rbtclap.insert(ClapTrap("bob"));
+	rbtclap.insert(ClapTrap("Danny"));
+	rbtclap.insert(ClapTrap("max"));
+
+	ft::red_black_node<const ClapTrap>	*n = rbtclap._root;
+	while (rbtclap.find_predecessor(n))
+		n = rbtclap.find_predecessor(n);
+	while (n)
+	{
+		std::cout << n->v << std::endl;
+		n = rbtclap.find_successor(n);
+	}
+
+	ft::map<int, ClapTrap> mm;
+
+	mm.base()->insert(p1);
+	mm.base()->insert(p2);
+	mm.base()->insert(ft::make_pair(5, ClapTrap("Denis")));
+
+	ft::red_black_node<ft::pair<const int, ClapTrap> >	*node = mm.base()->_root;
+
+	while (mm.base()->find_predecessor(node))
+		node = mm.base()->find_predecessor(node);
+
+	while (node)
+	{
+		std::cout << node->v.second << std::endl;
+		node = mm.base()->find_successor(node);
+	}
+
 (void)p2;
 
-
+	
 
 //	std::cout << "(p1 > p2) ? " << (p1 > p2) << std::endl;
 

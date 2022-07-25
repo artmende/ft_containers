@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/22 15:38:51 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:27:48 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,9 @@ namespace ft
 		//}
 
 		red_black_node(T const & value) : v(value), left(NULL), right(NULL), parent(NULL), color(false)
-		{}
+		{
+//			v = value; // cannot because it wouldnt work with const element
+		}
 
 		red_black_node(red_black_node const & x) // template? different template type ?
 		: v(x.v), left(NULL), right(NULL), parent(NULL), color(x.color)
@@ -101,10 +103,12 @@ namespace ft
 		Compare			_c;
 	//	std::allocator<red_black_node<T> >	_al;
 
-		red_black_tree(red_black_tree const & x);
+//		red_black_tree(red_black_tree const & x);
 		red_black_tree &	operator=(red_black_tree const & x);
 	public:
 		red_black_tree() : _root(NULL) {}
+
+		red_black_tree(Compare comp) : _root(NULL), _c(comp) {}
 
 		~red_black_tree()
 		{

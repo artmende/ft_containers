@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/25 12:12:33 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/25 16:53:17 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ namespace ft
 	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > >
 	class map
 	{
+
+
+
 	public:
 		typedef				Key									key_type;
 		typedef				T									mapped_type;
@@ -51,19 +54,11 @@ namespace ft
 
 	private:
 
-//		red_black_tree<value_type, Compare, Alloc>			_tree;
-
-		key_compare											_comp;
-		allocator_type										_alloc;
-
-
-
-
 // line 913 in <map>
 
 // 497 543
 
-public:
+public: // gonna be private later
 		class value_compare : public std::binary_function<value_type, value_type, bool> // it compares the pairs by looking only at the key
 		{
 			friend class map;
@@ -80,23 +75,29 @@ public:
 		};
 
 
-		red_black_tree<value_type, value_compare, Alloc>			_tree;
 
 
-		public :
-			////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
-			explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) // empty (1)
-			: _comp(comp), _alloc(alloc)
+	public :
+		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
+		explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) // empty (1)
+		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(comp))
 		{}
+
+/*
+		key_compare											_comp;
+		allocator_type										_alloc;
+		value_compare										_val_comp;
+		red_black_tree<value_type, value_compare, Alloc>	_tree;
+*/
 
 		//template <class InputIterator> // range (2)
 		//map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 		//{}
 		
-		map(const map& x) // copy (3)
-		{
-			(void)x;
-		}
+		//map(const map& x) // copy (3)
+		//{
+		//	(void)x;
+		//}
 
 		~map()
 		{}
@@ -225,7 +226,16 @@ public:
 		//allocator_type	get_allocator() const
 		//{}
 
+
+	private:
+		key_compare											_comp;
+		allocator_type										_alloc;
+		value_compare										_val_comp;
+		red_black_tree<value_type, value_compare, Alloc>	_tree;
 	};
+
+
+
 
 }
 
