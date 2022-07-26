@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/25 18:38:15 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/26 17:11:37 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ namespace ft
 		//}
 
 	public:
+
+		typedef	T	value_type;
 
 		//red_black_node(Key const & k)
 		//: p(pair<const Key, T>(k, T())), left(NULL), right(NULL), parent(NULL), color(false)
