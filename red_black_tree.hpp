@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/26 17:11:37 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/27 17:08:28 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,26 +106,35 @@ namespace ft
 	//	std::allocator<red_black_node<T> >	_al;
 
 
-		red_black_tree &	operator=(red_black_tree const & x);
+
 	public:
 		red_black_tree() : _root(NULL) {}
 
 
-		//red_black_tree(red_black_tree const & x) : _c(x._c)
-		//{
-		//	std::cout << "copy constructor called\n";
-		//	if (x._root == NULL)
-		//		this->_root = NULL;
-		//	else
-		//	{
-		//		red_black_node<T>	*node = x.find_first_node();
-		//		while (node)
-		//		{
-		//			this->insert(node->v);
-		//			node = x.find_successor(node);
-		//		}
-		//	}
-		//}
+		red_black_tree(red_black_tree const & x) : _root(NULL), _c(x._c)
+		{
+			std::cout << "copy constructor called\n";
+			if (x._root != NULL)
+			{
+//				red_black_node<T>	*node = x.find_first_node();
+				red_black_node<T>	*node = x._root;
+				while (red_black_tree<T, Compare, Alloc>::find_predecessor(node))
+					node = red_black_tree<T, Compare, Alloc>::find_predecessor(node);
+				while (node)
+				{
+					this->insert(node->v);
+					node = x.find_successor(node);
+				}
+			}
+		}
+
+		red_black_tree &	operator=(red_black_tree const & x)
+		{
+			if (this == &x)
+				return ;
+			// delete all
+			// copy all
+		}
 
 		red_black_tree(Compare comp) : _root(NULL), _c(comp) {std::cout << "comp constructor called\n";}
 
@@ -135,7 +144,7 @@ namespace ft
 				this->remove(this->_root);
 		}
 
-		red_black_node<T>	*find_successor(red_black_node<T> *node)
+		static red_black_node<T>	*find_successor(red_black_node<T> *node)
 		{
 /*
 			Next rule: The successor of a node is:
@@ -174,7 +183,7 @@ If you can't go up anymore, then there's no successor
 			}
 		}
 
-		red_black_node<T>	*find_predecessor(red_black_node<T> *node)
+		static red_black_node<T>	*find_predecessor(red_black_node<T> *node)
 		{
 			if (node == NULL)
 				return (NULL);
@@ -204,7 +213,7 @@ If you can't go up anymore, then there's no successor
 			}
 		}
 
-		red_black_node<T>	*find_first_node()
+		red_black_node<T>	*find_first_node() // make this function take a node as parameter and make it static
 		{
 			red_black_node<T>	*ret = this->_root;
 
