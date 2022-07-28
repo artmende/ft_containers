@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/27 17:03:57 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/28 17:19:16 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "ClapTrap.hpp"
 #include "pair.hpp"
 #include "map.hpp"
+#include "bst_iterator.hpp"
 
 
 #ifdef USE_STD
@@ -49,15 +50,17 @@ int	main()
 	p2.second = ClapTrap("Max");
 
 
-	ft::red_black_tree<const ClapTrap>	rbtclap;
+	ft::red_black_tree<ClapTrap>	rbtclap;
 
 	rbtclap.insert(ClapTrap("bob"));
 	rbtclap.insert(ClapTrap("Danny"));
 	rbtclap.insert(ClapTrap("max"));
 
-	ft::red_black_tree<const ClapTrap>	copy(rbtclap);
+	ft::red_black_tree<ClapTrap>	copy(rbtclap);
 
-	ft::red_black_node<const ClapTrap>	*n = copy._root;
+	copy = *(&copy);
+
+	ft::red_black_node<ClapTrap>	*n = copy._root;
 	while (copy.find_predecessor(n))
 		n = copy.find_predecessor(n);
 	while (n)
@@ -65,6 +68,29 @@ int	main()
 		std::cout << n->v << std::endl;
 		n = copy.find_successor(n);
 	}
+
+	std::cout << "testing iterators :\n\n";
+
+	ft::bst_iterator</*const */ClapTrap>	it(copy._root);
+//	ft::bst_iterator<const ClapTrap>	cit(it);
+
+	for (size_t i = 0; i < 5; ++i)
+	{
+		std::cout << *it << std::endl;
+		++it;
+	}
+
+	std::cout << std::endl;
+	for (size_t i = 0; i < 5; ++i)
+	{
+		std::cout << *it << std::endl;
+		it--;
+	}
+
+
+
+
+	//std::cout << "\ndown here is map declaration\n\n";
 
 	//ft::map<int, ClapTrap> mm;
 

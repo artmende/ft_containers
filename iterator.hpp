@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:53:49 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/26 11:08:10 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/28 16:55:31 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ namespace ft
 
 		vector_random_access_iterator() : _ptr(NULL) {} // default
 //		vector_random_access_iterator(const vector_random_access_iterator<typename remove_const<T>::type > & x) : _ptr(x.base()) {} // copy // use with remove const
-		vector_random_access_iterator(const vector_random_access_iterator<T> & x) : _ptr(x.base()) {} // instead of remove const
-		vector_random_access_iterator(pointer p) : _ptr(p) {}
+		vector_random_access_iterator(const vector_random_access_iterator<T> & x) : _ptr(x.base()) {std::cout << "iterator par copy\n";} // instead of remove const
+		vector_random_access_iterator(pointer p) : _ptr(p) {std::cout << "iterator par pointer\n";}
 		~vector_random_access_iterator() {}
 
 //		vector_random_access_iterator<typename remove_const<T>::type > &	operator=(const vector_random_access_iterator<typename remove_const<T>::type > & x) // use with remove const
 		vector_random_access_iterator<T> &	operator=(const vector_random_access_iterator<T> & x) // instead of remove const
-		{ if (this != &x) { this->_ptr = x._ptr; } return (*this); }
+		{ std::cout << "= assign\n"; if (this != &x) { this->_ptr = x._ptr; } return (*this); }
 
 		operator vector_random_access_iterator<const T>() const { return this->_ptr; } // can use instead of remove_const
 

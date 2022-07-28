@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/27 17:08:28 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/28 14:16:47 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,34 +31,9 @@ namespace ft
 	private:
 		red_black_node();
 
-		//pair<const Key, T>	init_pair(pair<const Key, T> & x)
-		//{
-		//	pair<const Key, T>	ret(x.first, T()); // copy constructor for the key
-		//	ret.second = x.second; // assignment operator for the value
-		//	return ret;
-		//}
-
 	public:
 
 		typedef	T	value_type;
-
-		//red_black_node(Key const & k)
-		//: p(pair<const Key, T>(k, T())), left(NULL), right(NULL), parent(NULL), color(false)
-		//{}
-
-		//red_black_node(Key const & k, T & value)
-		//: p(pair<const Key, T>(k, T())), left(NULL), right(NULL), parent(NULL), color(false)
-		//{
-		//	this->p.second = value;
-		//}
-
-		//red_black_node(pair<const Key, T> & p_param)
-		//: /*p(this->init_pair(p)),*/ p(pair<const Key, T>(p_param.first, T())), left(NULL), right(NULL), parent(NULL), color(false)
-		//{
-		//	this->p.second = p_param.second;
-		//	// node constructor receives a reference to an existing pair. The node doesn't care if that pair is allocated or not.
-		//	// it just initialize the exisiting pair inside the node, to the same value as the reference received
-		//}
 
 		red_black_node(T const & value) : v(value), left(NULL), right(NULL), parent(NULL), color(false)
 		{
@@ -84,7 +59,7 @@ namespace ft
 		red_black_node<T>	*left;
 		red_black_node<T>	*right;
 		red_black_node<T>	*parent;
-		bool				color; // true is black, false is red
+		bool				color; // true is black, false is red // use ENUM
 	};
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,27 +88,28 @@ namespace ft
 
 		red_black_tree(red_black_tree const & x) : _root(NULL), _c(x._c)
 		{
-			std::cout << "copy constructor called\n";
-			if (x._root != NULL)
+			red_black_node<T>	*node = x.find_first_node(x._root);
+			while (node)
 			{
-//				red_black_node<T>	*node = x.find_first_node();
-				red_black_node<T>	*node = x._root;
-				while (red_black_tree<T, Compare, Alloc>::find_predecessor(node))
-					node = red_black_tree<T, Compare, Alloc>::find_predecessor(node);
+				this->insert(node->v);
+				node = x.find_successor(node);
+			}
+		}
+
+		red_black_tree &	operator=(red_black_tree const & x) // do i need to copy allocator and compare ?
+		{
+			if (this != &x)
+			{
+				while (this->_root)
+					this->remove(this->_root);
+				red_black_node<T>	*node = x.find_first_node(x._root);
 				while (node)
 				{
 					this->insert(node->v);
 					node = x.find_successor(node);
 				}
 			}
-		}
-
-		red_black_tree &	operator=(red_black_tree const & x)
-		{
-			if (this == &x)
-				return ;
-			// delete all
-			// copy all
+			return (*this);
 		}
 
 		red_black_tree(Compare comp) : _root(NULL), _c(comp) {std::cout << "comp constructor called\n";}
@@ -213,7 +189,14 @@ If you can't go up anymore, then there's no successor
 			}
 		}
 
-		red_black_node<T>	*find_first_node() // make this function take a node as parameter and make it static
+		static red_black_node<T>	*find_first_node(red_black_node<T> *any_node_in_tree) // this one is static and needs to take a node as param
+		{ // if it receives NULL, it returns NULL
+			while (red_black_tree<T, Compare, Alloc>::find_predecessor(any_node_in_tree))
+				any_node_in_tree = red_black_tree<T, Compare, Alloc>::find_predecessor(any_node_in_tree);
+			return (any_node_in_tree);
+		}
+
+		red_black_node<T>	*find_first_node()
 		{
 			red_black_node<T>	*ret = this->_root;
 
