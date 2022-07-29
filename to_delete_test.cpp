@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 14:25:58 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/28 16:59:17 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/29 11:27:15 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,11 @@ int	main()
 
 	cit = it;
 
+	const int	a = 5;
 
+	int	b = a;
+
+	std::cout << b << std::endl;
 
 	std::cout << *it << std::endl;
 //	*it = 3;

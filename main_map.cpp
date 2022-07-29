@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/28 17:19:16 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/29 14:36:22 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ int	main()
 
 	ft::map<int, int>::value_compare	vc(ll);
 
+	ClapTrap		testclap1("un");
+	const ClapTrap	testclap2(testclap1);
 
-
-
+	ClapTrap		testclap3(testclap2);
 
 
 	ft::pair<int, ClapTrap>	p1;
@@ -71,8 +72,9 @@ int	main()
 
 	std::cout << "testing iterators :\n\n";
 
-	ft::bst_iterator</*const */ClapTrap>	it(copy._root);
+	ft::bst_iterator</*const*/ ClapTrap>	it(copy._root);
 //	ft::bst_iterator<const ClapTrap>	cit(it);
+
 
 	for (size_t i = 0; i < 5; ++i)
 	{

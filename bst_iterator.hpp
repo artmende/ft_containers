@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:19:08 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/28 16:55:36 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/29 14:00:46 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,21 @@ namespace ft
 
 		bst_iterator() : _inner_node(NULL), _is_out(true) {}
 		bst_iterator(bst_iterator const & x) : _inner_node(x._inner_node), _is_out(x._is_out) {}
-		bst_iterator(node *ptr) : _inner_node(ptr), _is_out(false) {}
+		bst_iterator(node /*const*/ *ptr) : _inner_node(ptr), _is_out(false) {}
 		~bst_iterator() {}
 
 		bst_iterator &	operator=(bst_iterator const & x) { if (this != &x) {this->_inner_node = x._inner_node; this->_is_out = x._is_out;} return (*this); }
 
-		operator bst_iterator<const T>() const { return this->_inner_node; } // can use instead of remove_const
+//		operator bst_iterator<const T>() const { return this->_inner_node; } // can use instead of remove_const
 
 		//operator vector_random_access_iterator<const T>() const { return this->_ptr; } // can use instead of remove_const
+
+
+		operator bst_iterator<const T>() const
+		{
+			return (bst_iterator<const T>
+				(reinterpret_cast<red_black_node<const T> const *>(_inner_node)));
+		}
 
 
 		reference	operator*() const
