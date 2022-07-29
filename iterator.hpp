@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:53:49 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/28 16:55:31 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/29 16:33:13 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,22 @@ namespace ft
 		typedef typename	std::iterator_traits<iterator_type>::reference			reference;
 
 	private:
-		pointer	_ptr;
+	//	pointer	_ptr;
+		T*		_ptr;
 	public:
 		///////////////	CONSTRUCTORS - DESTRUCTOR - ASSIGNATION	////////////////
 
 		vector_random_access_iterator() : _ptr(NULL) {} // default
 //		vector_random_access_iterator(const vector_random_access_iterator<typename remove_const<T>::type > & x) : _ptr(x.base()) {} // copy // use with remove const
 		vector_random_access_iterator(const vector_random_access_iterator<T> & x) : _ptr(x.base()) {std::cout << "iterator par copy\n";} // instead of remove const
-		vector_random_access_iterator(pointer p) : _ptr(p) {std::cout << "iterator par pointer\n";}
+		vector_random_access_iterator(T *p) : _ptr(p) {std::cout << "iterator par pointer\n";}
 		~vector_random_access_iterator() {}
 
 //		vector_random_access_iterator<typename remove_const<T>::type > &	operator=(const vector_random_access_iterator<typename remove_const<T>::type > & x) // use with remove const
 		vector_random_access_iterator<T> &	operator=(const vector_random_access_iterator<T> & x) // instead of remove const
 		{ std::cout << "= assign\n"; if (this != &x) { this->_ptr = x._ptr; } return (*this); }
 
-		operator vector_random_access_iterator<const T>() const { return this->_ptr; } // can use instead of remove_const
+//		operator vector_random_access_iterator<const T>() const { return this->_ptr; } // can use instead of remove_const
 
 		pointer	base() const
 		{

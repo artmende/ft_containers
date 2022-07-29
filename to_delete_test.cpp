@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 14:25:58 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/29 11:27:15 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/29 17:07:46 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,38 @@
 #include <vector>
 #include "map.hpp"
 #include "vector.hpp"
+#include "ClapTrap.hpp"
 
+template<typename T>
+class test_template
+{
+	public:
+	test_template() : t(T()) {}
+	T	t;
+	T &	display()
+	{
+		return t;
+	}
+};
 
+template<typename T>
+class test_it
+{
+	public:
+	test_it(test_template<T>	*ptr)
+	{
+		std::cout << "inside contructor\n";
+		(void)ptr;
+	}
+};
 
 int	main()
 {
-	ft::vector<int>	v;
-	v.push_back(5);
-	v.push_back(7);
-	v.push_back(-3);
 
-	ft::vector<int>	copy(v);
+	test_template<int>	tt;
 
-	ft::vector_random_access_iterator<int>	it(&(v[0]));
-	ft::vector_random_access_iterator<const int>	cit/*(it)*/;
 
-	cit = it;
-
-	const int	a = 5;
-
-	int	b = a;
-
-	std::cout << b << std::endl;
-
-	std::cout << *it << std::endl;
-//	*it = 3;
-
-	std::cout << copy[0] << std::endl;
+	test_it<const int> t(&tt);
 
 	return 0;
 }

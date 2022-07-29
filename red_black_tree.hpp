@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/28 14:16:47 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/29 15:51:08 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,32 +30,35 @@ namespace ft
 	{
 	private:
 		red_black_node();
+		red_black_node(red_black_node const & x);
+		red_black_node &	operator=(red_black_node const & x);
 
 	public:
 
 		typedef	T	value_type;
 
-		red_black_node(T const & value) : v(value), left(NULL), right(NULL), parent(NULL), color(false)
+		red_black_node(T *value) : v(*value), left(NULL), right(NULL), parent(NULL), color(false)
 		{
 //			v = value; // cannot because it wouldnt work with const element
 		}
 
-		red_black_node(red_black_node const & x) // template? different template type ?
-		: v(x.v), left(NULL), right(NULL), parent(NULL), color(x.color)
+		//red_black_node(red_black_node const & x) // template? different template type ?
+		//: v(x.v), left(NULL), right(NULL), parent(NULL), color(x.color)
+		//{} // I don't think I need it
+
+		~red_black_node()
 		{}
 
-		~red_black_node() {}
+		//red_black_node &	operator=(red_black_node const & x) // template? different template type ?
+		//{
+		//	if (&x != this)
+		//	{
+		//		this->v = x.v;
+		//	}
+		//	return (*this);
+		//} // I don't think I need it
 
-		red_black_node &	operator=(red_black_node const & x) // template? different template type ?
-		{
-			if (&x != this)
-			{
-				this->v = x.v;
-			}
-			return (*this);
-		}
-
-		T					v; // v is a real object that is part of the node. Deleting the node will delete p, no need to worry about something else
+		T &					v;
 		red_black_node<T>	*left;
 		red_black_node<T>	*right;
 		red_black_node<T>	*parent;
@@ -102,7 +105,7 @@ namespace ft
 			{
 				while (this->_root)
 					this->remove(this->_root);
-				red_black_node<T>	*node = x.find_first_node(x._root);
+				const red_black_node<T>	*node = x.find_first_node(x._root);
 				while (node)
 				{
 					this->insert(node->v);
@@ -120,7 +123,7 @@ namespace ft
 				this->remove(this->_root);
 		}
 
-		static red_black_node<T>	*find_successor(red_black_node<T> *node)
+		static red_black_node<T>	*find_successor(const red_black_node<T> *node)
 		{
 /*
 			Next rule: The successor of a node is:
@@ -159,7 +162,7 @@ If you can't go up anymore, then there's no successor
 			}
 		}
 
-		static red_black_node<T>	*find_predecessor(red_black_node<T> *node)
+		static red_black_node<T>	*find_predecessor(const red_black_node<T> *node)
 		{
 			if (node == NULL)
 				return (NULL);
@@ -208,10 +211,19 @@ If you can't go up anymore, then there's no successor
 
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
 		{
+			// idea : In map, after inserting, use the assignment operator on the mapped type
+
+			typedef typename Alloc::template rebind<T>::other	alloc_value;
+
+			alloc_value	al_value;
+
+			T	*val_to_insert	= al_value.allocate(1);
+			al_value.construct(val_to_insert, v);
+
 			if (this->_root == NULL)
 			{
 				this->_root = this->_al.allocate(1);
-				this->_al.construct(this->_root, v); // no need to set the parent ptr in the new node, because its the root. it remains NULL
+				this->_al.construct(this->_root, val_to_insert); // no need to set the parent ptr in the new node, because its the root. it remains NULL
 				return this->_root;
 			}
 
@@ -234,21 +246,25 @@ If you can't go up anymore, then there's no successor
 					continue;
 				}
 				else
+				{
+					al_value.destroy(val_to_insert);
+					al_value.deallocate(val_to_insert, 1);
 					return (browse); // this means what we want to insert already exist in the tree. We just return the already existing node
+				}
 			}
 			// here browse is a NULL pointer. It means its parent is the node that we have to insert under
 //			if (v < parent->v)
 			if (this->_c(v, parent->v))
 			{
 				parent->left = this->_al.allocate(1);
-				this->_al.construct(parent->left, v);
+				this->_al.construct(parent->left, val_to_insert);
 				parent->left->parent = parent;
 				return parent->left;
 			}
 			else
 			{
 				parent->right = this->_al.allocate(1);
-				this->_al.construct(parent->right, v);
+				this->_al.construct(parent->right, val_to_insert);
 				parent->right->parent = parent;
 				return parent->right;
 			}
@@ -286,6 +302,10 @@ If you can't go up anymore, then there's no successor
 		void	remove(red_black_node<T> *to_delete)
 		{
 
+			typedef typename Alloc::template rebind<T>::other	alloc_value;
+
+			alloc_value	al_value;
+
 						// 3 cases : 
 			// if delete leaf node, just delete it and put parent ptr to NULL
 			// if delete node with only 1 child, connect the child to the parent and delete
@@ -299,6 +319,8 @@ If you can't go up anymore, then there's no successor
 				if (to_delete->parent == NULL) // deleting root node
 				{
 					this->_root = NULL;
+					al_value.destroy(&(to_delete->v));
+					al_value.deallocate(&(to_delete->v), 1);
 					this->_al.destroy(to_delete);
 					this->_al.deallocate(to_delete, 1);
 					return;
@@ -306,6 +328,8 @@ If you can't go up anymore, then there's no successor
 				if (to_delete->parent->left == to_delete)
 				{
 					to_delete->parent->left = NULL;
+					al_value.destroy(&(to_delete->v));
+					al_value.deallocate(&(to_delete->v), 1);
 					this->_al.destroy(to_delete);
 					this->_al.deallocate(to_delete, 1);
 					return;
@@ -313,6 +337,8 @@ If you can't go up anymore, then there's no successor
 				if (to_delete->parent->right == to_delete)
 				{
 					to_delete->parent->right = NULL;
+					al_value.destroy(&(to_delete->v));
+					al_value.deallocate(&(to_delete->v), 1);
 					this->_al.destroy(to_delete);
 					this->_al.deallocate(to_delete, 1);
 					return;
@@ -326,6 +352,8 @@ If you can't go up anymore, then there's no successor
 				if (to_delete->parent == NULL)
 				{
 					this->_root = subtree;
+					al_value.destroy(&(to_delete->v));
+					al_value.deallocate(&(to_delete->v), 1);
 					this->_al.destroy(to_delete);
 					this->_al.deallocate(to_delete, 1);
 					return;
@@ -333,6 +361,8 @@ If you can't go up anymore, then there's no successor
 				if (to_delete->parent->left == to_delete)
 				{
 					to_delete->parent->left = subtree;
+					al_value.destroy(&(to_delete->v));
+					al_value.deallocate(&(to_delete->v), 1);
 					this->_al.destroy(to_delete);
 					this->_al.deallocate(to_delete, 1);
 					return;
@@ -340,6 +370,8 @@ If you can't go up anymore, then there's no successor
 				if (to_delete->parent->right == to_delete)
 				{
 					to_delete->parent->right = subtree;
+					al_value.destroy(&(to_delete->v));
+					al_value.deallocate(&(to_delete->v), 1);
 					this->_al.destroy(to_delete);
 					this->_al.deallocate(to_delete, 1);
 					return;
@@ -378,7 +410,8 @@ If you can't go up anymore, then there's no successor
 					to_delete->left->parent = smallest_in_right_subtree;
 				if (to_delete->right)
 					to_delete->right->parent = smallest_in_right_subtree;
-
+				al_value.destroy(&(to_delete->v));
+				al_value.deallocate(&(to_delete->v), 1);
 				this->_al.destroy(to_delete);
 				this->_al.deallocate(to_delete, 1);
 				return;
