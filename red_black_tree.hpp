@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/29 15:51:08 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/31 17:15:14 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,65 @@ namespace ft
 		//	}
 		//	return (*this);
 		//} // I don't think I need it
+
+		red_black_node<T>	*find_successor() const
+		{
+			if (this->right)
+			{
+				red_black_node<T>	*ret = this->right;
+				while (ret->left)
+					ret = ret->left;
+				return (ret);
+			}
+			else // no right subtree
+			{
+				red_black_node<T>	*ret = this->parent;
+				const red_black_node<T>	*temp_child = this;
+				while (ret)
+				{
+					if (ret->right == temp_child) // we did a left turn
+					{
+						temp_child = ret;
+						ret = ret->parent;
+					}
+					else // we did a right turn
+					{
+						return (ret);
+					}
+				}
+				return (NULL);
+			}
+		}
+
+		red_black_node<T>	*find_predecessor() const
+		{
+			if (this->left)
+			{
+				red_black_node<T>	*ret = this->left;
+				while (ret->right)
+					ret = ret->right;
+				return (ret);
+			}
+			else
+			{
+				red_black_node<T>	*ret = this->parent;
+				const red_black_node<T>	*temp_child = this;
+				while (ret)
+				{
+					if (ret->left == temp_child)
+					{
+						temp_child = ret;
+						ret = ret->parent;
+					}
+					else
+					{
+						return (ret);
+					}
+				}
+				return (NULL);
+			}
+		}
+
 
 		T &					v;
 		red_black_node<T>	*left;

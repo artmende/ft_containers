@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:19:08 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/29 16:23:44 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/31 17:17:39 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ a--
 namespace ft
 {
 
-	template<typename T> // T is the value type stored inside of the tree
+	template<typename T, typename node> // T is the value type stored inside of the tree
 	class bst_iterator
 	{
 	public:
@@ -61,11 +61,11 @@ namespace ft
 		typedef typename	std::iterator_traits<iterator_type>::difference_type	difference_type;
 		typedef typename	std::iterator_traits<iterator_type>::pointer			pointer; // a pointer to the type that is stored in the tree
 		typedef typename	std::iterator_traits<iterator_type>::reference			reference;
-		typedef				red_black_node<T>										node;
+//		typedef				red_black_node<T>										node;
 
 		bst_iterator() : _inner_node(NULL), _is_out(true) {}
-		bst_iterator(bst_iterator const & x) : _inner_node(x._inner_node), _is_out(x._is_out) {}
-		bst_iterator(red_black_node<T> *ptr)// : _inner_node(ptr), _is_out(false) {}
+		bst_iterator(bst_iterator<T, node> const & x) : _inner_node(x._inner_node), _is_out(x._is_out) {}
+		bst_iterator(const node *ptr) : _inner_node(ptr), _is_out(false)
 		{
 			(void)ptr;
 		}
@@ -74,7 +74,7 @@ namespace ft
 
 		bst_iterator &	operator=(bst_iterator const & x) { if (this != &x) {this->_inner_node = x._inner_node; this->_is_out = x._is_out;} return (*this); }
 
-//		operator bst_iterator<const T>() const { return this->_inner_node; } // can use instead of remove_const
+		operator bst_iterator<const T, node>() const { return this->_inner_node; } // can use instead of remove_const
 
 
 
@@ -106,7 +106,8 @@ namespace ft
 
 		bst_iterator &	operator++() // ++it
 		{
-			node const	*n = red_black_tree<T>::find_successor(this->_inner_node);
+		//	node const	*n = red_black_tree<T>::find_successor(this->_inner_node);
+			node const	*n = this->_inner_node->find_successor();
 			if (n == NULL) // we are already at the last node
 				this->_is_out = true;
 			else if (this->_is_out == true) // we are before the first node
@@ -118,14 +119,15 @@ namespace ft
 
 		bst_iterator	operator++(int) // it++
 		{
-			bst_iterator<T>	temp(*this);
+			bst_iterator<T, node>	temp(*this);
 			++(*this);
 			return (temp);
 		}
 
 		bst_iterator &	operator--() // --it
 		{
-			node const	*n = red_black_tree<T>::find_predecessor(this->_inner_node);
+//			node const	*n = red_black_tree<T>::find_predecessor(this->_inner_node);
+			node const	*n = this->_inner_node->find_predecessor();
 			if (n == NULL)
 				this->_is_out = true;
 			else if (this->_is_out == true)
@@ -137,7 +139,7 @@ namespace ft
 
 		bst_iterator	operator--(int) // it--
 		{
-			bst_iterator<T>	temp(*this);
+			bst_iterator<T, node>	temp(*this);
 			--(*this);
 			return (temp);
 		}

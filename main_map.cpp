@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/29 16:28:51 by artmende         ###   ########.fr       */
+/*   Updated: 2022/07/31 17:18:26 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,20 +72,20 @@ int	main()
 
 	std::cout << "testing iterators :\n\n";
 
-	ft::bst_iterator</*const*/ ClapTrap>	it(copy._root);
-//	ft::bst_iterator<const ClapTrap>	cit(it);
+	ft::bst_iterator<ClapTrap, ft::red_black_node<ClapTrap> >	it(copy._root);
+	ft::bst_iterator<const ClapTrap, ft::red_black_node<ClapTrap> >	cit(it);
 
 
 	for (size_t i = 0; i < 5; ++i)
 	{
-		std::cout << *it << std::endl;
+		std::cout << *cit << std::endl;
 		++it;
 	}
 
 	std::cout << std::endl;
 	for (size_t i = 0; i < 5; ++i)
 	{
-		std::cout << *it << std::endl;
+		std::cout << *cit << std::endl;
 		it--;
 	}
 
@@ -118,6 +118,9 @@ int	main()
 //	std::cout << "(p1 > p2) ? " << (p1 > p2) << std::endl;
 
 	std::cout << "a < b ? " << ('a' < 'b') << std::endl; 
+
+
+
 
 	return 0;
 }
