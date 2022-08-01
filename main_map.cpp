@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/01 14:15:31 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/01 17:33:04 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,33 @@
 
 int	main()
 {
+	ft::red_black_tree<int>	rr;
+	//rr.insert(4);
+	//rr.insert(5);
+	//rr.insert(2);
+
+	ft::red_black_tree<int>::const_iterator	itb = rr.begin();
+	ft::red_black_tree<int>::iterator	ite = rr.end();
+
+	std::cout << "itb._is_out ? " << itb._is_out << std::endl;
+	std::cout << "ite._is_out ? " << ite._is_out << std::endl;
+
+
+
+
+	//std::cout << *itb << std::endl;
+
+	std::cout << (itb == ite) << std::endl;
+
+	return 0;
+}
+
+/*
+
+int	main()
+{
+
+
 
 	{
 
@@ -134,3 +161,5 @@ int	main()
 
 	return 0;
 }
+
+*/

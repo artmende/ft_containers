@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/01 14:36:04 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/01 16:31:44 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <iostream>
 # include <memory>
 # include <functional>
+# include "bst_iterator.hpp"
 
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
@@ -42,8 +43,9 @@ namespace ft
 		red_black_node<T>	*right;
 		red_black_node<T>	*parent;
 		bool				color; // true is black, false is red // use ENUM
+		bool				empty;
 
-		red_black_node(T *value) : v(*value), left(NULL), right(NULL), parent(NULL), color(false) {}
+		red_black_node(T *value, bool empty) : v(*value), left(NULL), right(NULL), parent(NULL), color(false), empty(empty) {}
 		~red_black_node() {}
 
 		red_black_node<T>	*find_successor() const
@@ -119,6 +121,14 @@ If you can't go up anymore, then there's no successor
 				ret = ret->find_predecessor();
 			return (ret);
 		}
+
+		const red_black_node<T>	*find_last_node() const
+		{
+			const red_black_node<T>	*ret = this;
+			while (ret->find_successor())
+				ret = ret->find_successor();
+			return (ret);
+		}
 	};
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -126,18 +136,25 @@ If you can't go up anymore, then there's no successor
 	template <typename T, typename Compare = std::less<T>, typename Alloc = std::allocator<red_black_node<T> > >
 	class red_black_tree
 	{
-		typedef typename Alloc::template rebind<red_black_node<T> >::other	allocator_type;
+		typedef typename	Alloc::template rebind<red_black_node<T> >::other	allocator_type;
+		typedef typename	Alloc::template rebind<T>::other					alloc_value;
 	public:
+		typedef				bst_iterator<T, red_black_node<T> >					iterator;
+		typedef				bst_iterator<const T, red_black_node<T> >			const_iterator;
+
+
 		red_black_node<T>	*_root;
 	private:
 		
 		allocator_type	_al;
+		alloc_value		al_value;
 		Compare			_c;
 
 	public:
-		red_black_tree() : _root(NULL) {} // problem to put _root to NULL, because we neet to be able to initiate iterator on an empty tree. It has to point somewhere.
+		red_black_tree() : _root(create_empty_node()) {} // problem to put _root to NULL, because we neet to be able to initiate iterator on an empty tree. It has to point somewhere.
 		// so we need a special node that will exist only when the tree is empty, and will be deleted as soon as we insert something
 
+		red_black_tree(Compare comp) : _root(create_empty_node()), _c(comp) {std::cout << "comp constructor called\n";} // remove the message later
 
 		red_black_tree(red_black_tree const & x) : _root(NULL), _c(x._c)
 		{
@@ -161,35 +178,51 @@ If you can't go up anymore, then there's no successor
 			return (*this);
 		}
 
-		red_black_tree(Compare comp) : _root(NULL), _c(comp) {std::cout << "comp constructor called\n";} // remove the message later
-
 		~red_black_tree()
 		{
-			while (this->_root)
-				this->remove(this->_root); // right now that leaks
+			while (this->_root && this->_root->empty == false)
+				this->remove(this->_root);
+			destroy_and_deallocate_node(this->_root); // Necessary because when the last node is removed, an empty node takes its place
 		}
+
+		iterator	begin()
+		{
+			iterator	ret(this->_root->find_first_node());
+			if (this->_root->empty == true)
+				++ret;
+			return (ret);
+		}
+
+		iterator	end()
+		{
+			iterator	ret(this->_root->find_last_node());
+			++ret;
+			return (ret);
+		}
+
 
 		const red_black_node<T>	*find_first_node() const
 		{
 			return (this->_root->find_first_node());
 		}
 
+		const red_black_node<T>	*find_last_node() const
+		{
+			return (this->_root->find_last_node());
+		}
 
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
 		{
 			// idea : In map, after inserting, use the assignment operator on the mapped type
 
-			typedef typename Alloc::template rebind<T>::other	alloc_value;
-
-			alloc_value	al_value;
-
 			T	*val_to_insert	= al_value.allocate(1);
-			al_value.construct(val_to_insert, v);
+			this->al_value.construct(val_to_insert, v);
 
-			if (this->_root == NULL)
+			if (this->_root == NULL || this->_root->empty == true) // if root is null, second part will not be evaluated
 			{
+				this->destroy_and_deallocate_node(this->_root); // Ok to be called on a NULL pointer. This will get rid of the empty node
 				this->_root = this->_al.allocate(1);
-				this->_al.construct(this->_root, val_to_insert); // no need to set the parent ptr in the new node, because its the root. it remains NULL
+				this->_al.construct(this->_root, val_to_insert, false); // no need to set the parent ptr in the new node, because its the root. it remains NULL
 				return this->_root;
 			}
 
@@ -211,8 +244,8 @@ If you can't go up anymore, then there's no successor
 				}
 				else
 				{
-					al_value.destroy(val_to_insert);
-					al_value.deallocate(val_to_insert, 1);
+					this->al_value.destroy(val_to_insert);
+					this->al_value.deallocate(val_to_insert, 1);
 					return (browse); // this means what we want to insert already exist in the tree. We just return the already existing node
 				}
 			}
@@ -220,14 +253,14 @@ If you can't go up anymore, then there's no successor
 			if (this->_c(v, parent->v))
 			{
 				parent->left = this->_al.allocate(1);
-				this->_al.construct(parent->left, val_to_insert);
+				this->_al.construct(parent->left, val_to_insert, false);
 				parent->left->parent = parent;
 				return parent->left;
 			}
 			else
 			{
 				parent->right = this->_al.allocate(1);
-				this->_al.construct(parent->right, val_to_insert);
+				this->_al.construct(parent->right, val_to_insert, false);
 				parent->right->parent = parent;
 				return parent->right;
 			}
@@ -262,11 +295,6 @@ If you can't go up anymore, then there's no successor
 
 		void	remove(red_black_node<T> *to_delete)
 		{
-
-			typedef typename Alloc::template rebind<T>::other	alloc_value;
-
-			alloc_value	al_value;
-
 						// 3 cases : 
 			// if delete leaf node, just delete it and put parent ptr to NULL
 			// if delete node with only 1 child, connect the child to the parent and delete
@@ -337,19 +365,28 @@ If you can't go up anymore, then there's no successor
 				// parent and children of to_delete has to become parent and children of smallest
 			}
 			this->destroy_and_deallocate_node(to_delete);
+			if (this->_root == NULL)
+				this->_root = create_empty_node();
 		}
 
 		void	destroy_and_deallocate_node(red_black_node<T> *to_delete)
 		{
-			typedef typename Alloc::template rebind<T>::other	alloc_value;
-			alloc_value	al_value;
-
-			al_value.destroy(&(to_delete->v));
-			al_value.deallocate(&(to_delete->v), 1);
+			if (to_delete == NULL)
+				return ;
+			this->al_value.destroy(&(to_delete->v));
+			this->al_value.deallocate(&(to_delete->v), 1);
 			this->_al.destroy(to_delete);
 			this->_al.deallocate(to_delete, 1);
 		}
 
+		red_black_node<T>	*create_empty_node()
+		{
+			T	*val_to_insert	= al_value.allocate(1);
+			this->al_value.construct(val_to_insert, T());
+			red_black_node<T>	*ret = this->_al.allocate(1);
+			this->_al.construct(ret, val_to_insert, true);
+			return (ret);
+		}
 
 	};
 

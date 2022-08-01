@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:22:33 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/18 22:10:11 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/01 16:03:47 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ namespace ft
 		typedef	T1	first_type;
 		typedef	T2	second_type;
 
-		pair() {}
+		pair() : first(T1()), second(T2()) {}
 
 		template<class U1, class U2>
 		pair(const pair<U1, U2>& pr) : first(pr.first), second(pr.second)
