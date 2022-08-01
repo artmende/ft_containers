@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/25 16:53:17 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/01 11:13:20 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 # include "pair.hpp"
 # include "red_black_tree.hpp"
+# include "bst_iterator.hpp"
 
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
@@ -39,12 +40,13 @@ namespace ft
 		typedef				T									mapped_type;
 		typedef				pair<const key_type, mapped_type>	value_type;
 		typedef				Compare								key_compare;
-	//	typedef				/* something */						value_compare;
 		typedef				Alloc								allocator_type;
 		typedef	typename	allocator_type::reference			reference;
 		typedef typename	allocator_type::const_reference		const_reference;
 		typedef typename	allocator_type::pointer				pointer;
 		typedef typename	allocator_type::const_pointer		const_pointer;
+		typedef				ft::bst_iterator<value_type, ft::red_black_node<value_type> >	iterator;
+		typedef				ft::bst_iterator<const value_type, ft::red_black_node<value_type> >	const_iterator;
 	//	typedef				/* something */						iterator; // a bidirectional iterator to value_type	convertible to const_iterator
 	//	typedef				/* something */						const_iterator; // a bidirectional iterator to const value_type
 	//	typedef				reverse_iterator<iterator>			reverse_iterator;
@@ -117,8 +119,11 @@ public: // gonna be private later
 
 		////////////////////////////// ITERATORS ///////////////////////////////
 
-		//iterator	begin()
-		//{}
+		iterator	begin()
+		{
+			iterator	ret(this->_tree._root->find_first_node());
+			return (ret);
+		}
 
 		//const_iterator	begin() const
 		//{}

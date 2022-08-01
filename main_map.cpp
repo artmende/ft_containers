@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/31 17:18:26 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/01 11:16:01 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,17 @@
 int	main()
 {
 
-	std::less<int>	ll;
 
-	std::cout << ll(8, 7) << std::endl;
 
-	ft::map<int, int>::value_compare	vc(ll);
+	ft::map<int, int>	mm;
+
+	mm.base()->insert(ft::make_pair<int, int>(5, 5));
+
+	ft::map<int, int>::iterator	itm = mm.begin();
+
+	itm++;
+
+	std::cout << (*itm).first << std::endl;
 
 	ClapTrap		testclap1("un");
 	const ClapTrap	testclap2(testclap1);
@@ -53,6 +59,8 @@ int	main()
 
 	ft::red_black_tree<ClapTrap>	rbtclap;
 
+
+
 	rbtclap.insert(ClapTrap("bob"));
 	rbtclap.insert(ClapTrap("Danny"));
 	rbtclap.insert(ClapTrap("max"));
@@ -61,13 +69,13 @@ int	main()
 
 	copy = *(&copy);
 
-	ft::red_black_node<ClapTrap>	*n = copy._root;
-	while (copy.find_predecessor(n))
-		n = copy.find_predecessor(n);
+	const ft::red_black_node<ClapTrap>	*n = copy._root->find_first_node();
+	//while (copy.find_predecessor(n))
+	//	n = copy.find_predecessor(n);
 	while (n)
 	{
 		std::cout << n->v << std::endl;
-		n = copy.find_successor(n);
+		n = n->find_successor();
 	}
 
 	std::cout << "testing iterators :\n\n";
@@ -76,17 +84,19 @@ int	main()
 	ft::bst_iterator<const ClapTrap, ft::red_black_node<ClapTrap> >	cit(it);
 
 
+	*it = ClapTrap("yoppp");
+
 	for (size_t i = 0; i < 5; ++i)
 	{
 		std::cout << *cit << std::endl;
-		++it;
+		++cit;
 	}
 
 	std::cout << std::endl;
 	for (size_t i = 0; i < 5; ++i)
 	{
 		std::cout << *cit << std::endl;
-		it--;
+		cit--;
 	}
 
 

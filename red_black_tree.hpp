@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/31 17:15:14 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/01 11:24:46 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,14 @@ namespace ft
 
 		red_black_node<T>	*find_successor() const
 		{
+/*
+			Next rule: The successor of a node is:
+Next-R rule: If it has a right subtree, the leftmost node in the right subtree.
+Next-U rule: Otherwise, traverse up the tree
+If you make a right turn (i.e. this node was a left child), then that parent node is the successor
+If you make a left turn (i.e. this node was a right child), continue going up.
+If you can't go up anymore, then there's no successor
+*/
 			if (this->right)
 			{
 				red_black_node<T>	*ret = this->right;
@@ -116,6 +124,13 @@ namespace ft
 			}
 		}
 
+		const red_black_node<T>	*find_first_node() const
+		{
+			const red_black_node<T>	*ret = this;
+			while (ret->find_predecessor())
+				ret = ret->find_predecessor();
+			return (ret);
+		}
 
 		T &					v;
 		red_black_node<T>	*left;
@@ -145,126 +160,43 @@ namespace ft
 
 
 	public:
-		red_black_tree() : _root(NULL) {}
+		red_black_tree() : _root(NULL) {} // problem to put _root to NULL, because we neet to be able to initiate iterator on an empty tree. It has to point somewhere.
+		// so we need a special node that will exist only when the tree is empty, and will be deleted as soon as we insert something
 
 
 		red_black_tree(red_black_tree const & x) : _root(NULL), _c(x._c)
 		{
-			red_black_node<T>	*node = x.find_first_node(x._root);
-			while (node)
-			{
-				this->insert(node->v);
-				node = x.find_successor(node);
-			}
+			*this = x;
 		}
 
-		red_black_tree &	operator=(red_black_tree const & x) // do i need to copy allocator and compare ?
+		red_black_tree &	operator=(red_black_tree const & x)
 		{
+			
 			if (this != &x)
 			{
 				while (this->_root)
 					this->remove(this->_root);
-				const red_black_node<T>	*node = x.find_first_node(x._root);
+				const red_black_node<T>	*node = x.find_first_node();
 				while (node)
 				{
 					this->insert(node->v);
-					node = x.find_successor(node);
+					node = node->find_successor();
 				}
 			}
 			return (*this);
 		}
 
-		red_black_tree(Compare comp) : _root(NULL), _c(comp) {std::cout << "comp constructor called\n";}
+		red_black_tree(Compare comp) : _root(NULL), _c(comp) {std::cout << "comp constructor called\n";} // remove the message later
 
 		~red_black_tree()
 		{
 			while (this->_root)
-				this->remove(this->_root);
+				this->remove(this->_root); // right now that leaks
 		}
 
-		static red_black_node<T>	*find_successor(const red_black_node<T> *node)
+		const red_black_node<T>	*find_first_node() const
 		{
-/*
-			Next rule: The successor of a node is:
-Next-R rule: If it has a right subtree, the leftmost node in the right subtree.
-Next-U rule: Otherwise, traverse up the tree
-If you make a right turn (i.e. this node was a left child), then that parent node is the successor
-If you make a left turn (i.e. this node was a right child), continue going up.
-If you can't go up anymore, then there's no successor
-*/
-
-			if (node == NULL)
-				return (NULL);
-			if (node->right)
-			{
-				red_black_node<T>	*ret = node->right;
-				while (ret->left)
-					ret = ret->left;
-				return (ret);
-			}
-			else // no right subtree
-			{
-				red_black_node<T>	*ret = node->parent;
-				while (ret)
-				{
-					if (ret->right == node) // we did a left turn
-					{
-						node = ret;
-						ret = ret->parent;
-					}
-					else // we did a right turn
-					{
-						return (ret);
-					}
-				}
-				return (NULL);
-			}
-		}
-
-		static red_black_node<T>	*find_predecessor(const red_black_node<T> *node)
-		{
-			if (node == NULL)
-				return (NULL);
-			if (node->left)
-			{
-				red_black_node<T>	*ret = node->left;
-				while (ret->right)
-					ret = ret->right;
-				return (ret);
-			}
-			else
-			{
-				red_black_node<T>	*ret = node->parent;
-				while (ret)
-				{
-					if (ret->left == node)
-					{
-						node = ret;
-						ret = ret->parent;
-					}
-					else
-					{
-						return (ret);
-					}
-				}
-				return (NULL);
-			}
-		}
-
-		static red_black_node<T>	*find_first_node(red_black_node<T> *any_node_in_tree) // this one is static and needs to take a node as param
-		{ // if it receives NULL, it returns NULL
-			while (red_black_tree<T, Compare, Alloc>::find_predecessor(any_node_in_tree))
-				any_node_in_tree = red_black_tree<T, Compare, Alloc>::find_predecessor(any_node_in_tree);
-			return (any_node_in_tree);
-		}
-
-		red_black_node<T>	*find_first_node()
-		{
-			red_black_node<T>	*ret = this->_root;
-
-			while (this->find_predecessor(ret))
-				ret = find_predecessor(ret);
-			return (ret);
+			return (this->_root->find_first_node());
 		}
 
 
@@ -292,13 +224,11 @@ If you can't go up anymore, then there's no successor
 			while (browse)
 			{
 				parent = browse; // keeping the parent node
-//				if (v < browse->v)
 				if (this->_c(v, browse->v)) //////////////////////////
 				{
 					browse = browse->left;
 					continue;
 				}
-//				else if (browse->v < v)
 				else if (this->_c(browse->v, v))
 				{
 					browse = browse->right;
@@ -312,7 +242,6 @@ If you can't go up anymore, then there's no successor
 				}
 			}
 			// here browse is a NULL pointer. It means its parent is the node that we have to insert under
-//			if (v < parent->v)
 			if (this->_c(v, parent->v))
 			{
 				parent->left = this->_al.allocate(1);
@@ -335,13 +264,11 @@ If you can't go up anymore, then there's no successor
 
 			while (browse)
 			{
-//				if (v < browse->v)
 				if (this->_c(v, browse->v))
 				{
 					browse = browse->left;
 					continue;
 				}
-//				else if (browse->v < v)
 				else if (this->_c(browse->v, v))
 				{
 					browse = browse->right;
