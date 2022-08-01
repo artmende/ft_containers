@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/01 11:24:46 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/01 14:36:04 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,28 +35,16 @@ namespace ft
 
 	public:
 
-		typedef	T	value_type;
+		//typedef	T	value_type;
 
-		red_black_node(T *value) : v(*value), left(NULL), right(NULL), parent(NULL), color(false)
-		{
-//			v = value; // cannot because it wouldnt work with const element
-		}
+		T &					v;
+		red_black_node<T>	*left;
+		red_black_node<T>	*right;
+		red_black_node<T>	*parent;
+		bool				color; // true is black, false is red // use ENUM
 
-		//red_black_node(red_black_node const & x) // template? different template type ?
-		//: v(x.v), left(NULL), right(NULL), parent(NULL), color(x.color)
-		//{} // I don't think I need it
-
-		~red_black_node()
-		{}
-
-		//red_black_node &	operator=(red_black_node const & x) // template? different template type ?
-		//{
-		//	if (&x != this)
-		//	{
-		//		this->v = x.v;
-		//	}
-		//	return (*this);
-		//} // I don't think I need it
+		red_black_node(T *value) : v(*value), left(NULL), right(NULL), parent(NULL), color(false) {}
+		~red_black_node() {}
 
 		red_black_node<T>	*find_successor() const
 		{
@@ -131,20 +119,10 @@ If you can't go up anymore, then there's no successor
 				ret = ret->find_predecessor();
 			return (ret);
 		}
-
-		T &					v;
-		red_black_node<T>	*left;
-		red_black_node<T>	*right;
-		red_black_node<T>	*parent;
-		bool				color; // true is black, false is red // use ENUM
 	};
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-
-//	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > > // probably no need to put = because the type is given by map
-//	template <class Key, class T, class Compare, class Alloc>
 	template <typename T, typename Compare = std::less<T>, typename Alloc = std::allocator<red_black_node<T> > >
 	class red_black_tree
 	{
@@ -155,9 +133,6 @@ If you can't go up anymore, then there's no successor
 		
 		allocator_type	_al;
 		Compare			_c;
-	//	std::allocator<red_black_node<T> >	_al;
-
-
 
 	public:
 		red_black_tree() : _root(NULL) {} // problem to put _root to NULL, because we neet to be able to initiate iterator on an empty tree. It has to point somewhere.
@@ -224,7 +199,7 @@ If you can't go up anymore, then there's no successor
 			while (browse)
 			{
 				parent = browse; // keeping the parent node
-				if (this->_c(v, browse->v)) //////////////////////////
+				if (this->_c(v, browse->v))
 				{
 					browse = browse->left;
 					continue;
@@ -300,68 +275,26 @@ If you can't go up anymore, then there's no successor
 			if (to_delete == NULL) // if the node was not in the tree, nothing to do
 				return;
 
-			if (to_delete->left == NULL && to_delete->right == NULL) // deleting leaf node
+			if (to_delete->left == NULL && to_delete->right == NULL) // deleting leaf node, can i do only one destroy and deallocate at the end ?
 			{
 				if (to_delete->parent == NULL) // deleting root node
-				{
 					this->_root = NULL;
-					al_value.destroy(&(to_delete->v));
-					al_value.deallocate(&(to_delete->v), 1);
-					this->_al.destroy(to_delete);
-					this->_al.deallocate(to_delete, 1);
-					return;
-				}
-				if (to_delete->parent->left == to_delete)
-				{
+				else if (to_delete->parent->left == to_delete) // to_delete is a left child
 					to_delete->parent->left = NULL;
-					al_value.destroy(&(to_delete->v));
-					al_value.deallocate(&(to_delete->v), 1);
-					this->_al.destroy(to_delete);
-					this->_al.deallocate(to_delete, 1);
-					return;
-				}
-				if (to_delete->parent->right == to_delete)
-				{
+				else // to_delete is a right child
 					to_delete->parent->right = NULL;
-					al_value.destroy(&(to_delete->v));
-					al_value.deallocate(&(to_delete->v), 1);
-					this->_al.destroy(to_delete);
-					this->_al.deallocate(to_delete, 1);
-					return;
-				}
 			}
 			else if ((to_delete->left == NULL && to_delete->right) || (to_delete->left && to_delete->right == NULL)) // deleting node with only one child
 			{
 				red_black_node<T>	*subtree = (to_delete->left ? to_delete->left : to_delete->right);
 
 				subtree->parent = to_delete->parent;
-				if (to_delete->parent == NULL)
-				{
+				if (to_delete->parent == NULL) // deleting root node
 					this->_root = subtree;
-					al_value.destroy(&(to_delete->v));
-					al_value.deallocate(&(to_delete->v), 1);
-					this->_al.destroy(to_delete);
-					this->_al.deallocate(to_delete, 1);
-					return;
-				}
-				if (to_delete->parent->left == to_delete)
-				{
+				else if (to_delete->parent->left == to_delete) // to_delete is a left child
 					to_delete->parent->left = subtree;
-					al_value.destroy(&(to_delete->v));
-					al_value.deallocate(&(to_delete->v), 1);
-					this->_al.destroy(to_delete);
-					this->_al.deallocate(to_delete, 1);
-					return;
-				}
-				if (to_delete->parent->right == to_delete)
-				{
+				else // to_delete is a right child
 					to_delete->parent->right = subtree;
-					al_value.destroy(&(to_delete->v));
-					al_value.deallocate(&(to_delete->v), 1);
-					this->_al.destroy(to_delete);
-					this->_al.deallocate(to_delete, 1);
-					return;
-				}
 			}
 			else // deleting node with 2 children
 			{
@@ -373,14 +306,16 @@ If you can't go up anymore, then there's no successor
 				if (smallest_in_right_subtree->right)
 					smallest_in_right_subtree->right->parent = smallest_in_right_subtree->parent; // connecting his child to the parent
 
-				if (smallest_in_right_subtree->parent->left == smallest_in_right_subtree)
-					smallest_in_right_subtree->parent->left = smallest_in_right_subtree->right;
-				else
+				if (smallest_in_right_subtree->parent->left == smallest_in_right_subtree) // smallest_in_right_subtree can only have a right child, the left child is always NULL
+					smallest_in_right_subtree->parent->left = smallest_in_right_subtree->right; // it makes its right child (NULL or not) replace himself for his parent
+				else // that would mean smallest_in_right_subtree is the direct right child of to_delete
 					smallest_in_right_subtree->parent->right = smallest_in_right_subtree->right; // connecting new parent to child
 
 				smallest_in_right_subtree->parent = to_delete->parent;
 				smallest_in_right_subtree->left = to_delete->left;
 				smallest_in_right_subtree->right = to_delete->right;
+
+				// now smallest_in_right_subtree has replaced to_delete, 
 
 				if (to_delete->parent)
 				{
@@ -396,21 +331,24 @@ If you can't go up anymore, then there's no successor
 					to_delete->left->parent = smallest_in_right_subtree;
 				if (to_delete->right)
 					to_delete->right->parent = smallest_in_right_subtree;
-				al_value.destroy(&(to_delete->v));
-				al_value.deallocate(&(to_delete->v), 1);
-				this->_al.destroy(to_delete);
-				this->_al.deallocate(to_delete, 1);
-				return;
 
 				// smallest in right subtree can only have 1 child max, and it has to be right child (because left would be smaller)
 				// right child has to become child of parent of smallest (can be NULL but doesnt matter)
 				// parent and children of to_delete has to become parent and children of smallest
-
-				
 			}
+			this->destroy_and_deallocate_node(to_delete);
 		}
 
+		void	destroy_and_deallocate_node(red_black_node<T> *to_delete)
+		{
+			typedef typename Alloc::template rebind<T>::other	alloc_value;
+			alloc_value	al_value;
 
+			al_value.destroy(&(to_delete->v));
+			al_value.deallocate(&(to_delete->v), 1);
+			this->_al.destroy(to_delete);
+			this->_al.deallocate(to_delete, 1);
+		}
 
 
 	};

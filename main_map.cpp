@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/01 11:16:01 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/01 14:15:31 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 int	main()
 {
 
-
+	{
 
 	ft::map<int, int>	mm;
 
@@ -129,7 +129,7 @@ int	main()
 
 	std::cout << "a < b ? " << ('a' < 'b') << std::endl; 
 
-
+	}
 
 
 	return 0;
