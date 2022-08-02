@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/01 16:31:44 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 11:42:40 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
 // https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
 
-
+// NEED TO CHANGE THE INSERT FUNCTION TO HAVE ONLY ONE RETURN AND MAKE SURE THE ROOT IS PROPERLY SAVED INSIDE NULLNODE
 
 namespace ft
 {
 	template <typename T>
-	class red_black_node
+	class red_black_node // all node contains a bool indicating if they are nullnode or not. Parent of nullnode can always be the root
 	{
 	private:
 		red_black_node();
@@ -42,13 +42,18 @@ namespace ft
 		red_black_node<T>	*left;
 		red_black_node<T>	*right;
 		red_black_node<T>	*parent;
+		red_black_node<T>	*nullnode;
 		bool				color; // true is black, false is red // use ENUM
-		bool				empty;
+		bool				is_nullnode;
 
-		red_black_node(T *value, bool empty) : v(*value), left(NULL), right(NULL), parent(NULL), color(false), empty(empty) {}
+		red_black_node(T *value, bool is_nullnode) : v(*value), left(NULL), right(NULL), parent(NULL), color(false), is_nullnode(is_nullnode) {} // should i include pointer inside constructor?
 		~red_black_node() {}
 
-		red_black_node<T>	*find_successor() const
+/*
+	Successor of nullnode will look at the root. if the root exist, it will return the find_first_node from the root. if the root doesnt exist, it will return itself
+*/
+
+		const red_black_node<T>	*find_successor() const
 		{
 /*
 			Next rule: The successor of a node is:
@@ -58,7 +63,14 @@ If you make a right turn (i.e. this node was a left child), then that parent nod
 If you make a left turn (i.e. this node was a right child), continue going up.
 If you can't go up anymore, then there's no successor
 */
-			if (this->right)
+			if (this->is_nullnode)
+			{
+				if (this->parent)
+					return (this->parent->find_first_node());
+				else
+					return (this);
+			}
+			else if (this->right)
 			{
 				red_black_node<T>	*ret = this->right;
 				while (ret->left)
@@ -81,13 +93,20 @@ If you can't go up anymore, then there's no successor
 						return (ret);
 					}
 				}
-				return (NULL);
+				return (this->nullnode);
 			}
 		}
 
-		red_black_node<T>	*find_predecessor() const
+		const red_black_node<T>	*find_predecessor() const
 		{
-			if (this->left)
+			if (this->is_nullnode)
+			{
+				if (this->parent)
+					return (this->parent->find_last_node());
+				else
+					return (this);
+			}
+			else if (this->left)
 			{
 				red_black_node<T>	*ret = this->left;
 				while (ret->right)
@@ -110,14 +129,14 @@ If you can't go up anymore, then there's no successor
 						return (ret);
 					}
 				}
-				return (NULL);
+				return (this->nullnode);
 			}
 		}
 
 		const red_black_node<T>	*find_first_node() const
 		{
 			const red_black_node<T>	*ret = this;
-			while (ret->find_predecessor())
+			while (ret->find_predecessor()->is_nullnode == false)
 				ret = ret->find_predecessor();
 			return (ret);
 		}
@@ -125,7 +144,7 @@ If you can't go up anymore, then there's no successor
 		const red_black_node<T>	*find_last_node() const
 		{
 			const red_black_node<T>	*ret = this;
-			while (ret->find_successor())
+			while (ret->find_successor()->is_nullnode == false)
 				ret = ret->find_successor();
 			return (ret);
 		}
@@ -144,6 +163,7 @@ If you can't go up anymore, then there's no successor
 
 
 		red_black_node<T>	*_root;
+		red_black_node<T>	*_nullnode;
 	private:
 		
 		allocator_type	_al;
@@ -151,12 +171,12 @@ If you can't go up anymore, then there's no successor
 		Compare			_c;
 
 	public:
-		red_black_tree() : _root(create_empty_node()) {} // problem to put _root to NULL, because we neet to be able to initiate iterator on an empty tree. It has to point somewhere.
+		red_black_tree() : _root(NULL), _nullnode(create_nullnode()) {} // problem to put _root to NULL, because we neet to be able to initiate iterator on an empty tree. It has to point somewhere.
 		// so we need a special node that will exist only when the tree is empty, and will be deleted as soon as we insert something
 
-		red_black_tree(Compare comp) : _root(create_empty_node()), _c(comp) {std::cout << "comp constructor called\n";} // remove the message later
+		red_black_tree(Compare comp) : _root(NULL), _nullnode(create_nullnode()), _c(comp) {std::cout << "comp constructor called\n";} // remove the message later
 
-		red_black_tree(red_black_tree const & x) : _root(NULL), _c(x._c)
+		red_black_tree(red_black_tree const & x) : _root(NULL), _nullnode(create_nullnode()), _c(x._c)
 		{
 			*this = x;
 		}
@@ -180,35 +200,32 @@ If you can't go up anymore, then there's no successor
 
 		~red_black_tree()
 		{
-			while (this->_root && this->_root->empty == false)
+			while (this->_root)
 				this->remove(this->_root);
-			destroy_and_deallocate_node(this->_root); // Necessary because when the last node is removed, an empty node takes its place
+			destroy_and_deallocate_node(this->_nullnode);
 		}
 
 		iterator	begin()
 		{
-			iterator	ret(this->_root->find_first_node());
-			if (this->_root->empty == true)
-				++ret;
+			iterator	ret(this->_nullnode->find_first_node());
 			return (ret);
 		}
 
-		iterator	end()
+		iterator	end() // just return null node
 		{
-			iterator	ret(this->_root->find_last_node());
-			++ret;
+			iterator	ret(this->_nullnode);
 			return (ret);
 		}
 
 
 		const red_black_node<T>	*find_first_node() const
 		{
-			return (this->_root->find_first_node());
+			return (this->_nullnode->find_first_node()); // the tree will always contain at least a valid nullnode
 		}
 
 		const red_black_node<T>	*find_last_node() const
 		{
-			return (this->_root->find_last_node());
+			return (this->_nullnode->find_last_node());
 		}
 
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
@@ -218,11 +235,12 @@ If you can't go up anymore, then there's no successor
 			T	*val_to_insert	= al_value.allocate(1);
 			this->al_value.construct(val_to_insert, v);
 
-			if (this->_root == NULL || this->_root->empty == true) // if root is null, second part will not be evaluated
+			if (this->_root == NULL) // if root is null, second part will not be evaluated
 			{
-				this->destroy_and_deallocate_node(this->_root); // Ok to be called on a NULL pointer. This will get rid of the empty node
 				this->_root = this->_al.allocate(1);
 				this->_al.construct(this->_root, val_to_insert, false); // no need to set the parent ptr in the new node, because its the root. it remains NULL
+				this->_root->nullnode = this->_nullnode; //////////////////////////////////////////
+				this->_nullnode->parent = this->_root; /////////////////////////////////////////////
 				return this->_root;
 			}
 
@@ -254,6 +272,7 @@ If you can't go up anymore, then there's no successor
 			{
 				parent->left = this->_al.allocate(1);
 				this->_al.construct(parent->left, val_to_insert, false);
+				parent->left->nullnode = this->_nullnode; //////////////////////
 				parent->left->parent = parent;
 				return parent->left;
 			}
@@ -261,6 +280,7 @@ If you can't go up anymore, then there's no successor
 			{
 				parent->right = this->_al.allocate(1);
 				this->_al.construct(parent->right, val_to_insert, false);
+				parent->right->nullnode = this->_nullnode;/////////////////////
 				parent->right->parent = parent;
 				return parent->right;
 			}
@@ -365,8 +385,7 @@ If you can't go up anymore, then there's no successor
 				// parent and children of to_delete has to become parent and children of smallest
 			}
 			this->destroy_and_deallocate_node(to_delete);
-			if (this->_root == NULL)
-				this->_root = create_empty_node();
+			this->_nullnode->parent = this->_root;
 		}
 
 		void	destroy_and_deallocate_node(red_black_node<T> *to_delete)
@@ -379,12 +398,13 @@ If you can't go up anymore, then there's no successor
 			this->_al.deallocate(to_delete, 1);
 		}
 
-		red_black_node<T>	*create_empty_node()
+		red_black_node<T>	*create_nullnode()
 		{
 			T	*val_to_insert	= al_value.allocate(1);
 			this->al_value.construct(val_to_insert, T());
 			red_black_node<T>	*ret = this->_al.allocate(1);
 			this->_al.construct(ret, val_to_insert, true);
+			ret->nullnode = ret; ///////////////////////////////////////////////
 			return (ret);
 		}
 

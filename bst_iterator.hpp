@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:19:08 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/01 17:32:54 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 11:46:01 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,30 +62,22 @@ namespace ft
 		typedef typename	std::iterator_traits<iterator_type>::pointer			pointer; // a pointer to the type that is stored in the tree
 		typedef typename	std::iterator_traits<iterator_type>::reference			reference;
 
-		bst_iterator() : _inner_node(NULL), _is_out(true) {}
-		bst_iterator(bst_iterator<T, node> const & x) : _inner_node(x._inner_node), _is_out(x._is_out) {}
-		bst_iterator(const node *ptr) : _inner_node(ptr), _is_out(false)
-		{
-			if (this->_inner_node->empty == true)
-				this->_is_out = true;
-		}
+		bst_iterator() : _inner_node(NULL) {}
+		bst_iterator(bst_iterator<T, node> const & x) : _inner_node(x._inner_node) {}
+		bst_iterator(const node *ptr) : _inner_node(ptr) {}
 		~bst_iterator() {}
 
-		bst_iterator &	operator=(bst_iterator const & x) { if (this != &x) {this->_inner_node = x._inner_node; this->_is_out = x._is_out;} return (*this); }
+		bst_iterator &	operator=(bst_iterator const & x) { if (this != &x) {this->_inner_node = x._inner_node;} return (*this); }
 
 		operator bst_iterator<const T, node>() const { return this->_inner_node; }
 
 		reference	operator*() const
 		{
-			if (this->_is_out == true)
-				throw std::out_of_range("Out of range"); // remove comment later
 			return (this->_inner_node->v);
 		}
 
 		pointer	operator->() const
 		{
-			if (this->_is_out == true)
-				throw std::out_of_range("Out of range");
 			return (&(this->_inner_node->v));
 		}
 
@@ -93,13 +85,8 @@ namespace ft
 
 		bst_iterator &	operator++() // ++it
 		{
-			node const	*n = this->_inner_node->find_successor();
-			if (n == NULL) // we are already at the last node
-				this->_is_out = true;
-			else if (this->_is_out == true) // we are before the first node
-				this->_is_out = false;
-			else
-				this->_inner_node = n;
+			if (this->_inner_node)
+				this->_inner_node = this->_inner_node->find_successor();
 			return (*this);
 		}
 
@@ -112,13 +99,8 @@ namespace ft
 
 		bst_iterator &	operator--() // --it
 		{
-			node const	*n = this->_inner_node->find_predecessor();
-			if (n == NULL)
-				this->_is_out = true;
-			else if (this->_is_out == true)
-				this->_is_out = false;
-			else
-				this->_inner_node = n;
+			if (this->_inner_node)
+				this->_inner_node = this->_inner_node->find_predecessor();
 			return (*this);
 		}
 
@@ -131,12 +113,16 @@ namespace ft
 
 		bool	operator==(bst_iterator const & rhs) const
 		{
-			return ((this->_inner_node == rhs._inner_node) && (this->_is_out == rhs._is_out));
+			return (this->_inner_node == rhs._inner_node);
+		}
+
+		bool	operator!=(bst_iterator const & rhs) const
+		{
+			return (this->_inner_node != rhs._inner_node);
 		}
 
 	//private:
 		const node	*_inner_node;
-		bool		_is_out;
 
 
 		

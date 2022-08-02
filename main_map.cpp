@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/01 17:33:04 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 11:47:27 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,17 @@ int	main()
 	ft::red_black_tree<int>::const_iterator	itb = rr.begin();
 	ft::red_black_tree<int>::iterator	ite = rr.end();
 
-	std::cout << "itb._is_out ? " << itb._is_out << std::endl;
-	std::cout << "ite._is_out ? " << ite._is_out << std::endl;
+	//std::cout << "itb._is_out ? " << itb._is_out << std::endl;
+	//std::cout << "ite._is_out ? " << ite._is_out << std::endl;
 
 
 
-
-	//std::cout << *itb << std::endl;
-
-	std::cout << (itb == ite) << std::endl;
+	for(int i = 0; i < 15; ++i)
+	{
+		std::cout << *itb << std::endl;
+		itb++;
+	}
+//	std::cout << (itb == ite) << std::endl;
 
 	return 0;
 }
