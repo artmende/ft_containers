@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 11:42:40 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 14:29:05 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ If you can't go up anymore, then there's no successor
 		red_black_tree() : _root(NULL), _nullnode(create_nullnode()) {} // problem to put _root to NULL, because we neet to be able to initiate iterator on an empty tree. It has to point somewhere.
 		// so we need a special node that will exist only when the tree is empty, and will be deleted as soon as we insert something
 
-		red_black_tree(Compare comp) : _root(NULL), _nullnode(create_nullnode()), _c(comp) {std::cout << "comp constructor called\n";} // remove the message later
+		red_black_tree(Compare comp) : _root(NULL), _nullnode(create_nullnode()), _c(comp) {}
 
 		red_black_tree(red_black_tree const & x) : _root(NULL), _nullnode(create_nullnode()), _c(x._c)
 		{
@@ -189,7 +189,7 @@ If you can't go up anymore, then there's no successor
 				while (this->_root)
 					this->remove(this->_root);
 				const red_black_node<T>	*node = x.find_first_node();
-				while (node)
+				while (node->nullnode == false)
 				{
 					this->insert(node->v);
 					node = node->find_successor();

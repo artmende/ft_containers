@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:19:08 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 11:46:01 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 13:44:45 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ namespace ft
 
 		bst_iterator &	operator=(bst_iterator const & x) { if (this != &x) {this->_inner_node = x._inner_node;} return (*this); }
 
-		operator bst_iterator<const T, node>() const { return this->_inner_node; }
+		operator bst_iterator<const T, node>() const { return this->_inner_node; } // This is what allow const_iterator to be constructed from iterator and allow them to be compared together
 
 		reference	operator*() const
 		{
@@ -120,21 +120,11 @@ namespace ft
 		{
 			return (this->_inner_node != rhs._inner_node);
 		}
-
-	//private:
+	
+	private:
 		const node	*_inner_node;
 
-
-		
-
-		//friend bool	operator==(const bst_iterator<T, red_black_node<T> > & a, const bst_iterator<T, red_black_node<T> > & b);
 	};
-
-	//	template <typename T> // 2 different types because it could be const and non const
-	//bool	operator==(bst_iterator<T, ft::red_black_node<T> > const & a, bst_iterator<T, ft::red_black_node<T> > const & b)
-	//{
-	//	return ((a._inner_node == b._inner_node) && (a._is_out == b._is_out));
-	//}
 }
 
 

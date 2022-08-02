@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 11:47:27 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 14:31:29 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,32 @@
 
 int	main()
 {
-	ft::red_black_tree<int>	rr;
-	//rr.insert(4);
-	//rr.insert(5);
-	//rr.insert(2);
+	
+	ft::map<int, int>	mm;
 
-	ft::red_black_tree<int>::const_iterator	itb = rr.begin();
-	ft::red_black_tree<int>::iterator	ite = rr.end();
-
-	//std::cout << "itb._is_out ? " << itb._is_out << std::endl;
-	//std::cout << "ite._is_out ? " << ite._is_out << std::endl;
-
-
-
-	for(int i = 0; i < 15; ++i)
+	for (size_t i = 0; i < 20; i++)
 	{
-		std::cout << *itb << std::endl;
-		itb++;
+		mm._tree.insert(ft::make_pair(i, i));
 	}
-//	std::cout << (itb == ite) << std::endl;
+
+	ft::map<int, int>::iterator	cite = mm.begin();
+	(*cite).second = 4;
+
+	for (ft::map<int, int>::const_iterator it = mm.begin(); it != mm.end(); ++it)
+	{
+		std::cout << (*it).second << std::endl;
+	}
+
+	ft::map<int, int>	m2(mm);
+
+	while (mm.begin() != mm.end())
+		mm._tree.remove(mm._tree._root);
+
+	for (ft::map<int, int>::const_iterator it = m2.begin(); it != m2.end(); ++it)
+	{
+		std::cout << (*it).second << std::endl;
+	}
+
 
 	return 0;
 }
