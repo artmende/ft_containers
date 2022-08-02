@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 15:04:38 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 17:00:33 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,42 @@
 
 int	main()
 {
+
+	ft::map<char, int> mymap;
+
+	// first insert function version (single parameter):
+	mymap.insert(ft::pair<char, int>('a', 100));
+	mymap.insert(ft::pair<char, int>('z', 200));
+
+	ft::pair<ft::map<char, int>::iterator, bool> ret;
+	ret = mymap.insert(ft::pair<char, int>('z', 500));
+	if (ret.second == false)
+	{
+		std::cout << "element 'z' already existed";
+		std::cout << " with a value of " << ret.first->second << '\n';
+	}
+
+	// second insert function version (with hint position):
+	ft::map<char, int>::iterator it = mymap.begin();
+	mymap.insert(it, ft::pair<char, int>('b', 300)); // max efficiency inserting
+	mymap.insert(it, ft::pair<char, int>('c', 400)); // no max efficiency inserting
+
+	// third insert function version (range insertion):
+	ft::map<char, int> anothermap;
+	anothermap.insert(mymap.begin(), mymap.find('c'));
+
 	
-	ft::map<int, int>	mm;
+	mymap.erase(mymap.find('b'));
+	
 
-	for (size_t i = 0; i < 20; i++)
-	{
-		mm._tree.insert(ft::make_pair(i, i));
-	}
+	// showing contents:
+	std::cout << "mymap contains:\n";
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
 
-	ft::map<int, int>::iterator	cite = mm.begin();
-	(*cite).second = 4;
-
-	mm[8] = 1000;
-	mm[51] = -10;
-
-	for (ft::map<int, int>::const_iterator it = mm.begin(); it != mm.end(); ++it)
-	{
-		std::cout << (*it).second << std::endl;
-	}
-
-
-
+	std::cout << "anothermap contains:\n";
+	for (it = anothermap.begin(); it != anothermap.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
 
 	return 0;
 }

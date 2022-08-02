@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 15:05:19 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 17:06:52 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,14 @@ namespace ft
 	public :
 		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
 		explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) // empty (1)
-		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(comp)), _size(0)
+		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(comp))
 		{}
 
 		//template <class InputIterator> // range (2)
 		//map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 		//{}
 		
-		map(const map& x) : _comp(x._comp), _alloc(x._alloc), _val_comp(x._val_comp), _tree(x._tree), _size(x._size) // copy (3)
+		map(const map& x) : _comp(x._comp), _alloc(x._alloc), _val_comp(x._val_comp), _tree(x._tree) // copy (3)
 		{
 //			this->_tree = x._tree;
 		}
@@ -96,7 +96,10 @@ namespace ft
 
 		map& operator=(const map& x)
 		{
-			(void)x;
+			if (this != &x)
+			{
+				this->_tree = x._tree;
+			}
 			return (*this);
 		}
 
@@ -143,12 +146,12 @@ namespace ft
 
 		bool	empty() const
 		{
-			return (this->_size == 0);
+			return (this->size() == 0);
 		}
 
 		size_type	size() const
 		{
-			return (this->_size);
+			return (_tree.size());
 		}
 
 		size_type	max_size() const
@@ -166,18 +169,41 @@ namespace ft
 
 		///////////////////////////	MODIFIERS	////////////////////////////////
 
-		//pair<iterator,bool>	insert(const value_type& val) // value_type is a pair (reference to a pair)
-		//{}
+		pair<iterator,bool>	insert(const value_type& val) // value_type is a pair (reference to a pair)
+		{
+			size_t	size_before = this->_tree.size();
+			red_black_node<value_type>	*ret = this->_tree.insert(val);
+			if (size_before == this->_tree.size())
+				return (ft::make_pair<iterator, bool>(ret, false));
+			else
+				return (ft::make_pair<iterator, bool>(ret, true));
+		}
 
-		//iterator	insert(iterator position, const value_type& val)
-		//{}
+		iterator	insert(iterator position, const value_type& val)
+		{
+			(void)position;
+			return ((this->insert(val)).first);
+		}
 
-		//template <class InputIterator>
-		//void	insert(InputIterator first, InputIterator last)
-		//{}
+		template <class InputIterator>
+		void	insert(InputIterator first, InputIterator last)
+		{
+			while (first != last)
+			{
+				this->insert(*first);
+				++first;
+			}
+		}
 
-		//void	erase(iterator position)
-		//{}
+
+
+
+		void	erase(iterator position)
+		{
+			const red_black_node<value_type>	*ret = position._inner_node;
+			std::cout << ret << std::endl;
+//			this->_tree.remove(ret);
+		}
 
 		//size_type	erase(const key_type& k)
 		//{}
@@ -201,8 +227,18 @@ namespace ft
 
 		///////////////////////////	OPERATIONS	////////////////////////////////
 
-		//iterator	find(const key_type& k)
-		//{}
+		iterator	find(const key_type& k)
+		{
+			size_t	size_before = this->_tree.size();
+			red_black_node<value_type>	*ret = this->_tree.insert(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
+			if (size_before == this->_tree.size())
+				return (iterator(ret));
+			else
+			{
+				this->_tree.remove(ret);
+				return (this->end());
+			}
+		}
 
 		//const_iterator	find(const key_type& k) const
 		//{}
@@ -239,7 +275,6 @@ namespace ft
 		allocator_type										_alloc;
 		value_compare										_val_comp;
 		red_black_tree<value_type, value_compare, Alloc>	_tree;
-		size_type											_size;
 	};
 
 

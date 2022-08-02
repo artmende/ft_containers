@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:19:08 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 14:47:29 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 16:57:57 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ namespace ft
 			return (this->_inner_node != rhs._inner_node);
 		}
 	
-	private:
+	//private: // gonna stay public
 		const node	*_inner_node;
 
 	};

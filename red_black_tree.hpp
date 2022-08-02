@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 14:29:05 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 17:06:33 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,14 +169,15 @@ If you can't go up anymore, then there's no successor
 		allocator_type	_al;
 		alloc_value		al_value;
 		Compare			_c;
+		size_t			_size;
 
 	public:
-		red_black_tree() : _root(NULL), _nullnode(create_nullnode()) {} // problem to put _root to NULL, because we neet to be able to initiate iterator on an empty tree. It has to point somewhere.
+		red_black_tree() : _root(NULL), _nullnode(create_nullnode()), _size(0) {} // problem to put _root to NULL, because we neet to be able to initiate iterator on an empty tree. It has to point somewhere.
 		// so we need a special node that will exist only when the tree is empty, and will be deleted as soon as we insert something
 
-		red_black_tree(Compare comp) : _root(NULL), _nullnode(create_nullnode()), _c(comp) {}
+		red_black_tree(Compare comp) : _root(NULL), _nullnode(create_nullnode()), _c(comp), _size(0) {}
 
-		red_black_tree(red_black_tree const & x) : _root(NULL), _nullnode(create_nullnode()), _c(x._c)
+		red_black_tree(red_black_tree const & x) : _root(NULL), _nullnode(create_nullnode()), _c(x._c), _size(x._size)
 		{
 			*this = x;
 		}
@@ -203,6 +204,11 @@ If you can't go up anymore, then there's no successor
 			while (this->_root)
 				this->remove(this->_root);
 			destroy_and_deallocate_node(this->_nullnode);
+		}
+
+		size_t	size() const
+		{
+			return (this->_size);
 		}
 
 		iterator	begin()
@@ -234,6 +240,7 @@ If you can't go up anymore, then there's no successor
 
 			T	*val_to_insert	= al_value.allocate(1);
 			this->al_value.construct(val_to_insert, v);
+			this->_size++; //////////////////////////////
 
 			if (this->_root == NULL) // if root is null, second part will not be evaluated
 			{
@@ -264,6 +271,7 @@ If you can't go up anymore, then there's no successor
 				{
 					this->al_value.destroy(val_to_insert);
 					this->al_value.deallocate(val_to_insert, 1);
+					this->_size--; ////////////////////////////
 					return (browse); // this means what we want to insert already exist in the tree. We just return the already existing node
 				}
 			}
@@ -386,6 +394,7 @@ If you can't go up anymore, then there's no successor
 			}
 			this->destroy_and_deallocate_node(to_delete);
 			this->_nullnode->parent = this->_root;
+			this->_size--;
 		}
 
 		void	destroy_and_deallocate_node(red_black_node<T> *to_delete)
