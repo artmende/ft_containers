@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 14:31:29 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 15:04:38 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,15 @@ int	main()
 	ft::map<int, int>::iterator	cite = mm.begin();
 	(*cite).second = 4;
 
+	mm[8] = 1000;
+	mm[51] = -10;
+
 	for (ft::map<int, int>::const_iterator it = mm.begin(); it != mm.end(); ++it)
 	{
 		std::cout << (*it).second << std::endl;
 	}
 
-	ft::map<int, int>	m2(mm);
 
-	while (mm.begin() != mm.end())
-		mm._tree.remove(mm._tree._root);
-
-	for (ft::map<int, int>::const_iterator it = m2.begin(); it != m2.end(); ++it)
-	{
-		std::cout << (*it).second << std::endl;
-	}
 
 
 	return 0;

@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:19:08 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 13:44:45 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 14:47:29 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,8 @@ namespace ft
 		const node	*_inner_node;
 
 	};
+
+	// maybe need to put comparison operators outside to make it work with reverse iterator
 }
 
 

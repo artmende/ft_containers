@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 14:29:43 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 15:05:19 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,14 @@ namespace ft
 	public :
 		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
 		explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) // empty (1)
-		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(comp))
+		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(comp)), _size(0)
 		{}
 
 		//template <class InputIterator> // range (2)
 		//map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 		//{}
 		
-		map(const map& x) : _comp(x._comp), _alloc(x._alloc), _val_comp(x._val_comp), /*_tree(red_black_tree<value_type, value_compare, Alloc>(_comp)),*/ _tree(x._tree) // copy (3)
+		map(const map& x) : _comp(x._comp), _alloc(x._alloc), _val_comp(x._val_comp), _tree(x._tree), _size(x._size) // copy (3)
 		{
 //			this->_tree = x._tree;
 		}
@@ -141,19 +141,28 @@ namespace ft
 
 		/////////////////////////////// CAPACITY ///////////////////////////////
 
-		//bool	empty() const
-		//{}
+		bool	empty() const
+		{
+			return (this->_size == 0);
+		}
 
-		//size_type	size() const
-		//{}
+		size_type	size() const
+		{
+			return (this->_size);
+		}
 
-		//size_type	max_size() const
-		//{}
+		size_type	max_size() const
+		{
+			return (this->_alloc.max_size());
+		}
 
 		///////////////////////////	ELEMENT ACCESS	////////////////////////////
 
-		//mapped_type&	operator[](const key_type& k)
-		//{}
+		mapped_type&	operator[](const key_type& k)
+		{
+			red_black_node<value_type>	*ret = this->_tree.insert(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
+			return(ret->v.second);
+		}
 
 		///////////////////////////	MODIFIERS	////////////////////////////////
 
@@ -230,6 +239,7 @@ namespace ft
 		allocator_type										_alloc;
 		value_compare										_val_comp;
 		red_black_tree<value_type, value_compare, Alloc>	_tree;
+		size_type											_size;
 	};
 
 
