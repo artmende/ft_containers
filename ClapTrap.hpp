@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:40:59 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/01 10:53:51 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 17:31:12 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ public:
 
 	std::string		get_name() const;
 
-	bool	operator<(ClapTrap const & rhs) const {return (this->_name < rhs._name);} /////////////////////////////
+//	bool	operator<(ClapTrap const & rhs) const {return (this->_name < rhs._name);} /////////////////////////////
 
 };
 

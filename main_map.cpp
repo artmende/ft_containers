@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 17:00:33 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 18:17:24 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 
 int	main()
 {
+
+
 
 	ft::map<char, int> mymap;
 
@@ -52,6 +54,7 @@ int	main()
 
 	
 	mymap.erase(mymap.find('b'));
+	mymap.erase('z');
 	
 
 	// showing contents:

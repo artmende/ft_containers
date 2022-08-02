@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 17:06:52 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/02 18:22:35 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ namespace ft
 	public :
 		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
 		explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) // empty (1)
-		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(comp))
+		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(_val_comp)) // why is it (comp) and not (_val_comp) ?
 		{}
 
 		//template <class InputIterator> // range (2)
@@ -200,16 +200,28 @@ namespace ft
 
 		void	erase(iterator position)
 		{
-			const red_black_node<value_type>	*ret = position._inner_node;
-			std::cout << ret << std::endl;
-//			this->_tree.remove(ret);
+			uintptr_t	test = reinterpret_cast<uintptr_t>(position._inner_node);
+			this->_tree.remove(reinterpret_cast<red_black_node<value_type> *>(test));
 		}
 
-		//size_type	erase(const key_type& k)
-		//{}
+		size_type	erase(const key_type& k)
+		{
+			red_black_node<value_type>	*to_erase = this->_tree.find(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
+			this->_tree.remove(to_erase);
+			if (to_erase)
+				return (1);
+			else
+				return (0);
+		}
 
-		//void	erase(iterator first, iterator last)
-		//{}
+		void	erase(iterator first, iterator last)
+		{
+			while (first != last)
+			{
+				this->erase(first);
+				++first;
+			}
+		}
 
 		//void	swap(map& x)
 		//{}
@@ -229,15 +241,11 @@ namespace ft
 
 		iterator	find(const key_type& k)
 		{
-			size_t	size_before = this->_tree.size();
-			red_black_node<value_type>	*ret = this->_tree.insert(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
-			if (size_before == this->_tree.size())
+			red_black_node<value_type>	*ret = this->_tree.find(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
+			if (ret)
 				return (iterator(ret));
 			else
-			{
-				this->_tree.remove(ret);
 				return (this->end());
-			}
 		}
 
 		//const_iterator	find(const key_type& k) const
