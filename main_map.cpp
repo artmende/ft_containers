@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 17:30:59 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/03 19:00:00 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,66 @@
 # define ft std
 #endif
 
-int	main()
+
+
+bool fncomp (char lhs, char rhs) {return lhs<rhs;}
+
+struct classcomp {
+  bool operator() (const char& lhs, const char& rhs) const
+  {return lhs<rhs;}
+};
+
+int main ()
 {
-	ft::map<char, int> mymap;
-	ft::map<char, int>::iterator itlow, itup;
+	ft::map<char, int> first;
 
-	mymap['a'] = 20;
-	mymap['b'] = 40;
-//	mymap['c'] = 60;
-	mymap['d'] = 80;
-	mymap['e'] = 100;
+	first['a'] = 10;
+	first['b'] = 30;
+	first['c'] = 50;
+	first['d'] = 70;
 
-	itlow = mymap.lower_bound('e'); // itlow points to b
-	itup = mymap.upper_bound('e');	// itup points to e (not d!)
+	ft::map<char, int> second(first.begin(), first.end());
 
-	std::cout << "itlow : " << (*itlow).first << std::endl;
-	std::cout << "itup : " << (*itup).first << std::endl;
+	ft::map<char, int> third(second);
+
+	ft::map<char, int, classcomp> fourth; // class as Compare
+
+	bool (*fn_pt)(char, char) = fncomp;
+	ft::map<char, int, bool (*)(char, char)> fifth(fn_pt); // function pointer as Compare
+
+	ft::map<char, int>::iterator	it = fifth.begin();
+
+	for (size_t i = 0; i < fifth.size(); i++)
+	{
+		std::cout << (*it).first << " -> " << (*it).second << std::endl;
+		++it;
+	}
+	
 
 	return 0;
 }
+
+
+
+//int	main()
+//{
+//	ft::map<char, int> mymap;
+
+//	mymap['a'] = 10;
+//	mymap['b'] = 20;
+//	mymap['c'] = 30;
+
+//	ft::pair<ft::map<char, int>::iterator, ft::map<char, int>::iterator> ret;
+//	ret = mymap.equal_range('b');
+
+//	std::cout << "lower bound points to: ";
+//	std::cout << ret.first->first << " => " << ret.first->second << '\n';
+
+//	std::cout << "upper bound points to: ";
+//	std::cout << ret.second->first << " => " << ret.second->second << '\n';
+
+//	return 0;
+//}
 
 /*
 

@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 17:14:18 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/03 18:53:06 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,19 @@ namespace ft
 		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(_val_comp)) // why is it (comp) and not (_val_comp) ?
 		{}
 
-		//template <class InputIterator> // range (2)
-		//map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-		//{}
+		template <class InputIterator> // range (2)
+		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(_val_comp))
+		{
+			while (first != last)
+			{
+				this->_tree.insert(*first);
+				++first;
+			}
+		}
 		
 		map(const map& x) : _comp(x._comp), _alloc(x._alloc), _val_comp(x._val_comp), _tree(x._tree) // copy (3)
-		{
-//			this->_tree = x._tree;
-		}
+		{}
 
 		~map()
 		{}
@@ -302,11 +307,23 @@ namespace ft
 			return (this->_tree.upper_bound(ft::make_pair<key_type, mapped_type>(k, mapped_type())));
 		}
 
-		//pair<const_iterator,const_iterator>	equal_range(const key_type& k) const
-		//{}
+		pair<const_iterator,const_iterator>	equal_range(const key_type& k) const
+		{
+			const_iterator	low = this->lower_bound(k);
+			const_iterator	up = this->upper_bound(k);
+			pair<const_iterator,const_iterator>	ret(low, up);
 
-		//pair<iterator,iterator>	equal_range(const key_type& k)
-		//{}
+			return (ret);
+		}
+
+		pair<iterator,iterator>	equal_range(const key_type& k)
+		{
+			iterator	low = this->lower_bound(k);
+			iterator	up = this->upper_bound(k);
+			pair<iterator,iterator>	ret(low, up);
+
+			return (ret);
+		}
 
 		///////////////////////////	ALLOCATOR	////////////////////////////////
 

@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 17:28:12 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/03 18:58:36 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ If you can't go up anymore, then there's no successor
 
 		red_black_tree(Compare comp) : _root(NULL), _nullnode(create_nullnode()), _c(comp), _size(0) {}
 
-		red_black_tree(red_black_tree const & x) : _root(NULL), _nullnode(create_nullnode()), _c(x._c), _size(x._size)
+		red_black_tree(red_black_tree const & x) : _root(NULL), _nullnode(create_nullnode()), _c(x._c), _size(0)
 		{
 			*this = x;
 		}
@@ -190,7 +190,7 @@ If you can't go up anymore, then there's no successor
 				while (this->_root)
 					this->remove(this->_root);
 				const red_black_node<T>	*node = x.find_first_node();
-				while (node->nullnode == false)
+				while (node->is_nullnode == false)
 				{
 					this->insert(node->v);
 					node = node->find_successor();
