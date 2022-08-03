@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 18:22:35 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/03 15:34:40 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,24 +218,34 @@ namespace ft
 		{
 			while (first != last)
 			{
-				this->erase(first);
+				iterator	to_erase = first;
 				++first;
+				this->erase(to_erase);
 			}
 		}
 
-		//void	swap(map& x)
-		//{}
+		void	swap(map& x)
+		{
+			this->_tree.swap(x._tree);
+		}
 
-		//void	clear()
-		//{}
+		void	clear()
+		{
+			ft::map<key_type, mapped_type>	temp;
+			this->swap(temp);
+		}
 
 		///////////////////////////	OBSERVERS	////////////////////////////////
 
-		//key_compare	key_comp() const
-		//{}
+		key_compare	key_comp() const
+		{
+			return (this->_comp);
+		}
 
-		//value_compare	value_comp() const
-		//{}
+		value_compare	value_comp() const
+		{
+			return (this->_val_comp);
+		}
 
 		///////////////////////////	OPERATIONS	////////////////////////////////
 

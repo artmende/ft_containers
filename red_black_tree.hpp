@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/02 17:06:33 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/03 15:13:29 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,21 @@ If you can't go up anymore, then there's no successor
 			while (this->_root)
 				this->remove(this->_root);
 			destroy_and_deallocate_node(this->_nullnode);
+		}
+
+		void	swap(red_black_tree & x)
+		{
+			size_t				size_temp = x._size;
+			red_black_node<T>	*root_temp = x._root;
+			red_black_node<T>	*nullnode_temp = x._nullnode;
+
+			x._size = this->_size;
+			x._root = this->_root;
+			x._nullnode = this->_nullnode;
+
+			this->_size = size_temp;
+			this->_root = root_temp;
+			this->_nullnode = nullnode_temp;
 		}
 
 		size_t	size() const
