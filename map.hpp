@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 15:34:40 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/03 17:14:18 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,11 @@ namespace ft
 			return (ret);
 		}
 
-		//const_iterator	begin() const
-		//{}
+		const_iterator	begin() const
+		{
+			const_iterator	ret(this->_tree.begin());
+			return (ret);
+		}
 
 		iterator	end()
 		{
@@ -127,8 +130,11 @@ namespace ft
 			return (ret);
 		}
 
-		//const_iterator	end() const
-		//{}
+		const_iterator	end() const
+		{
+			const_iterator	ret(this->_tree.end());
+			return (ret);
+		}
 
 		//reverse_iterator	rbegin()
 		//{}
@@ -258,23 +264,43 @@ namespace ft
 				return (this->end());
 		}
 
-		//const_iterator	find(const key_type& k) const
-		//{}
+		const_iterator	find(const key_type& k) const
+		{
+			const red_black_node<value_type>	*ret = this->_tree.find(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
+			if (ret)
+				return (const_iterator(ret));
+			else
+				return (this->end());
+		}
 
-		//size_type	count(const key_type& k) const
-		//{}
+		size_type	count(const key_type& k) const
+		{
+			const red_black_node<value_type>	*n = this->_tree.find(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
+			if (n)
+				return (1);
+			else
+				return (0);
+		}
 
-		//iterator	lower_bound(const key_type& k)
-		//{}
+		iterator	lower_bound(const key_type& k)
+		{
+			return (this->_tree.lower_bound(ft::make_pair<key_type, mapped_type>(k, mapped_type())));
+		}
 
-		//const_iterator	lower_bound(const key_type& k) const
-		//{}
+		const_iterator	lower_bound(const key_type& k) const
+		{
+			return (this->_tree.lower_bound(ft::make_pair<key_type, mapped_type>(k, mapped_type())));
+		}
 
-		//iterator	upper_bound(const key_type& k)
-		//{}
+		iterator	upper_bound(const key_type& k)
+		{
+			return (this->_tree.upper_bound(ft::make_pair<key_type, mapped_type>(k, mapped_type())));
+		}
 
-		//const_iterator	upper_bound(const key_type& k) const
-		//{}
+		const_iterator	upper_bound(const key_type& k) const
+		{
+			return (this->_tree.upper_bound(ft::make_pair<key_type, mapped_type>(k, mapped_type())));
+		}
 
 		//pair<const_iterator,const_iterator>	equal_range(const key_type& k) const
 		//{}
@@ -284,8 +310,10 @@ namespace ft
 
 		///////////////////////////	ALLOCATOR	////////////////////////////////
 
-		//allocator_type	get_allocator() const
-		//{}
+		allocator_type	get_allocator() const
+		{
+			return (this->_alloc);
+		}
 
 
 	//private:

@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 15:13:29 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/03 17:28:12 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,12 +232,23 @@ If you can't go up anymore, then there's no successor
 			return (ret);
 		}
 
+		const_iterator	begin() const
+		{
+			const_iterator	ret(this->_nullnode->find_first_node());
+			return (ret);
+		}
+
 		iterator	end() // just return null node
 		{
 			iterator	ret(this->_nullnode);
 			return (ret);
 		}
 
+		const_iterator	end() const // just return null node
+		{
+			const_iterator	ret(this->_nullnode);
+			return (ret);
+		}
 
 		const red_black_node<T>	*find_first_node() const
 		{
@@ -330,6 +341,117 @@ If you can't go up anymore, then there's no successor
 			}
 			return NULL; // means we didnt find it
 		}
+
+		const red_black_node<T>	*find(T const & v) const // not const because returned ptr can be used to edit the node
+		{
+			const red_black_node<T>	*browse = this->_root;
+
+			while (browse)
+			{
+				if (this->_c(v, browse->v))
+				{
+					browse = browse->left;
+					continue;
+				}
+				else if (this->_c(browse->v, v))
+				{
+					browse = browse->right;
+					continue;
+				}
+				else // means we found it
+					return (browse);
+			}
+			return NULL; // means we didnt find it
+		}
+
+		iterator	lower_bound(T const & v)
+		{
+			red_black_node<T>	*browse = this->_root;
+
+			while (browse)
+			{
+				if (this->_c(v, browse->v)) // the v that we are looking for is smaller than current node
+				{
+					if (browse->left == NULL)
+						return (iterator(browse));
+					browse = browse->left;
+					continue;
+				}
+				else if (this->_c(browse->v, v)) // the v that we are looking for is bigger than current node
+				{
+					if (browse->right == NULL)
+					{
+						iterator	ret(browse);
+						++ret;
+						return (ret);
+					}
+					browse = browse->right;
+					continue;
+				}
+				else // means we fount it
+					return (iterator(browse));
+			}
+			return (this->end()); // in case the tree is empty
+		}
+
+		const_iterator	lower_bound(T const & v) const
+		{
+			const red_black_node<T>	*browse = this->_root;
+
+			while (browse)
+			{
+				if (this->_c(v, browse->v)) // the v that we are looking for is smaller than current node
+				{
+					if (browse->left == NULL)
+						return (const_iterator(browse));
+					browse = browse->left;
+					continue;
+				}
+				else if (this->_c(browse->v, v)) // the v that we are looking for is bigger than current node
+				{
+					if (browse->right == NULL)
+					{
+						const_iterator	ret(browse);
+						++ret;
+						return (ret);
+					}
+					browse = browse->right;
+					continue;
+				}
+				else // means we fount it
+					return (const_iterator(browse));
+			}
+			return (this->end()); // in case the tree is empty
+		}
+
+		iterator	upper_bound(T const & v)
+		{
+			if (this->_root == NULL)
+				return (this->end());
+			else
+			{
+				iterator	ret = this->lower_bound(v);
+				if (ret != this->end() && !(this->_c(v, *ret) || this->_c(*ret, v)))
+					++ret;
+				return (ret);
+			}
+		}
+
+		const_iterator	upper_bound(T const & v) const
+		{
+			if (this->_root == NULL)
+				return (this->end());
+			else
+			{
+				const_iterator	ret = this->lower_bound(v);
+				if (ret != this->end() && !(this->_c(v, *ret) || this->_c(*ret, v)))
+					++ret;
+				return (ret);
+			}
+		}
+
+
+
 
 		void	remove(T const & v)
 		{

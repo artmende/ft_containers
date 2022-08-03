@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 15:29:47 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/03 17:30:59 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,19 @@
 int	main()
 {
 	ft::map<char, int> mymap;
+	ft::map<char, int>::iterator itlow, itup;
 
-	ft::map<char, int>::key_compare mycomp = mymap.key_comp();
+	mymap['a'] = 20;
+	mymap['b'] = 40;
+//	mymap['c'] = 60;
+	mymap['d'] = 80;
+	mymap['e'] = 100;
 
-	mymap['a'] = 100;
-	mymap['b'] = 200;
-	mymap['c'] = 300;
+	itlow = mymap.lower_bound('e'); // itlow points to b
+	itup = mymap.upper_bound('e');	// itup points to e (not d!)
 
-	std::cout << "mymap contains:\n";
-
-	ft::map<char, int>::iterator	rbegin = mymap.end(); --rbegin;
-
-	char highest = (*rbegin).first; // key value of last element
-
-	ft::map<char, int>::iterator it = mymap.begin();
-	do
-	{
-		std::cout << it->first << " => " << it->second << '\n';
-	} while (mycomp((*it++).first, highest));
-
-	std::cout << '\n';
+	std::cout << "itlow : " << (*itlow).first << std::endl;
+	std::cout << "itup : " << (*itup).first << std::endl;
 
 	return 0;
 }
