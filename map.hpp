@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/04 16:01:51 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/04 18:15:25 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include "red_black_tree.hpp"
 # include "bst_iterator.hpp"
 # include "reverse_iterator.hpp"
+# include "lexicographical_compare_equal.hpp"
 
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
@@ -76,7 +77,7 @@ namespace ft
 	public :
 		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
 		explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) // empty (1)
-		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(_val_comp)) // why is it (comp) and not (_val_comp) ?
+		: _comp(comp), _alloc(alloc), _val_comp(value_compare(comp)), _tree(red_black_tree<value_type, value_compare, Alloc>(_val_comp))
 		{}
 
 		template <class InputIterator> // range (2)
@@ -339,9 +340,50 @@ namespace ft
 		red_black_tree<value_type, value_compare, Alloc>	_tree;
 	};
 
+	template <class Key, class T, class Compare, class Alloc>
+	bool	operator==(const ft::map<Key, T, Compare, Alloc> &lhs, const ft::map<Key, T, Compare, Alloc> &rhs)
+	{
+		if (lhs.size() != rhs.size())
+			return (false);
+		else
+			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
 
+	template <class Key, class T, class Compare, class Alloc>
+	bool	operator!=(const ft::map<Key, T, Compare, Alloc> &lhs, const ft::map<Key, T, Compare, Alloc> &rhs)
+	{
+		return (!(lhs == rhs));
+	}
 
+	template <class Key, class T, class Compare, class Alloc>
+	bool	operator<(const ft::map<Key, T, Compare, Alloc> &lhs, const ft::map<Key, T, Compare, Alloc> &rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
 
+	template <class Key, class T, class Compare, class Alloc>
+	bool	operator<=(const ft::map<Key, T, Compare, Alloc> &lhs, const ft::map<Key, T, Compare, Alloc> &rhs)
+	{
+		return (lhs == rhs || lhs < rhs);
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool	operator>(const ft::map<Key, T, Compare, Alloc> &lhs, const ft::map<Key, T, Compare, Alloc> &rhs)
+	{
+		return (!(lhs < rhs) && lhs != rhs);
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool	operator>=(const ft::map<Key, T, Compare, Alloc> &lhs, const ft::map<Key, T, Compare, Alloc> &rhs)
+	{
+		return (lhs == rhs || lhs > rhs);
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	void	swap(ft::map<Key, T, Compare, Alloc> &lhs, ft::map<Key, T, Compare, Alloc> &rhs)
+	{
+		lhs.swap(rhs);
+	}
 }
 
 // creating a default object, then using assignment to give it the right value

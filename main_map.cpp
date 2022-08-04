@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/04 15:27:45 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/04 18:10:55 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@
 # define ft std
 #endif
 
+struct test
+{
+	bool	operator==(test const & x) const {return (this == &x);}
+	bool	operator<(test const & x) const {return (this < &x);}
+};
 
 
 int main ()
@@ -35,7 +40,12 @@ int main ()
 	first['c'] = 50;
 	first['d'] = 70;
 
-	for (ft::map<char, int>::iterator i = first.begin(); i != first.end(); i++)
+	ft::map<char, int>	second;
+	second = first;
+
+	second['5'] = 50;
+
+	for (ft::map<char, int>::iterator i = second.begin(); i != second.end(); i++)
 	{
 		std::cout << (*i).first << " -> " << (*i).second << std::endl;
 	}
@@ -46,7 +56,19 @@ int main ()
 	{
 		std::cout << (*rit).first << " -> " << (*rit).second << std::endl;
 	}
-	
+
+	test	t1, t2;
+
+	ft::map<int, test>	m1, m2;
+
+	m1[2] = test();
+
+	std::cout << "t1 == t2 ? " << (t1 == t2) << std::endl;
+
+	std::cout << "m1 == m2 ? " << (m1 == m2) << std::endl;
+
+	std::cout << "first > second ? " << (first > second) << std::endl;
+
 	return 0;
 }
 
