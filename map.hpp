@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 18:53:06 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/04 16:01:51 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "pair.hpp"
 # include "red_black_tree.hpp"
 # include "bst_iterator.hpp"
+# include "reverse_iterator.hpp"
 
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
@@ -49,12 +50,8 @@ namespace ft
 		typedef typename	allocator_type::size_type					size_type;
 		typedef typename	red_black_tree<value_type>::iterator		iterator;
 		typedef typename	red_black_tree<value_type>::const_iterator	const_iterator;
-//		typedef				ft::bst_iterator<value_type, ft::red_black_node<value_type> >	iterator;
-//		typedef				ft::bst_iterator<const value_type, ft::red_black_node<value_type> >	const_iterator;
-	//	typedef				/* something */						iterator; // a bidirectional iterator to value_type	convertible to const_iterator
-	//	typedef				/* something */						const_iterator; // a bidirectional iterator to const value_type
-	//	typedef				reverse_iterator<iterator>			reverse_iterator;
-	//	typedef				reverse_iterator<const_iterator>	const_reverse_iterator;
+		typedef				ft::reverse_iterator<iterator>				reverse_iterator;
+		typedef				ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 
 
 
@@ -108,13 +105,6 @@ namespace ft
 			return (*this);
 		}
 
-
-		red_black_tree<value_type, value_compare, Alloc>	*base()
-		{
-			return (&(this->_tree));
-		}
-
-
 		////////////////////////////// ITERATORS ///////////////////////////////
 
 		iterator	begin()
@@ -141,17 +131,29 @@ namespace ft
 			return (ret);
 		}
 
-		//reverse_iterator	rbegin()
-		//{}
+		reverse_iterator	rbegin()
+		{
+			reverse_iterator	ret(this->end());
+			return (ret);
+		}
 
-		//const_reverse_iterator	rbegin() const
-		//{}
+		const_reverse_iterator	rbegin() const
+		{
+			const_reverse_iterator	ret(this->end());
+			return (ret);
+		}
 
-		//reverse_iterator	rend()
-		//{}
+		reverse_iterator	rend()
+		{
+			reverse_iterator	ret(this->begin());
+			return (ret);
+		}
 
-		//const_reverse_iterator	rend() const
-		//{}
+		const_reverse_iterator	rend() const
+		{
+			const_reverse_iterator	ret(this->begin());
+			return (ret);
+		}
 
 		/////////////////////////////// CAPACITY ///////////////////////////////
 
@@ -205,9 +207,6 @@ namespace ft
 				++first;
 			}
 		}
-
-
-
 
 		void	erase(iterator position)
 		{
@@ -333,7 +332,7 @@ namespace ft
 		}
 
 
-	//private:
+	private:
 		key_compare											_comp;
 		allocator_type										_alloc;
 		value_compare										_val_comp;

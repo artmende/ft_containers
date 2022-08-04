@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:19:08 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 16:59:43 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/04 15:19:29 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ a--
 
 namespace ft
 {
+	template <typename T>
+	class red_black_node;
 
 	template<typename T, typename node> // T is the value type stored inside of the tree
 	class bst_iterator
@@ -70,6 +72,11 @@ namespace ft
 		bst_iterator &	operator=(bst_iterator const & x) { if (this != &x) {this->_inner_node = x._inner_node;} return (*this); }
 
 		operator bst_iterator<const T, node>() const { return this->_inner_node; } // This is what allow const_iterator to be constructed from iterator and allow them to be compared together
+
+		//const node	*base() const
+		//{
+		//	return (this->_inner_node);
+		//}
 
 		reference	operator*() const
 		{
@@ -111,20 +118,32 @@ namespace ft
 			return (temp);
 		}
 
-		bool	operator==(bst_iterator const & rhs) const
-		{
-			return (this->_inner_node == rhs._inner_node);
-		}
+		//bool	operator==(bst_iterator const & rhs) const
+		//{
+		//	return (this->_inner_node == rhs._inner_node);
+		//}
 
-		bool	operator!=(bst_iterator const & rhs) const
-		{
-			return (this->_inner_node != rhs._inner_node);
-		}
+		//bool	operator!=(bst_iterator const & rhs) const
+		//{
+		//	return (this->_inner_node != rhs._inner_node);
+		//}
 	
 	//private: // gonna stay public // use in erase method in map
 		const node	*_inner_node;
 
 	};
+
+	template <typename T1, typename NODE1, typename T2, typename NODE2>
+	bool	operator==(bst_iterator<T1, NODE1> const & a, bst_iterator<T2, NODE2> const & b)
+	{
+		return (a._inner_node == b._inner_node);
+	}
+
+	template <typename T1, typename NODE1, typename T2, typename NODE2>
+	bool	operator!=(bst_iterator<T1, NODE1> const & a, bst_iterator<T2, NODE2> const & b)
+	{
+		return (!(a == b));
+	}
 
 	// maybe need to put comparison operators outside to make it work with reverse iterator
 }

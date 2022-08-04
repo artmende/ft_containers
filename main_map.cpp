@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 19:00:00 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/04 15:27:45 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,11 @@
 #include "bst_iterator.hpp"
 
 
-#ifdef USE_STD
+#ifndef USE_STD
 # define ft std
 #endif
 
 
-
-bool fncomp (char lhs, char rhs) {return lhs<rhs;}
-
-struct classcomp {
-  bool operator() (const char& lhs, const char& rhs) const
-  {return lhs<rhs;}
-};
 
 int main ()
 {
@@ -42,24 +35,18 @@ int main ()
 	first['c'] = 50;
 	first['d'] = 70;
 
-	ft::map<char, int> second(first.begin(), first.end());
-
-	ft::map<char, int> third(second);
-
-	ft::map<char, int, classcomp> fourth; // class as Compare
-
-	bool (*fn_pt)(char, char) = fncomp;
-	ft::map<char, int, bool (*)(char, char)> fifth(fn_pt); // function pointer as Compare
-
-	ft::map<char, int>::iterator	it = fifth.begin();
-
-	for (size_t i = 0; i < fifth.size(); i++)
+	for (ft::map<char, int>::iterator i = first.begin(); i != first.end(); i++)
 	{
-		std::cout << (*it).first << " -> " << (*it).second << std::endl;
-		++it;
+		std::cout << (*i).first << " -> " << (*i).second << std::endl;
+	}
+
+	std::cout << "-----------------\n";
+
+	for (ft::map<char, int>::reverse_iterator	rit = first.rbegin(); rit != first.rend(); rit++)
+	{
+		std::cout << (*rit).first << " -> " << (*rit).second << std::endl;
 	}
 	
-
 	return 0;
 }
 
