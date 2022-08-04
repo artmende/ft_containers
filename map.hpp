@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/04 18:15:25 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/04 18:31:21 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,8 @@ namespace ft
 
 		size_type	max_size() const
 		{
-			return (this->_alloc.max_size());
+			return (this->_tree.max_size());
+//			return (this->_alloc.max_size());
 		}
 
 		///////////////////////////	ELEMENT ACCESS	////////////////////////////

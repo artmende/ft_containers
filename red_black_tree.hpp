@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/03 18:58:36 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/04 18:30:45 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,11 @@ If you can't go up anymore, then there's no successor
 		size_t	size() const
 		{
 			return (this->_size);
+		}
+
+		size_t	max_size() const
+		{
+			return (this->_al.max_size());
 		}
 
 		iterator	begin()

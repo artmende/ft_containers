@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/04 18:10:55 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/04 18:31:37 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ int main ()
 	std::cout << "m1 == m2 ? " << (m1 == m2) << std::endl;
 
 	std::cout << "first > second ? " << (first > second) << std::endl;
+
+	std::cout << "max size is : " << m1.max_size() << std::endl;
 
 	return 0;
 }
