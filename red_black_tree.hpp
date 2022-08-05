@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/04 18:30:45 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/05 17:47:18 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,7 @@ If you can't go up anymore, then there's no successor
 
 		~red_black_tree()
 		{
+			// no need to balance the tree when deleting here
 			while (this->_root)
 				this->remove(this->_root);
 			destroy_and_deallocate_node(this->_nullnode);

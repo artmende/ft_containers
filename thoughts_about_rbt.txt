@@ -1,0 +1,17 @@
+after inserting node, look at the parent.
+
+if parent black, no problem
+
+if parent red :
+
+  - if uncle red : recolor parent, uncle, and also grand parent only if not root, then recheck GRAND PARENT if it is now red
+
+  - if uncle black : look at the new node, parent and grand parent. do they form a line ?
+    * if they form a line : recolor parent and grand parent and rotate GRAND PARENT to direction opposite to new node
+    * if they do not form a line : rotate parent opposite to new node, it is now a line and we can do same as above considering the last node(parent) as newnode
+
+deletion :
+
+if node to delete is red, just delete it normally, (but what about red or black ?)
+
+internal node retain its color ?
