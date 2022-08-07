@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/07 11:55:10 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/07 17:42:15 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,33 @@ struct test
 };
 
 
+template <typename T>
+void printBT(const std::string& prefix, const ft::red_black_node<T>* node, bool isLeft)
+{
+    if( node != NULL )
+    {
+        std::cout << prefix;
+
+        std::cout << (isLeft ? "├──" : "└──" );
+
+        // print the value of the node
+        std::cout << node->v.first << (node->color == true ? " black" : " red") << std::endl;
+
+        // enter the next tree level - left and right branch
+        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
+        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
+    }
+}
+
+template <typename T>
+void printBT(const ft::red_black_node<T>* node)
+{
+    printBT("", node, false);    
+}
+
+// pass the root node of your binary tree
+
+
 int main ()
 {
 /*	int j = 5;
@@ -42,43 +69,61 @@ int main ()
 
 	al.construct(n, &j, false, false);*/
 
-	ft::map<char, int> first;
 
-	first['a'] = 10;
-	first['b'] = 30;
-	first['c'] = 50;
-	first['d'] = 70;
+	ft::map<int, int>	mm;
 
-	ft::map<char, int>	second;
-	second = first;
-
-	second['5'] = 50;
-
-	for (ft::map<char, int>::iterator i = second.begin(); i != second.end(); i++)
+	for (size_t i = 0; i < 20; i++)
 	{
-		std::cout << (*i).first << " -> " << (*i).second << std::endl;
+		mm[i] = i;
 	}
 
-	std::cout << "-----------------\n";
+	//for (ft::map<int, int>::iterator it = mm.begin(); it != mm.end(); it++)
+	//{
+	//	std::cout << (*it).first << std::endl;
+	//}
 
-	for (ft::map<char, int>::reverse_iterator	rit = first.rbegin(); rit != first.rend(); rit++)
-	{
-		std::cout << (*rit).first << " -> " << (*rit).second << std::endl;
-	}
+	std::cout << "\n\n";
 
-	test	t1, t2;
+	printBT(mm._tree._root);
 
-	ft::map<int, test>	m1, m2;
 
-	m1[2] = test();
+	//ft::map<char, int> first;
 
-	std::cout << "t1 == t2 ? " << (t1 == t2) << std::endl;
+	//first['a'] = 10;
+	//first['b'] = 30;
+	//first['c'] = 50;
+	//first['d'] = 70;
 
-	std::cout << "m1 == m2 ? " << (m1 == m2) << std::endl;
+	//ft::map<char, int>	second;
+	//second = first;
 
-	std::cout << "first > second ? " << (first > second) << std::endl;
+	//second['5'] = 50;
 
-	std::cout << "max size is : " << m1.max_size() << std::endl;
+	//for (ft::map<char, int>::iterator i = second.begin(); i != second.end(); i++)
+	//{
+	//	std::cout << (*i).first << " -> " << (*i).second << std::endl;
+	//}
+
+	//std::cout << "-----------------\n";
+
+	//for (ft::map<char, int>::reverse_iterator	rit = first.rbegin(); rit != first.rend(); rit++)
+	//{
+	//	std::cout << (*rit).first << " -> " << (*rit).second << std::endl;
+	//}
+
+	//test	t1, t2;
+
+	//ft::map<int, test>	m1, m2;
+
+	//m1[2] = test();
+
+	//std::cout << "t1 == t2 ? " << (t1 == t2) << std::endl;
+
+	//std::cout << "m1 == m2 ? " << (m1 == m2) << std::endl;
+
+	//std::cout << "first > second ? " << (first > second) << std::endl;
+
+	//std::cout << "max size is : " << m1.max_size() << std::endl;
 
 	return 0;
 }

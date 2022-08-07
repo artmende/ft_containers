@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/07 14:43:30 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/07 17:47:32 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -291,6 +291,131 @@ If you can't go up anymore, then there's no successor
 			return (this->_nullnode->find_last_node()); // need to optimize this !
 		}
 
+		void	left_rotate(red_black_node<T> *pivot)
+		{
+			if (pivot->right == NULL)
+				return;
+			red_black_node<T>	*right_child_of_pivot = pivot->right; // pivot will become its left child
+			red_black_node<T>	*left_child_of_right_child_of_pivot = pivot->right->left; // will become right child of pivot
+			red_black_node<T>	*parent_of_pivot = pivot->parent; // will become parent of right child of pivot
+
+			right_child_of_pivot->parent = parent_of_pivot;
+			right_child_of_pivot->left = pivot;
+			pivot->parent = right_child_of_pivot;
+			pivot->right = left_child_of_right_child_of_pivot;
+			if (left_child_of_right_child_of_pivot)
+				left_child_of_right_child_of_pivot->parent = pivot;
+
+			if (right_child_of_pivot->parent == NULL)
+				this->_root = right_child_of_pivot;
+			else
+			{
+				if (parent_of_pivot->right == pivot)
+					parent_of_pivot->right = right_child_of_pivot;
+				else
+					parent_of_pivot->left = right_child_of_pivot;
+			}
+			this->_nullnode->parent = this->_root;
+		}
+
+		void	right_rotate(red_black_node<T> *pivot)
+		{
+			if (pivot->left == NULL)
+				return;
+			red_black_node<T>	*left_child_of_pivot = pivot->left; // pivot will become its right child
+			red_black_node<T>	*right_child_of_left_child_of_pivot = pivot->left->right; // will become left child of pivot
+			red_black_node<T>	*parent_of_pivot = pivot->parent; // will become parent of left child of pivot
+
+			left_child_of_pivot->parent = parent_of_pivot;
+			left_child_of_pivot->right = pivot;
+			pivot->parent = left_child_of_pivot;
+			pivot->left = right_child_of_left_child_of_pivot;
+			if (right_child_of_left_child_of_pivot)
+				right_child_of_left_child_of_pivot->parent = pivot;
+
+			if (left_child_of_pivot->parent == NULL)
+				this->_root = left_child_of_pivot;
+			else
+			{
+				if (parent_of_pivot->right == pivot)
+					parent_of_pivot->right = left_child_of_pivot;
+				else
+					parent_of_pivot->left = left_child_of_pivot;
+			}
+			this->_nullnode->parent = this->_root;
+		}
+
+		void	recolor_node(red_black_node<T> *node)
+		{
+			if (node == NULL)
+				return;
+			if (node->color == BLACK)
+				node->color = RED;
+			else
+				node->color = BLACK;
+		}
+
+		red_black_node<T>	*get_uncle(red_black_node<T> *node) /*const*/ // probably cannot put const here because the pointer received can be use to recolor
+		{
+			if (node == NULL || node->parent == NULL || node->parent->parent == NULL || node->is_nullnode == true)
+				return (NULL);
+			if (node->parent->parent->left == node->parent)
+				return (node->parent->parent->right);
+			else
+				return (node->parent->parent->left);
+		}
+
+		bool	three_nodes_form_a_line(red_black_node<T> *node, red_black_node<T> *parent, red_black_node<T> *grand_parent) /*const*/
+		{
+			if (node == NULL || parent == NULL || grand_parent == NULL)
+				return (false);
+			return ((grand_parent->left == parent && grand_parent->left->left == node) || (grand_parent->right == parent && grand_parent->right->right == node));
+		}
+
+		red_black_node<T>	*fix_rbt_insert(red_black_node<T> *inserted_node)
+		{
+			if (inserted_node == NULL || inserted_node->parent == NULL || inserted_node->parent->color == BLACK || inserted_node->is_nullnode == true)
+				return (inserted_node);
+			// here the parent can only be non null and RED
+			red_black_node<T>	*uncle = this->get_uncle(inserted_node);
+			if (uncle && uncle->color == RED)
+			{
+				this->recolor_node(inserted_node->parent);
+				this->recolor_node(uncle);
+				// inserted_node->parent is non NULL and is RED. That means it's not the root. Its parent must be non NULL too
+				if (inserted_node->parent->parent->parent != NULL) // recolor grand parent only if it's not the root
+					this->recolor_node(inserted_node->parent->parent);
+				fix_rbt_insert(inserted_node->parent->parent); // we have to check from grand parent now
+			}
+			else // uncle is black or NULL
+			{
+				red_black_node<T>	*original_parent = inserted_node->parent;
+				red_black_node<T>	*original_grand_parent = original_parent->parent; // the only one that is guaranteed to not move
+				if (false == this->three_nodes_form_a_line(inserted_node, original_parent, original_grand_parent))
+				{ // we need to rotate parent in direction opposite to inserted_node
+					if (inserted_node->parent->left == inserted_node)
+						this->right_rotate(inserted_node->parent);
+					else
+						this->left_rotate(inserted_node->parent);
+				}
+				// here they form a line
+				if (original_grand_parent->left == original_parent || original_grand_parent->left == inserted_node)
+				{
+					this->recolor_node(original_grand_parent);
+					this->recolor_node(original_grand_parent->left);
+					this->right_rotate(original_grand_parent);
+				}
+				else
+				{
+					this->recolor_node(original_grand_parent);
+					this->recolor_node(original_grand_parent->right);
+					this->left_rotate(original_grand_parent);
+				}
+			}
+			return (inserted_node);
+		}
+
+
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
 		{
 
@@ -338,19 +463,19 @@ If you can't go up anymore, then there's no successor
 			{
 				parent->left = this->_al.allocate(1);
 				this->_al.construct(parent->left, n);
-			//	this->_al.construct(parent->left, val_to_insert, false);
 				parent->left->nullnode = this->_nullnode; //////////////////////
 				parent->left->parent = parent;
-				return parent->left; // return (fix_rbt_insert(parent->left));
+			//	return parent->left;
+				return (this->fix_rbt_insert(parent->left));
 			}
 			else
 			{
 				parent->right = this->_al.allocate(1);
 				this->_al.construct(parent->right, n);
-			//	this->_al.construct(parent->right, val_to_insert, false);
 				parent->right->nullnode = this->_nullnode;/////////////////////
 				parent->right->parent = parent;
-				return parent->right; // return (fix_rbt_insert(parent->right));
+			//	return parent->right;
+				return (this->fix_rbt_insert(parent->right));
 			}
 		}
 

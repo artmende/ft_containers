@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/04 18:31:21 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/07 17:32:42 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,7 +338,8 @@ namespace ft
 		key_compare											_comp;
 		allocator_type										_alloc;
 		value_compare										_val_comp;
-		red_black_tree<value_type, value_compare, Alloc>	_tree;
+	public:
+		red_black_tree<value_type, value_compare, Alloc>	_tree; //////////////// was private before
 	};
 
 	template <class Key, class T, class Compare, class Alloc>
