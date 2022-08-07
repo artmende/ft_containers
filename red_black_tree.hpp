@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/07 11:55:24 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/07 14:43:30 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ namespace ft
 	{
 	private:
 		red_black_node();
-		red_black_node(red_black_node const & x);
-		red_black_node &	operator=(red_black_node const & x);
+		
+
 
 	public:
 
@@ -48,8 +48,30 @@ namespace ft
 		bool				color; // true is black, false is red // use ENUM
 		bool				is_nullnode;
 
-		red_black_node(T *value, /*bool color,*/ bool is_nullnode) : v(*value), left(NULL), right(NULL), parent(NULL), color(/*color*/false), is_nullnode(is_nullnode) {}
+		red_black_node(T *value, bool color, bool is_nullnode = false) : v(*value), left(NULL), right(NULL), parent(NULL), nullnode(NULL), color(color), is_nullnode(is_nullnode) {}
+		red_black_node(red_black_node const & x) : v(x.v), left(x.left), right(x.right), parent(x.parent), nullnode(x.nullnode), color(x.color), is_nullnode(x.is_nullnode) {}
 		~red_black_node() {}
+
+		red_black_node &	operator=(red_black_node const & x)
+		{
+			if (this != &x)
+			{
+				this->v = x.v; // that's okay because both are references. No T object is created here
+				this->left = x.left;
+				this->right = x.right;
+				this->parent = x.parent;
+				this->nullnode = x.nullnode;
+				this->color = x.color; // do i need this ? 
+				this->is_nullnode = x.is_nullnode;
+			}
+			return (*this);
+		}
+
+		void	be_replaced_in_tree(red_black_node const & x)
+		{
+			// this function can be called only after v is destroyed and deallocated
+			this->v = x.v;
+		}
 
 /*
 	Successor of nullnode will look at the root. if the root exist, it will return the find_first_node from the root. if the root doesnt exist, it will return itself
@@ -164,7 +186,7 @@ If you can't go up anymore, then there's no successor
 		typedef				bst_iterator<const T, red_black_node<T> >			const_iterator;
 
 
-		red_black_node<T>	*_root;
+		red_black_node<T>	*_root; // do those need to be public ?
 		red_black_node<T>	*_nullnode;
 	private:
 		
@@ -189,6 +211,7 @@ If you can't go up anymore, then there's no successor
 			
 			if (this != &x)
 			{
+				// maybe better to go from the root first to the left, and then to the right. instead of inserting from first node to last node.
 				while (this->_root)
 					this->remove(this->_root);
 				const red_black_node<T>	*node = x.find_first_node();
@@ -270,7 +293,6 @@ If you can't go up anymore, then there's no successor
 
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
 		{
-			// idea : In map, after inserting, use the assignment operator on the mapped type
 
 			T	*val_to_insert	= al_value.allocate(1);
 			this->al_value.construct(val_to_insert, v);
@@ -279,8 +301,8 @@ If you can't go up anymore, then there's no successor
 			if (this->_root == NULL)
 			{
 				this->_root = this->_al.allocate(1);
-			//	this->_al.construct(this->_root, val_to_insert, BLACK, false); // no need to set the parent ptr in the new node, because its the root. it remains NULL
-				this->_al.construct(this->_root, val_to_insert, false);
+				red_black_node<T>	n(val_to_insert, BLACK, false); // temporary object to pass 3 parameters to node constructor
+				this->_al.construct(this->_root, n); // no need to set the parent ptr in the new node, because its the root. it remains NULL
 				this->_root->nullnode = this->_nullnode; //////////////////////////////////////////
 				this->_nullnode->parent = this->_root; // from the nullnode, following the parent pointer brings to the root of the tree
 				return this->_root;
@@ -311,11 +333,12 @@ If you can't go up anymore, then there's no successor
 				}
 			}
 			// here browse is a NULL pointer. It means its parent is the node that we have to insert under
+			red_black_node<T>	n(val_to_insert, RED, false); // temporary object to pass 3 parameters to node constructor
 			if (this->_c(v, parent->v))
 			{
 				parent->left = this->_al.allocate(1);
-			//	this->_al.construct(parent->left, val_to_insert, RED, false);
-				this->_al.construct(parent->left, val_to_insert, false);
+				this->_al.construct(parent->left, n);
+			//	this->_al.construct(parent->left, val_to_insert, false);
 				parent->left->nullnode = this->_nullnode; //////////////////////
 				parent->left->parent = parent;
 				return parent->left; // return (fix_rbt_insert(parent->left));
@@ -323,8 +346,8 @@ If you can't go up anymore, then there's no successor
 			else
 			{
 				parent->right = this->_al.allocate(1);
-			//	this->_al.construct(parent->right, val_to_insert, RED, false);
-				this->_al.construct(parent->right, val_to_insert, false);
+				this->_al.construct(parent->right, n);
+			//	this->_al.construct(parent->right, val_to_insert, false);
 				parent->right->nullnode = this->_nullnode;/////////////////////
 				parent->right->parent = parent;
 				return parent->right; // return (fix_rbt_insert(parent->right));
@@ -560,8 +583,9 @@ If you can't go up anymore, then there's no successor
 			T	*val_to_insert	= al_value.allocate(1);
 			this->al_value.construct(val_to_insert, T());
 			red_black_node<T>	*ret = this->_al.allocate(1);
-		//	this->_al.construct(ret, val_to_insert, BLACK, true);
-			this->_al.construct(ret, val_to_insert, true);
+			red_black_node<T>	n(val_to_insert, BLACK, true); // temporary object to pass 3 parameters to node constructor
+			this->_al.construct(ret, n);
+		//	this->_al.construct(ret, val_to_insert, true);
 			ret->nullnode = ret; ///////////////////////////////////////////////
 			return (ret);
 		}
