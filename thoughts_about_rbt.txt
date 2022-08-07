@@ -15,3 +15,5 @@ deletion :
 if node to delete is red, just delete it normally, (but what about red or black ?)
 
 internal node retain its color ?
+
+

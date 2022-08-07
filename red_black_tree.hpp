@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/05 17:47:18 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/07 11:55:24 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <functional>
 # include "bst_iterator.hpp"
 
+# define RED false
+# define BLACK true
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
 // https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
@@ -46,7 +48,7 @@ namespace ft
 		bool				color; // true is black, false is red // use ENUM
 		bool				is_nullnode;
 
-		red_black_node(T *value, bool is_nullnode) : v(*value), left(NULL), right(NULL), parent(NULL), color(false), is_nullnode(is_nullnode) {} // should i include pointer inside constructor?
+		red_black_node(T *value, /*bool color,*/ bool is_nullnode) : v(*value), left(NULL), right(NULL), parent(NULL), color(/*color*/false), is_nullnode(is_nullnode) {}
 		~red_black_node() {}
 
 /*
@@ -258,12 +260,12 @@ If you can't go up anymore, then there's no successor
 
 		const red_black_node<T>	*find_first_node() const
 		{
-			return (this->_nullnode->find_first_node()); // the tree will always contain at least a valid nullnode
+			return (this->_nullnode->find_first_node()); // need to optimize this !
 		}
 
 		const red_black_node<T>	*find_last_node() const
 		{
-			return (this->_nullnode->find_last_node());
+			return (this->_nullnode->find_last_node()); // need to optimize this !
 		}
 
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
@@ -274,12 +276,13 @@ If you can't go up anymore, then there's no successor
 			this->al_value.construct(val_to_insert, v);
 			this->_size++; //////////////////////////////
 
-			if (this->_root == NULL) // if root is null, second part will not be evaluated
+			if (this->_root == NULL)
 			{
 				this->_root = this->_al.allocate(1);
-				this->_al.construct(this->_root, val_to_insert, false); // no need to set the parent ptr in the new node, because its the root. it remains NULL
+			//	this->_al.construct(this->_root, val_to_insert, BLACK, false); // no need to set the parent ptr in the new node, because its the root. it remains NULL
+				this->_al.construct(this->_root, val_to_insert, false);
 				this->_root->nullnode = this->_nullnode; //////////////////////////////////////////
-				this->_nullnode->parent = this->_root; /////////////////////////////////////////////
+				this->_nullnode->parent = this->_root; // from the nullnode, following the parent pointer brings to the root of the tree
 				return this->_root;
 			}
 
@@ -311,18 +314,20 @@ If you can't go up anymore, then there's no successor
 			if (this->_c(v, parent->v))
 			{
 				parent->left = this->_al.allocate(1);
+			//	this->_al.construct(parent->left, val_to_insert, RED, false);
 				this->_al.construct(parent->left, val_to_insert, false);
 				parent->left->nullnode = this->_nullnode; //////////////////////
 				parent->left->parent = parent;
-				return parent->left;
+				return parent->left; // return (fix_rbt_insert(parent->left));
 			}
 			else
 			{
 				parent->right = this->_al.allocate(1);
+			//	this->_al.construct(parent->right, val_to_insert, RED, false);
 				this->_al.construct(parent->right, val_to_insert, false);
 				parent->right->nullnode = this->_nullnode;/////////////////////
 				parent->right->parent = parent;
-				return parent->right;
+				return parent->right; // return (fix_rbt_insert(parent->right));
 			}
 		}
 
@@ -348,7 +353,7 @@ If you can't go up anymore, then there's no successor
 			return NULL; // means we didnt find it
 		}
 
-		const red_black_node<T>	*find(T const & v) const // not const because returned ptr can be used to edit the node
+		const red_black_node<T>	*find(T const & v) const
 		{
 			const red_black_node<T>	*browse = this->_root;
 
@@ -555,6 +560,7 @@ If you can't go up anymore, then there's no successor
 			T	*val_to_insert	= al_value.allocate(1);
 			this->al_value.construct(val_to_insert, T());
 			red_black_node<T>	*ret = this->_al.allocate(1);
+		//	this->_al.construct(ret, val_to_insert, BLACK, true);
 			this->_al.construct(ret, val_to_insert, true);
 			ret->nullnode = ret; ///////////////////////////////////////////////
 			return (ret);
@@ -566,5 +572,7 @@ If you can't go up anymore, then there's no successor
 
 }
 
+# undef RED
+# undef BLACK
 
 #endif

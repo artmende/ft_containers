@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/04 18:31:37 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/07 11:55:10 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include "bst_iterator.hpp"
 
 
-#ifndef USE_STD
+#ifdef USE_STD
 # define ft std
 #endif
 
@@ -33,6 +33,15 @@ struct test
 
 int main ()
 {
+/*	int j = 5;
+	ft::red_black_node<int>	y(&j, true, true);
+
+	std::allocator<ft::red_black_node<int> >	al;
+
+	ft::red_black_node<int>	*n = al.allocate(1);
+
+	al.construct(n, &j, false, false);*/
+
 	ft::map<char, int> first;
 
 	first['a'] = 10;
