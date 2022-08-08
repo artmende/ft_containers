@@ -13,6 +13,11 @@ if parent red :
 		* if they form a line : recolor parent and grand parent and rotate GRAND PARENT to direction opposite to new node. no need to recheck anything
 
 
+RED BLACK PROPERTIES : 
+
+- red node cannot have only 1 child. either 2 or 0.
+- black not always have a sibling, only exception is the root
+
 deletion :
 
 Idea : instead of smallest_in_right_subtree, use successor/predecessor by calling the function find_successor or find_predecessor from the node we want to delete
@@ -30,7 +35,22 @@ Let's look at what the successor/predecessor was before it got moved :
 A note on case 6 : the red node that become black is the original sibling far red child before rotation
 
 
-look at sibling : 
+deletion :
+
+If deleted node is leaf : 
+	- If it is RED, just delete it. done.
+	- If is it BLACK, replace it by double black temp node, and follow steps for double black
+
+If deleted node is not leaf : replace deleted node by successor/predecessor (in subtree !!).
+- If the node that we move up has a child (it cannot have 2), simply connect the child to the moved node parent and color that child black. That child will always be red (because a black node always have a sibling)
+- If the node that we move up has no child : 
+	* if it is red, just move it, finished
+	* if it is black, replace if by double black temp node and follow double black steps.
+
+
+
+Steps for double black :
+look at sibling of double black : 
 	- if red, its case 4
 	- if black, look at the far child of sibling :
 		* if its red, its case 6

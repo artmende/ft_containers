@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/08 15:31:12 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/08 18:49:08 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,6 @@ namespace ft
 			return (*this);
 		}
 
-		void	be_replaced_in_tree(red_black_node const & x) // bad idea. Better to not use that, as it would invalidate iterators
-		{
-			// this function can be called only after v is destroyed and deallocated
-			this->v = x.v;
-		}
 
 /*
 	Successor of nullnode will look at the root. if the root exist, it will return the find_first_node from the root. if the root doesnt exist, it will return itself
@@ -358,6 +353,47 @@ If you can't go up anymore, then there's no successor
 				node->color = BLACK;
 		}
 
+		void	replace_node_by_another_in_tree(red_black_node<T> *to_delete, red_black_node<T> *replacement)
+		{
+		// this function does not affect previous family of replacement
+			// connecting parent of to_delete to replacement
+			if (to_delete->parent == NULL)
+				this->_root = replacement;
+			else if (to_delete->parent->left == to_delete)
+				to_delete->parent->left = replacement;
+			else
+				to_delete->parent->right = replacement;
+			// connecting children of to_delete to replacement
+			if (to_delete->left)
+				to_delete->left->parent = replacement;
+			if (to_delete->right)
+				to_delete->right->parent = replacement;
+			// connecting replacement to its new parent and children
+			replacement->parent = to_delete->parent;
+			replacement->left = to_delete->left;
+			replacement->right = to_delete->right;
+		}
+
+		red_black_node<T>	*get_replacement_in_subtree(red_black_node<T> *node)
+		{
+			red_black_node<T>	*ret;
+			if (node->left)
+			{
+				ret = node->left;
+				while (ret->right)
+					ret = ret->right;
+			}
+			else if (node->right)
+			{
+				ret = node->right;
+				while (ret->left)
+					ret = ret->left;
+			}
+			else
+				ret = NULL;
+			return (ret);
+		}
+
 		red_black_node<T>	*get_uncle(red_black_node<T> *node) /*const*/ // probably cannot put const here because the pointer received can be use to recolor
 		{
 			if (node == NULL || node->parent == NULL || node->parent->parent == NULL || node->is_nullnode == true)
@@ -623,9 +659,9 @@ If you can't go up anymore, then there's no successor
 
 		void	remove(red_black_node<T> *to_delete)
 		{
-						// 3 cases : 
-			// if delete leaf node, just delete it and put parent ptr to NULL
-			// if delete node with only 1 child, connect the child to the parent and delete
+						// 3 cases : NOPEE
+			// if delete leaf node, just delete it and put parent ptr to NULL - ONLY IF NODE IS RED OR IS ROOT
+			// if delete node with only 1 child, connect the child to the parent and delete - ONLY IF NODE IS RED OR IS ROOT
 			// if delete node with 2 children, take the smallest in the right subtree and make it replace the node to delete
 
 			if (to_delete == NULL) // if the node was not in the tree, nothing to do
@@ -633,65 +669,126 @@ If you can't go up anymore, then there's no successor
 
 			if (to_delete->left == NULL && to_delete->right == NULL) // deleting leaf node
 			{
-				if (to_delete->parent == NULL) // deleting root node
+				if (to_delete == this->_root) // root doesnt have parent, null node will be updated at the end of remove function
 					this->_root = NULL;
-				else if (to_delete->parent->left == to_delete) // to_delete is a left child
-					to_delete->parent->left = NULL;
-				else // to_delete is a right child
-					to_delete->parent->right = NULL;
-			}
-			else if ((to_delete->left == NULL && to_delete->right) || (to_delete->left && to_delete->right == NULL)) // deleting node with only one child
-			{
-				red_black_node<T>	*subtree = (to_delete->left ? to_delete->left : to_delete->right);
-
-				subtree->parent = to_delete->parent;
-				if (to_delete->parent == NULL) // deleting root node
-					this->_root = subtree;
-				else if (to_delete->parent->left == to_delete) // to_delete is a left child
-					to_delete->parent->left = subtree;
-				else // to_delete is a right child
-					to_delete->parent->right = subtree;
-			}
-			else // deleting node with 2 children
-			{
-				red_black_node<T>	*smallest_in_right_subtree = to_delete->right;
-
-				while (smallest_in_right_subtree->left)
-					smallest_in_right_subtree = smallest_in_right_subtree->left; // finding smallest in right sub
-			
-				if (smallest_in_right_subtree->right)
-					smallest_in_right_subtree->right->parent = smallest_in_right_subtree->parent; // connecting his child to the parent
-
-				if (smallest_in_right_subtree->parent->left == smallest_in_right_subtree) // smallest_in_right_subtree can only have a right child, the left child is always NULL
-					smallest_in_right_subtree->parent->left = smallest_in_right_subtree->right; // it makes its right child (NULL or not) replace himself for his parent
-				else // that would mean smallest_in_right_subtree is the direct right child of to_delete
-					smallest_in_right_subtree->parent->right = smallest_in_right_subtree->right; // connecting new parent to child
-
-				smallest_in_right_subtree->parent = to_delete->parent;
-				smallest_in_right_subtree->left = to_delete->left;
-				smallest_in_right_subtree->right = to_delete->right;
-
-				// now smallest_in_right_subtree has replaced to_delete, 
-
-				if (to_delete->parent)
+				else if (to_delete->color == RED)
 				{
 					if (to_delete->parent->left == to_delete)
-						to_delete->parent->left = smallest_in_right_subtree;
+						to_delete->parent->left = NULL;
 					else
-						to_delete->parent->right = smallest_in_right_subtree;
+						to_delete->parent->right = NULL;
 				}
-				else
-					this->_root = smallest_in_right_subtree;
-
-				if (to_delete->left)
-					to_delete->left->parent = smallest_in_right_subtree;
-				if (to_delete->right)
-					to_delete->right->parent = smallest_in_right_subtree;
-
-				// smallest in right subtree can only have 1 child max, and it has to be right child (because left would be smaller)
-				// right child has to become child of parent of smallest (can be NULL but doesnt matter)
-				// parent and children of to_delete has to become parent and children of smallest
+				else // to_delete is black
+				{
+					T	*double_black_val = al_value.allocate(1);
+					this->al_value.construct(double_black_val, T());
+					red_black_node<T>	double_black_temp(double_black_val, BLACK, false, true);
+					red_black_node<T>	*double_black = this->_al.allocate(1);
+					this->_al.construct(double_black, double_black_temp);
+					if (to_delete->parent->left == to_delete)
+						to_delete->parent->left = double_black;
+					else
+						to_delete->parent->right = double_black;
+					// here need to call function for steps for double black
+				}
 			}
+			else // to_delete is not leaf node
+			{
+				red_black_node<T>	*replacement = this->get_replacement_in_subtree(to_delete);
+				if (replacement->left || replacement->right) // replacement has a child
+				{
+					if (replacement->left) // replacement has a left child
+					{
+						replacement->left->color = BLACK;
+						replacement->parent->right = replacement->left; // the replacement can only have a child in the opposite direction of itself (or it wouln't be the replacement)
+						replacement->left->parent = replacement->parent;
+					}
+					else // replacement has a right child
+					{
+						replacement->right->color = BLACK;
+						replacement->parent->left = replacement->right;
+						replacement->right->parent = replacement->parent;
+					}
+					replace_node_by_another_in_tree(to_delete, replacement);
+				}
+				else // replacement does not have a child
+				{
+					
+				}
+
+			}
+
+
+			//if ((to_delete == this->_root || to_delete->color == RED) && to_delete->left == NULL && to_delete->right == NULL) // deleting leaf node
+			//{
+			//	if (to_delete->parent == NULL) // deleting root node
+			//		this->_root = NULL;
+			//	else if (to_delete->parent->left == to_delete) // to_delete is a left child
+			//		to_delete->parent->left = NULL;
+			//	else // to_delete is a right child
+			//		to_delete->parent->right = NULL;
+			//}
+			//else if ((to_delete->color == RED || to_delete == this->_root) && ((to_delete->left == NULL && to_delete->right) || (to_delete->left && to_delete->right == NULL))) // deleting node with only one child
+			//{
+			//	// red node cannot have only 1 child
+			//	// root with one child can only happen in a tree with 2 nodes
+			//	// let's just delete this whole section
+			//	red_black_node<T>	*subtree = (to_delete->left ? to_delete->left : to_delete->right);
+
+			//	subtree->parent = to_delete->parent;
+			//	if (to_delete->parent == NULL) // deleting root node
+			//	{
+			//		this->_root = subtree;
+			//		subtree->color = BLACK; // root has to be black. It doesnt change anything to the subtree
+			//	}
+			//	else if (to_delete->parent->left == to_delete) // to_delete is a left child
+			//		to_delete->parent->left = subtree;
+			//	else // to_delete is a right child
+			//		to_delete->parent->right = subtree;
+			//}
+			//else // deleting node with 2 children
+			//{
+			//	red_black_node<T>	*smallest_in_right_subtree = to_delete->right;
+
+			//	while (smallest_in_right_subtree->left)
+			//		smallest_in_right_subtree = smallest_in_right_subtree->left; // finding smallest in right sub
+			
+			//	if (smallest_in_right_subtree->right)
+			//		smallest_in_right_subtree->right->parent = smallest_in_right_subtree->parent; // connecting his child to the parent
+
+			//	if (smallest_in_right_subtree->parent->left == smallest_in_right_subtree) // smallest_in_right_subtree can only have a right child, the left child is always NULL
+			//		smallest_in_right_subtree->parent->left = smallest_in_right_subtree->right; // it makes its right child (NULL or not) replace himself for his parent
+			//	else // that would mean smallest_in_right_subtree is the direct right child of to_delete
+			//		smallest_in_right_subtree->parent->right = smallest_in_right_subtree->right; // connecting new parent to child
+
+			//	smallest_in_right_subtree->parent = to_delete->parent;
+			//	smallest_in_right_subtree->left = to_delete->left;
+			//	smallest_in_right_subtree->right = to_delete->right;
+
+			//	// now smallest_in_right_subtree has replaced to_delete, 
+
+			//	if (to_delete->parent)
+			//	{
+			//		if (to_delete->parent->left == to_delete)
+			//			to_delete->parent->left = smallest_in_right_subtree;
+			//		else
+			//			to_delete->parent->right = smallest_in_right_subtree;
+			//	}
+			//	else
+			//		this->_root = smallest_in_right_subtree;
+
+			//	if (to_delete->left)
+			//		to_delete->left->parent = smallest_in_right_subtree;
+			//	if (to_delete->right)
+			//		to_delete->right->parent = smallest_in_right_subtree;
+
+			//	// smallest in right subtree can only have 1 child max, and it has to be right child (because left would be smaller)
+			//	// right child has to become child of parent of smallest (can be NULL but doesnt matter)
+			//	// parent and children of to_delete has to become parent and children of smallest
+			//}
+
+
+
 			this->destroy_and_deallocate_node(to_delete);
 			this->_nullnode->parent = this->_root;
 			this->_size--;
@@ -709,7 +806,7 @@ If you can't go up anymore, then there's no successor
 
 		red_black_node<T>	*create_nullnode()
 		{
-			T	*val_to_insert	= al_value.allocate(1);
+			T	*val_to_insert = al_value.allocate(1);
 			this->al_value.construct(val_to_insert, T());
 			red_black_node<T>	*ret = this->_al.allocate(1);
 			red_black_node<T>	n(val_to_insert, BLACK, true); // temporary object to pass 3 parameters to node constructor
