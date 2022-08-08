@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/07 17:47:32 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/08 15:31:12 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,19 @@ namespace ft
 		red_black_node<T>	*nullnode;
 		bool				color; // true is black, false is red // use ENUM
 		bool				is_nullnode;
+		bool				is_temp_node;
 
-		red_black_node(T *value, bool color, bool is_nullnode = false) : v(*value), left(NULL), right(NULL), parent(NULL), nullnode(NULL), color(color), is_nullnode(is_nullnode) {}
-		red_black_node(red_black_node const & x) : v(x.v), left(x.left), right(x.right), parent(x.parent), nullnode(x.nullnode), color(x.color), is_nullnode(x.is_nullnode) {}
+		red_black_node(T *value, bool color, bool is_nullnode = false, bool is_temp_node = false)
+		: v(*value), left(NULL), right(NULL), parent(NULL), nullnode(NULL), color(color), is_nullnode(is_nullnode), is_temp_node(is_temp_node) {}
+		red_black_node(red_black_node const & x)
+		: v(x.v), left(x.left), right(x.right), parent(x.parent), nullnode(x.nullnode), color(x.color), is_nullnode(x.is_nullnode), is_temp_node(x.is_temp_node) {}
 		~red_black_node() {}
 
-		red_black_node &	operator=(red_black_node const & x)
+		red_black_node &	operator=(red_black_node const & x) // this should be private
 		{
 			if (this != &x)
 			{
-				this->v = x.v; // that's okay because both are references. No T object is created here
+				this->v = x.v; // that's not okay. It will call the assignation operator on v
 				this->left = x.left;
 				this->right = x.right;
 				this->parent = x.parent;
@@ -67,7 +70,7 @@ namespace ft
 			return (*this);
 		}
 
-		void	be_replaced_in_tree(red_black_node const & x)
+		void	be_replaced_in_tree(red_black_node const & x) // bad idea. Better to not use that, as it would invalidate iterators
 		{
 			// this function can be called only after v is destroyed and deallocated
 			this->v = x.v;
@@ -412,6 +415,7 @@ If you can't go up anymore, then there's no successor
 					this->left_rotate(original_grand_parent);
 				}
 			}
+			//this->_nullnode->parent = this->_root; // no need because rotation already take care of it
 			return (inserted_node);
 		}
 
@@ -426,7 +430,7 @@ If you can't go up anymore, then there's no successor
 			if (this->_root == NULL)
 			{
 				this->_root = this->_al.allocate(1);
-				red_black_node<T>	n(val_to_insert, BLACK, false); // temporary object to pass 3 parameters to node constructor
+				red_black_node<T>	n(val_to_insert, BLACK/*, false*/); // temporary object to pass 3 parameters to node constructor
 				this->_al.construct(this->_root, n); // no need to set the parent ptr in the new node, because its the root. it remains NULL
 				this->_root->nullnode = this->_nullnode; //////////////////////////////////////////
 				this->_nullnode->parent = this->_root; // from the nullnode, following the parent pointer brings to the root of the tree
@@ -458,7 +462,7 @@ If you can't go up anymore, then there's no successor
 				}
 			}
 			// here browse is a NULL pointer. It means its parent is the node that we have to insert under
-			red_black_node<T>	n(val_to_insert, RED, false); // temporary object to pass 3 parameters to node constructor
+			red_black_node<T>	n(val_to_insert, RED/*, false*/); // temporary object to pass 3 parameters to node constructor
 			if (this->_c(v, parent->v))
 			{
 				parent->left = this->_al.allocate(1);
@@ -627,7 +631,7 @@ If you can't go up anymore, then there's no successor
 			if (to_delete == NULL) // if the node was not in the tree, nothing to do
 				return;
 
-			if (to_delete->left == NULL && to_delete->right == NULL) // deleting leaf node, can i do only one destroy and deallocate at the end ?
+			if (to_delete->left == NULL && to_delete->right == NULL) // deleting leaf node
 			{
 				if (to_delete->parent == NULL) // deleting root node
 					this->_root = NULL;

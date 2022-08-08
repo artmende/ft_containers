@@ -1,19 +1,40 @@
-after inserting node, look at the parent.
+after inserting node, look at the parent of the node just inserted.
+
+recolor means invert the color
 
 if parent black, no problem
 
 if parent red :
 
-  - if uncle red : recolor parent, uncle, and also grand parent only if not root, then recheck GRAND PARENT if it is now red
+	- if uncle red : recolor parent, uncle, and also grand parent only if grand parent is not root, then recheck GRAND PARENT if it is now red
 
-  - if uncle black : look at the new node, parent and grand parent. do they form a line ?
-    * if they form a line : recolor parent and grand parent and rotate GRAND PARENT to direction opposite to new node
-    * if they do not form a line : rotate parent opposite to new node, it is now a line and we can do same as above considering the last node(parent) as newnode
+	- if uncle black : look at the new node, parent and grand parent. do they form a line ? (a grand parent has to exist, because parent is red)
+		* if they do not form a line : rotate parent opposite to new node, it is now a line and we can do same as above considering the last node(parent) as newnode. (just recheck the parent)
+		* if they form a line : recolor parent and grand parent and rotate GRAND PARENT to direction opposite to new node. no need to recheck anything
+
 
 deletion :
 
-if node to delete is red, just delete it normally, (but what about red or black ?)
+Idea : instead of smallest_in_right_subtree, use successor/predecessor by calling the function find_successor or find_predecessor from the node we want to delete
+Idea : simple reconnection like we do now is ok when deleting RED node. Deleting black node we should use successor/predecessor replacement.
 
-internal node retain its color ?
+Idea : I will have to add a temporary node to be a double black when it's a NIL DB. Have to add a field in node to know if its a temp node or not
 
+the inorder successor or predecessor has to take the place of the node we delete. But successor/predecessor has to take the color of the deleted node.
+
+Let's look at what the successor/predecessor was before it got moved :
+
+	- If successor/predecessor was red node. Nothing to do.
+	- If it was a black node, we now have a 'double black' there
+
+A note on case 6 : the red node that become black is the original sibling far red child before rotation
+
+
+look at sibling : 
+	- if red, its case 4
+	- if black, look at the far child of sibling :
+		* if its red, its case 6
+		* if its black, look at the near child of sibling : 
+			+ if it's black, it's case 3
+			+ if it's red, it's case 5
 
