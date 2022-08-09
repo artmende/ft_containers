@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/08 18:49:08 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/09 12:00:59 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -372,6 +372,7 @@ If you can't go up anymore, then there's no successor
 			replacement->parent = to_delete->parent;
 			replacement->left = to_delete->left;
 			replacement->right = to_delete->right;
+			replacement->color = to_delete->color; // the color is conserved
 		}
 
 		red_black_node<T>	*get_replacement_in_subtree(red_black_node<T> *node)
@@ -649,7 +650,10 @@ If you can't go up anymore, then there's no successor
 			}
 		}
 
-
+		void	handle_double_black_cases(red_black_node<T>	*double_black)
+		{
+			
+		}
 
 
 		void	remove(T const & v)
@@ -678,18 +682,14 @@ If you can't go up anymore, then there's no successor
 					else
 						to_delete->parent->right = NULL;
 				}
-				else // to_delete is black
+				else // to_delete is black, need to replace it with double black
 				{
-					T	*double_black_val = al_value.allocate(1);
-					this->al_value.construct(double_black_val, T());
-					red_black_node<T>	double_black_temp(double_black_val, BLACK, false, true);
-					red_black_node<T>	*double_black = this->_al.allocate(1);
-					this->_al.construct(double_black, double_black_temp);
+					red_black_node<T>	*double_black = this->create_double_black_node();
 					if (to_delete->parent->left == to_delete)
 						to_delete->parent->left = double_black;
 					else
 						to_delete->parent->right = double_black;
-					// here need to call function for steps for double black
+					this->handle_double_black_cases(double_black);
 				}
 			}
 			else // to_delete is not leaf node
@@ -699,7 +699,7 @@ If you can't go up anymore, then there's no successor
 				{
 					if (replacement->left) // replacement has a left child
 					{
-						replacement->left->color = BLACK;
+						replacement->left->color = BLACK; // the child of replacement can only be red (because black node must have sibling), and this replacement must be black. With replacement going up the tree, the number of black is less, and we compensate by coloring the child black. There is nothing else to do here
 						replacement->parent->right = replacement->left; // the replacement can only have a child in the opposite direction of itself (or it wouln't be the replacement)
 						replacement->left->parent = replacement->parent;
 					}
@@ -709,13 +709,29 @@ If you can't go up anymore, then there's no successor
 						replacement->parent->left = replacement->right;
 						replacement->right->parent = replacement->parent;
 					}
-					replace_node_by_another_in_tree(to_delete, replacement);
+					this->replace_node_by_another_in_tree(to_delete, replacement);
 				}
 				else // replacement does not have a child
 				{
-					
+					if (replacement->color == RED)
+					{
+						if (replacement->parent->left == replacement)
+							replacement->parent->left = NULL;
+						else
+							replacement->parent->right = NULL;
+						this->replace_node_by_another_in_tree(to_delete, replacement);
+					}
+					else // replacement is black
+					{
+						red_black_node<T>	*double_black = this->create_double_black_node();
+						if (replacement->parent->left == replacement)
+							replacement->parent->left = double_black;
+						else
+							replacement->parent->right = double_black;
+						this->replace_node_by_another_in_tree(to_delete, replacement);
+						this->handle_double_black_cases(double_black);
+					}
 				}
-
 			}
 
 
@@ -788,7 +804,7 @@ If you can't go up anymore, then there's no successor
 			//}
 
 
-
+			// double black should be deleted during steps
 			this->destroy_and_deallocate_node(to_delete);
 			this->_nullnode->parent = this->_root;
 			this->_size--;
@@ -814,6 +830,18 @@ If you can't go up anymore, then there's no successor
 		//	this->_al.construct(ret, val_to_insert, true);
 			ret->nullnode = ret; ///////////////////////////////////////////////
 			return (ret);
+		}
+
+		red_black_node<T>	*create_double_black_node()
+		{
+
+			T	*double_black_val = al_value.allocate(1);
+			this->al_value.construct(double_black_val, T());
+			red_black_node<T>	double_black_temp(double_black_val, BLACK, false, true);
+			red_black_node<T>	*double_black = this->_al.allocate(1);
+			this->_al.construct(double_black, double_black_temp);
+			double_black->nullnode = this->_nullnode;
+			return (double_black);
 		}
 
 	};

@@ -16,7 +16,7 @@ if parent red :
 RED BLACK PROPERTIES : 
 
 - red node cannot have only 1 child. either 2 or 0.
-- black not always have a sibling, only exception is the root
+- black must always have a sibling, only exception is the root
 
 deletion :
 
@@ -38,7 +38,7 @@ A note on case 6 : the red node that become black is the original sibling far re
 deletion :
 
 If deleted node is leaf : 
-	- If it is RED, just delete it. done.
+	- If it is RED or root, just delete it. done.
 	- If is it BLACK, replace it by double black temp node, and follow steps for double black
 
 If deleted node is not leaf : replace deleted node by successor/predecessor (in subtree !!).
