@@ -33,6 +33,7 @@ Let's look at what the successor/predecessor was before it got moved :
 	- If it was a black node, we now have a 'double black' there
 
 A note on case 6 : the red node that become black is the original sibling far red child before rotation
+Another note on case 6 : deallocate double black if its a temporary node
 
 
 deletion :

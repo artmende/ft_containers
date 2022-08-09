@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/09 12:00:59 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/09 17:45:35 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,44 @@
 # include <functional>
 # include "bst_iterator.hpp"
 
-# define RED false
-# define BLACK true
+//# define RED false
+//# define BLACK true
+
+# define RED 0
+# define BLACK 1
+
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
 // https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
 
 // NEED TO CHANGE THE INSERT FUNCTION TO HAVE ONLY ONE RETURN AND MAKE SURE THE ROOT IS PROPERLY SAVED INSIDE NULLNODE
+
+
+
+//template <typename T>
+//void printBT(const std::string& prefix, const ft::red_black_node<T>* node, bool isLeft)
+//{
+//    if( node != NULL )
+//    {
+//        std::cout << prefix;
+
+//        std::cout << (isLeft ? "├──" : "└──" );
+
+//        // print the value of the node
+//        std::cout << node->v.first << (node->color == true ? " black" : " red") << std::endl;
+
+//        // enter the next tree level - left and right branch
+//        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
+//        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
+//    }
+//}
+
+//template <typename T>
+//void printBT(const ft::red_black_node<T>* node)
+//{
+//    printBT("", node, false);    
+//}
+
 
 namespace ft
 {
@@ -405,6 +436,40 @@ If you can't go up anymore, then there's no successor
 				return (node->parent->parent->left);
 		}
 
+		red_black_node<T>	*get_sibling(red_black_node<T> *node)
+		{
+			if (node == NULL || node->parent == NULL)
+				return (NULL);
+			if (node->parent->left == node)
+				return (node->parent->right);
+			else
+				return (node->parent->left);
+		}
+
+		red_black_node<T>	*get_far_child_of_sibling(red_black_node<T> *node)
+		{
+			red_black_node<T>	*sibling = this->get_sibling(node);
+
+			if (sibling == NULL) // is node is root, sibling will be null
+				return (NULL);
+			if (node->parent->left == node)
+				return (sibling->right);
+			else
+				return (sibling->left);
+		}
+
+		red_black_node<T>	*get_near_child_of_sibling(red_black_node<T> *node)
+		{
+			red_black_node<T>	*sibling = this->get_sibling(node);
+
+			if (sibling == NULL) // is node is root, sibling will be null
+				return (NULL);
+			if (node->parent->left == node)
+				return (sibling->left);
+			else
+				return (sibling->right);
+		}
+
 		bool	three_nodes_form_a_line(red_black_node<T> *node, red_black_node<T> *parent, red_black_node<T> *grand_parent) /*const*/
 		{
 			if (node == NULL || parent == NULL || grand_parent == NULL)
@@ -652,7 +717,82 @@ If you can't go up anymore, then there's no successor
 
 		void	handle_double_black_cases(red_black_node<T>	*double_black)
 		{
-			
+			if (double_black->parent == NULL)
+			{
+				double_black->color = BLACK; //////////////////////
+				return;
+			}
+			red_black_node<T>	*sibling = this->get_sibling(double_black);
+			if (sibling && sibling->color == RED) // case 4
+			{
+				if (sibling->color != double_black->parent->color) // (a)
+				{
+					this->recolor_node(sibling);
+					this->recolor_node(double_black->parent);
+				}
+				if (double_black->parent->left == double_black) // (b)
+					this->left_rotate(double_black->parent);
+				else
+					this->right_rotate(double_black->parent);
+				this->handle_double_black_cases(double_black); // (c)
+			}
+			else // sibling is black (or null)
+			{
+				red_black_node<T>	*far_child_of_sibling = get_far_child_of_sibling(double_black);
+				red_black_node<T>	*near_child_of_sibling = get_near_child_of_sibling(double_black);
+				if (far_child_of_sibling && far_child_of_sibling->color == RED) // case 6
+				{
+					if (sibling->color != double_black->parent->color) // (a)
+					{
+						this->recolor_node(sibling);
+						this->recolor_node(double_black->parent);
+					}
+					if (double_black->parent->left == double_black) // (b)
+						this->left_rotate(double_black->parent);
+					else
+						this->right_rotate(double_black->parent);
+					far_child_of_sibling->color = BLACK; // (d)
+					if (double_black->is_temp_node == true)
+					{
+						if (double_black->parent->left == double_black)
+							double_black->parent->left = NULL;
+						else
+							double_black->parent->right = NULL;
+						this->destroy_and_deallocate_node(double_black);
+					}
+				}
+				else if (near_child_of_sibling && near_child_of_sibling->color == RED) // case 5
+				{
+					sibling->color = RED; // (a)
+					near_child_of_sibling->color = BLACK; // (a)
+					if (double_black->parent->left == double_black) // (b)
+						this->right_rotate(sibling);
+					else
+						this->left_rotate(sibling);
+					this->handle_double_black_cases(double_black);
+				}
+				else // sibling is black with both children black // case 3
+				{
+					red_black_node<T>	*db_parent = double_black->parent;
+//					red_black_node<T>	*sibling = this->get_sibling(double_black); // double black always have a sibling, no NULL node here 
+					if (sibling) /////////////////////////
+						sibling->color = RED; // (b)
+					if (double_black->is_temp_node == true) // (a)
+					{
+						if (double_black->parent->left == double_black)
+							double_black->parent->left = NULL;
+						else
+							double_black->parent->right = NULL;
+						this->destroy_and_deallocate_node(double_black);
+					}
+					if (db_parent->color == RED) // (c)
+						db_parent->color = BLACK;
+					else
+					{
+						this->handle_double_black_cases(db_parent);
+					}
+				}
+			}
 		}
 
 
@@ -668,12 +808,15 @@ If you can't go up anymore, then there's no successor
 			// if delete node with only 1 child, connect the child to the parent and delete - ONLY IF NODE IS RED OR IS ROOT
 			// if delete node with 2 children, take the smallest in the right subtree and make it replace the node to delete
 
+
+
 			if (to_delete == NULL) // if the node was not in the tree, nothing to do
 				return;
 
 			if (to_delete->left == NULL && to_delete->right == NULL) // deleting leaf node
 			{
-				if (to_delete == this->_root) // root doesnt have parent, null node will be updated at the end of remove function
+//				if (to_delete == this->_root) // root doesnt have parent, null node will be updated at the end of remove function
+				if (to_delete->parent == NULL)
 					this->_root = NULL;
 				else if (to_delete->color == RED)
 				{
@@ -685,6 +828,7 @@ If you can't go up anymore, then there's no successor
 				else // to_delete is black, need to replace it with double black
 				{
 					red_black_node<T>	*double_black = this->create_double_black_node();
+					double_black->parent = to_delete->parent;
 					if (to_delete->parent->left == to_delete)
 						to_delete->parent->left = double_black;
 					else
@@ -700,14 +844,24 @@ If you can't go up anymore, then there's no successor
 					if (replacement->left) // replacement has a left child
 					{
 						replacement->left->color = BLACK; // the child of replacement can only be red (because black node must have sibling), and this replacement must be black. With replacement going up the tree, the number of black is less, and we compensate by coloring the child black. There is nothing else to do here
-						replacement->parent->right = replacement->left; // the replacement can only have a child in the opposite direction of itself (or it wouln't be the replacement)
 						replacement->left->parent = replacement->parent;
+
+						if (replacement->parent->left == replacement)
+							replacement->parent->left = replacement->left;
+						else
+							replacement->parent->right = replacement->left; // the replacement can only have a child in the opposite direction of itself (or it wouln't be the replacement)
+
+
 					}
 					else // replacement has a right child
 					{
 						replacement->right->color = BLACK;
-						replacement->parent->left = replacement->right;
 						replacement->right->parent = replacement->parent;
+						if (replacement->parent->left == replacement)
+							replacement->parent->left = replacement->right;
+						else
+							replacement->parent->right = replacement->right;
+						
 					}
 					this->replace_node_by_another_in_tree(to_delete, replacement);
 				}
@@ -724,6 +878,7 @@ If you can't go up anymore, then there's no successor
 					else // replacement is black
 					{
 						red_black_node<T>	*double_black = this->create_double_black_node();
+						double_black->parent = replacement->parent;
 						if (replacement->parent->left == replacement)
 							replacement->parent->left = double_black;
 						else
