@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/09 17:45:35 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/12 14:12:02 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,9 @@
 # include <functional>
 # include "bst_iterator.hpp"
 
-//# define RED false
-//# define BLACK true
+# define RED false
+# define BLACK true
 
-# define RED 0
-# define BLACK 1
 
 
 // iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
@@ -64,7 +62,7 @@ namespace ft
 	{
 	private:
 		red_black_node();
-		
+		red_black_node &	operator=(red_black_node const & x);
 
 
 	public:
@@ -76,7 +74,7 @@ namespace ft
 		red_black_node<T>	*right;
 		red_black_node<T>	*parent;
 		red_black_node<T>	*nullnode;
-		bool				color; // true is black, false is red // use ENUM
+		bool				color; // true is black, false is red
 		bool				is_nullnode;
 		bool				is_temp_node;
 
@@ -86,20 +84,7 @@ namespace ft
 		: v(x.v), left(x.left), right(x.right), parent(x.parent), nullnode(x.nullnode), color(x.color), is_nullnode(x.is_nullnode), is_temp_node(x.is_temp_node) {}
 		~red_black_node() {}
 
-		red_black_node &	operator=(red_black_node const & x) // this should be private
-		{
-			if (this != &x)
-			{
-				this->v = x.v; // that's not okay. It will call the assignation operator on v
-				this->left = x.left;
-				this->right = x.right;
-				this->parent = x.parent;
-				this->nullnode = x.nullnode;
-				this->color = x.color; // do i need this ? 
-				this->is_nullnode = x.is_nullnode;
-			}
-			return (*this);
-		}
+
 
 
 /*
@@ -517,7 +502,6 @@ If you can't go up anymore, then there's no successor
 					this->left_rotate(original_grand_parent);
 				}
 			}
-			//this->_nullnode->parent = this->_root; // no need because rotation already take care of it
 			return (inserted_node);
 		}
 
@@ -527,14 +511,14 @@ If you can't go up anymore, then there's no successor
 
 			T	*val_to_insert	= al_value.allocate(1);
 			this->al_value.construct(val_to_insert, v);
-			this->_size++; //////////////////////////////
+			this->_size++;
 
 			if (this->_root == NULL)
 			{
 				this->_root = this->_al.allocate(1);
-				red_black_node<T>	n(val_to_insert, BLACK/*, false*/); // temporary object to pass 3 parameters to node constructor
+				red_black_node<T>	n(val_to_insert, BLACK); // temporary object that will be used to call copy constructor
 				this->_al.construct(this->_root, n); // no need to set the parent ptr in the new node, because its the root. it remains NULL
-				this->_root->nullnode = this->_nullnode; //////////////////////////////////////////
+				this->_root->nullnode = this->_nullnode;
 				this->_nullnode->parent = this->_root; // from the nullnode, following the parent pointer brings to the root of the tree
 				return this->_root;
 			}
@@ -559,28 +543,24 @@ If you can't go up anymore, then there's no successor
 				{
 					this->al_value.destroy(val_to_insert);
 					this->al_value.deallocate(val_to_insert, 1);
-					this->_size--; ////////////////////////////
+					this->_size--;
 					return (browse); // this means what we want to insert already exist in the tree. We just return the already existing node
 				}
 			}
 			// here browse is a NULL pointer. It means its parent is the node that we have to insert under
-			red_black_node<T>	n(val_to_insert, RED/*, false*/); // temporary object to pass 3 parameters to node constructor
+			red_black_node<T>	n(val_to_insert, RED); // temporary object that will be used to call copy constructor
+			n.parent = parent;
+			n.nullnode = this->_nullnode;
 			if (this->_c(v, parent->v))
 			{
 				parent->left = this->_al.allocate(1);
 				this->_al.construct(parent->left, n);
-				parent->left->nullnode = this->_nullnode; //////////////////////
-				parent->left->parent = parent;
-			//	return parent->left;
 				return (this->fix_rbt_insert(parent->left));
 			}
 			else
 			{
 				parent->right = this->_al.allocate(1);
 				this->_al.construct(parent->right, n);
-				parent->right->nullnode = this->_nullnode;/////////////////////
-				parent->right->parent = parent;
-			//	return parent->right;
 				return (this->fix_rbt_insert(parent->right));
 			}
 		}
