@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/09 17:45:47 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/12 16:31:56 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,18 @@ int main ()
 		mm[i] = i;
 	}
 
-	//for (ft::map<int, int>::iterator it = mm.begin(); it != mm.end(); it++)
-	//{
-	//	std::cout << (*it).first << std::endl;
-	//}
+	for (ft::map<int, int>::iterator it = mm.begin(); it != mm.end(); it++)
+	{
+		std::cout << (*it).first << std::endl;
+	}
 
 	std::cout << "\n\n";
 
-	printBT(mm._tree._root);
+//	ft::map<int, int>::iterator	itt = mm.end()._inner_node->parent;
+
+	//printBT(mm._tree._root);
+	printBT(mm.end()._inner_node->parent);
+
 
 
 	//ft::map<char, int> first;
