@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/12 16:36:57 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/12 18:07:14 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,7 @@ namespace ft
 		red_black_node();
 		red_black_node &	operator=(red_black_node const & x);
 
-
 	public:
-
-		//typedef	T	value_type;
-
 		T &					v;
 		red_black_node<T>	*left;
 		red_black_node<T>	*right;
@@ -222,14 +218,26 @@ If you can't go up anymore, then there's no successor
 		{
 			if (this != &x)
 			{
-				// maybe better to go from the root first to the left, and then to the right. instead of inserting from first node to last node.
-				while (this->_root)
-					this->remove(this->_root);
-				const red_black_node<T>	*node = x.find_first_node();
-				while (node->is_nullnode == false)
+				red_black_tree<T, Compare, Alloc>	temp(this->_c);
+				this->swap(temp); // this current tree will be cleared by the destructor of temp
+
+				if (x._root == NULL)
+					return (*this);
+				const red_black_node<T>	*node_left = x._root->find_predecessor();
+				const red_black_node<T>	*node_right = x._root->find_successor();
+				this->insert(x._root->v);
+				while (node_left->is_nullnode == false || node_right->is_nullnode == false)
 				{
-					this->insert(node->v);
-					node = node->find_successor();
+					if (node_left->is_nullnode == false)
+					{
+						this->insert(node_left->v);
+						node_left = node_left->find_predecessor();
+					}
+					if (node_right->is_nullnode == false)
+					{
+						this->insert(node_right->v);
+						node_right = node_right->find_successor();
+					}
 				}
 			}
 			return (*this);
@@ -239,7 +247,16 @@ If you can't go up anymore, then there's no successor
 		{
 			// no need to balance the tree when deleting here
 			while (this->_root)
-				this->remove(this->_root);
+				this->remove_no_rebalance(this->_root);
+
+			//red_black_node<T>	*node = this->find_first_node();
+			//while (this->_root)
+			//{
+			//	red_black_node<T>	*successor = node->find_successor();
+			//	this->remove_no_rebalance(node);
+			//	node = successor;
+			//}
+
 			destroy_and_deallocate_node(this->_nullnode);
 		}
 
@@ -584,6 +601,82 @@ If you can't go up anymore, then there's no successor
 		//////////////////////////////////////////
 
 	private:
+
+		void	remove_no_rebalance(red_black_node<T> *to_delete)
+		{
+				// 3 cases : 
+			// if delete leaf node, just delete it and put parent ptr to NULL
+			// if delete node with only 1 child, connect the child to the parent and delete
+			// if delete node with 2 children, take the smallest in the right subtree and make it replace the node to delete
+
+			if (to_delete == NULL) // if the node was not in the tree, nothing to do
+				return;
+
+			if (to_delete->left == NULL && to_delete->right == NULL) // deleting leaf node
+			{
+				if (to_delete->parent == NULL) // deleting root node
+					this->_root = NULL;
+				else if (to_delete->parent->left == to_delete) // to_delete is a left child
+					to_delete->parent->left = NULL;
+				else // to_delete is a right child
+					to_delete->parent->right = NULL;
+			}
+			else if ((to_delete->left == NULL && to_delete->right) || (to_delete->left && to_delete->right == NULL)) // deleting node with only one child
+			{
+				red_black_node<T>	*subtree = (to_delete->left ? to_delete->left : to_delete->right);
+
+				subtree->parent = to_delete->parent;
+				if (to_delete->parent == NULL) // deleting root node
+					this->_root = subtree;
+				else if (to_delete->parent->left == to_delete) // to_delete is a left child
+					to_delete->parent->left = subtree;
+				else // to_delete is a right child
+					to_delete->parent->right = subtree;
+			}
+			else // deleting node with 2 children
+			{
+				red_black_node<T>	*smallest_in_right_subtree = to_delete->right;
+
+				while (smallest_in_right_subtree->left)
+					smallest_in_right_subtree = smallest_in_right_subtree->left; // finding smallest in right sub
+			
+				if (smallest_in_right_subtree->right)
+					smallest_in_right_subtree->right->parent = smallest_in_right_subtree->parent; // connecting his child to the parent
+
+				if (smallest_in_right_subtree->parent->left == smallest_in_right_subtree) // smallest_in_right_subtree can only have a right child, the left child is always NULL
+					smallest_in_right_subtree->parent->left = smallest_in_right_subtree->right; // it makes its right child (NULL or not) replace himself for his parent
+				else // that would mean smallest_in_right_subtree is the direct right child of to_delete
+					smallest_in_right_subtree->parent->right = smallest_in_right_subtree->right; // connecting new parent to child
+
+				smallest_in_right_subtree->parent = to_delete->parent;
+				smallest_in_right_subtree->left = to_delete->left;
+				smallest_in_right_subtree->right = to_delete->right;
+
+				// now smallest_in_right_subtree has replaced to_delete, 
+
+				if (to_delete->parent)
+				{
+					if (to_delete->parent->left == to_delete)
+						to_delete->parent->left = smallest_in_right_subtree;
+					else
+						to_delete->parent->right = smallest_in_right_subtree;
+				}
+				else
+					this->_root = smallest_in_right_subtree;
+
+				if (to_delete->left)
+					to_delete->left->parent = smallest_in_right_subtree;
+				if (to_delete->right)
+					to_delete->right->parent = smallest_in_right_subtree;
+
+				// smallest in right subtree can only have 1 child max, and it has to be right child (because left would be smaller)
+				// right child (NULL or not) has to become child of parent of smallest
+				// parent and children of to_delete has to become parent and children of smallest
+			}
+			this->destroy_and_deallocate_node(to_delete);
+			this->_nullnode->parent = this->_root;
+			this->_size--;
+		}
 
 		void	left_rotate(red_black_node<T> *pivot)
 		{

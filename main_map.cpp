@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/12 16:31:56 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/12 17:20:15 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,28 @@ int main ()
 	//printBT(mm._tree._root);
 	printBT(mm.end()._inner_node->parent);
 
+	std::cout << "\n\n";
+
+	ft::map<int, int>	mm2 = mm;
+
+	printBT(mm2.end()._inner_node->parent);
+
+	std::cout << "\n\n";
+
+	ft::red_black_tree<char>	rbtchar;
+
+	for (size_t i = 32; i < 100; i++)
+	{
+		rbtchar.insert(i);
+	}
+
+	ft::red_black_tree<char>	rbtcharr = rbtchar;
+
+	for (ft::red_black_tree<char>::const_iterator it = rbtcharr.begin(); it != rbtcharr.end(); it++)
+	{
+		std::cout << *it;
+	}
+	std::cout << std::endl;
 
 
 	//ft::map<char, int> first;
