@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/12 18:07:14 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/14 15:37:08 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,42 @@ If you make a left turn (i.e. this node was a right child), continue going up.
 If you can't go up anymore, then there's no successor
 */
 
+		red_black_node<T>	*find_successor()
+		{
+			if (this->is_nullnode)
+			{
+				if (this->parent)
+					return (this->parent->find_first_node());
+				else
+					return (this);
+			}
+			else if (this->right)
+			{
+				red_black_node<T>	*ret = this->right;
+				while (ret->left)
+					ret = ret->left;
+				return (ret);
+			}
+			else // no right subtree
+			{
+				red_black_node<T>	*ret = this->parent;
+				red_black_node<T>	*temp_child = this;
+				while (ret)
+				{
+					if (ret->right == temp_child) // we did a left turn
+					{
+						temp_child = ret;
+						ret = ret->parent;
+					}
+					else // we did a right turn
+					{
+						return (ret);
+					}
+				}
+				return (this->nullnode);
+			}
+		}
+
 		const red_black_node<T>	*find_successor() const
 		{
 			if (this->is_nullnode)
@@ -119,6 +155,42 @@ If you can't go up anymore, then there's no successor
 						ret = ret->parent;
 					}
 					else // we did a right turn
+					{
+						return (ret);
+					}
+				}
+				return (this->nullnode);
+			}
+		}
+
+		red_black_node<T>	*find_predecessor()
+		{
+			if (this->is_nullnode)
+			{
+				if (this->parent)
+					return (this->parent->find_last_node());
+				else
+					return (this);
+			}
+			else if (this->left)
+			{
+				red_black_node<T>	*ret = this->left;
+				while (ret->right)
+					ret = ret->right;
+				return (ret);
+			}
+			else
+			{
+				red_black_node<T>	*ret = this->parent;
+				red_black_node<T>	*temp_child = this;
+				while (ret)
+				{
+					if (ret->left == temp_child)
+					{
+						temp_child = ret;
+						ret = ret->parent;
+					}
+					else
 					{
 						return (ret);
 					}
@@ -163,6 +235,16 @@ If you can't go up anymore, then there's no successor
 			}
 		}
 
+		red_black_node<T>	*find_first_node()
+		{
+			if (this->is_nullnode)
+				return (this->find_successor());
+			red_black_node<T>	*ret = this;
+			while (ret->find_predecessor()->is_nullnode == false)
+				ret = ret->find_predecessor();
+			return (ret);
+		}
+
 		const red_black_node<T>	*find_first_node() const
 		{
 			if (this->is_nullnode)
@@ -170,6 +252,16 @@ If you can't go up anymore, then there's no successor
 			const red_black_node<T>	*ret = this;
 			while (ret->find_predecessor()->is_nullnode == false)
 				ret = ret->find_predecessor();
+			return (ret);
+		}
+
+		red_black_node<T>	*find_last_node()
+		{
+			if (this->is_nullnode)
+				return (this->find_predecessor());
+			red_black_node<T>	*ret = this;
+			while (ret->find_successor()->is_nullnode == false)
+				ret = ret->find_successor();
 			return (ret);
 		}
 
@@ -245,17 +337,16 @@ If you can't go up anymore, then there's no successor
 
 		~red_black_tree()
 		{
-			// no need to balance the tree when deleting here
-			while (this->_root)
-				this->remove_no_rebalance(this->_root);
+			// no need to rebalance the tree when deleting here
+			// delete preferably a leaf node, to avoid having to look for replacement in the deletion process
 
-			//red_black_node<T>	*node = this->find_first_node();
-			//while (this->_root)
-			//{
-			//	red_black_node<T>	*successor = node->find_successor();
-			//	this->remove_no_rebalance(node);
-			//	node = successor;
-			//}
+			red_black_node<T>	*node = this->find_first_node();
+			while (this->_root)
+			{
+				red_black_node<T>	*successor = node->find_successor();
+				this->remove_no_rebalance(node);
+				node = successor;
+			}
 
 			destroy_and_deallocate_node(this->_nullnode);
 		}
@@ -309,9 +400,19 @@ If you can't go up anymore, then there's no successor
 			return (ret);
 		}
 
+		red_black_node<T>	*find_first_node()
+		{
+			return (this->_nullnode->find_successor());
+		}
+
 		const red_black_node<T>	*find_first_node() const
 		{
 			return (this->_nullnode->find_successor());
+		}
+
+		red_black_node<T>	*find_last_node()
+		{
+			return (this->_nullnode->find_predecessor());
 		}
 
 		const red_black_node<T>	*find_last_node() const
@@ -321,7 +422,6 @@ If you can't go up anymore, then there's no successor
 
 		red_black_node<T>	*insert(T const & v) // returns a pointer to the newly added node
 		{
-
 			T	*val_to_insert	= al_value.allocate(1);
 			this->al_value.construct(val_to_insert, v);
 			this->_size++;
@@ -378,7 +478,7 @@ If you can't go up anymore, then there's no successor
 			}
 		}
 
-		red_black_node<T>	*find(T const & v) // not const because returned ptr can be used to edit the node
+		red_black_node<T>	*find(T const & v)
 		{
 			red_black_node<T>	*browse = this->_root;
 
@@ -564,7 +664,6 @@ If you can't go up anymore, then there's no successor
 							replacement->parent->left = replacement->right;
 						else
 							replacement->parent->right = replacement->right;
-						
 					}
 					this->replace_node_by_another_in_tree(to_delete, replacement);
 				}
@@ -597,10 +696,7 @@ If you can't go up anymore, then there's no successor
 			this->_size--;
 		}
 
-
-		//////////////////////////////////////////
-
-	private:
+	private:		//////////////////////////////////////////
 
 		void	remove_no_rebalance(red_black_node<T> *to_delete)
 		{
@@ -786,7 +882,7 @@ If you can't go up anymore, then there's no successor
 
 		red_black_node<T>	*get_uncle(red_black_node<T> *node) const
 		{
-			if (node == NULL || node->parent == NULL || node->parent->parent == NULL || node->is_nullnode == true)
+			if (node == NULL || node->is_nullnode == true || node->parent == NULL || node->parent->parent == NULL)
 				return (NULL);
 			if (node->parent->parent->left == node->parent)
 				return (node->parent->parent->right);
@@ -808,7 +904,7 @@ If you can't go up anymore, then there's no successor
 		{
 			red_black_node<T>	*sibling = this->get_sibling(node);
 
-			if (sibling == NULL) // is node is root, sibling will be null
+			if (sibling == NULL) // if node is root, sibling will be null
 				return (NULL);
 			if (node->parent->left == node)
 				return (sibling->right);
@@ -820,7 +916,7 @@ If you can't go up anymore, then there's no successor
 		{
 			red_black_node<T>	*sibling = this->get_sibling(node);
 
-			if (sibling == NULL) // is node is root, sibling will be null
+			if (sibling == NULL) // if node is root, sibling will be null
 				return (NULL);
 			if (node->parent->left == node)
 				return (sibling->left);
@@ -837,7 +933,7 @@ If you can't go up anymore, then there's no successor
 
 		red_black_node<T>	*fix_rbt_insert(red_black_node<T> *inserted_node)
 		{
-			// see in node the steps to fix the insert
+			// see in note the steps to fix the insert
 			if (inserted_node == NULL || inserted_node->parent == NULL || inserted_node->parent->color == BLACK || inserted_node->is_nullnode == true)
 				return (inserted_node);
 			// here the parent can only be non null and RED

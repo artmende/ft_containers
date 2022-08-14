@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:59:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/07 17:32:42 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/14 15:55:49 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,9 @@
 
 namespace ft
 {
-
-
-
 	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > >
 	class map
 	{
-
-
-
 	public:
 		typedef				Key											key_type;
 		typedef				T											mapped_type;
@@ -54,16 +48,12 @@ namespace ft
 		typedef				ft::reverse_iterator<iterator>				reverse_iterator;
 		typedef				ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 
-
-
 	private:
 		class value_compare : public std::binary_function<value_type, value_type, bool> // it compares the pairs by looking only at the key
 		{
 			friend class map;
 		protected:
 			key_compare	comp;
-
-			
 		public:
 			value_compare(key_compare c) : comp(c) {}
 			bool	operator()(const value_type& x, const value_type& y) const // value_type is the pair
@@ -71,8 +61,6 @@ namespace ft
 				return (comp(x.first, y.first));
 			}
 		};
-
-
 
 	public :
 		////////////////////// CONSTRUCTORS - DESTRUCTOR ///////////////////////
@@ -171,7 +159,6 @@ namespace ft
 		size_type	max_size() const
 		{
 			return (this->_tree.max_size());
-//			return (this->_alloc.max_size());
 		}
 
 		///////////////////////////	ELEMENT ACCESS	////////////////////////////
@@ -333,13 +320,11 @@ namespace ft
 			return (this->_alloc);
 		}
 
-
 	private:
 		key_compare											_comp;
 		allocator_type										_alloc;
 		value_compare										_val_comp;
-	public:
-		red_black_tree<value_type, value_compare, Alloc>	_tree; //////////////// was private before
+		red_black_tree<value_type, value_compare, Alloc>	_tree;
 	};
 
 	template <class Key, class T, class Compare, class Alloc>
@@ -387,7 +372,5 @@ namespace ft
 		lhs.swap(rhs);
 	}
 }
-
-// creating a default object, then using assignment to give it the right value
 
 #endif
