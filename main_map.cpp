@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/12 17:20:15 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/14 17:59:28 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "map.hpp"
 #include "bst_iterator.hpp"
 
+# include <vector>
 
 #ifdef USE_STD
 # define ft std
@@ -31,125 +32,99 @@ struct test
 };
 
 
-template <typename T>
-void printBT(const std::string& prefix, const ft::red_black_node<T>* node, bool isLeft)
-{
-    if( node != NULL )
-    {
-        std::cout << prefix;
+//template <typename T>
+//void printBT(const std::string& prefix, const ft::red_black_node<T>* node, bool isLeft)
+//{
+//    if( node != NULL )
+//    {
+//        std::cout << prefix;
 
-        std::cout << (isLeft ? "├──" : "└──" );
+//        std::cout << (isLeft ? "├──" : "└──" );
 
-        // print the value of the node
-        std::cout << node->v.first << (node->color == true ? " black" : " red") << std::endl;
+//        // print the value of the node
+//        std::cout << node->v.first << (node->color == true ? " black" : " red") << std::endl;
 
-        // enter the next tree level - left and right branch
-        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
-        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
-    }
-}
+//        // enter the next tree level - left and right branch
+//        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
+//        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
+//    }
+//}
 
-template <typename T>
-void printBT(const ft::red_black_node<T>* node)
-{
-    printBT("", node, false);    
-}
+//template <typename T>
+//void printBT(const ft::red_black_node<T>* node)
+//{
+//    printBT("", node, false);    
+//}
 
-// pass the root node of your binary tree
 
 
 int main ()
 {
-/*	int j = 5;
-	ft::red_black_node<int>	y(&j, true, true);
 
-	std::allocator<ft::red_black_node<int> >	al;
-
-	ft::red_black_node<int>	*n = al.allocate(1);
-
-	al.construct(n, &j, false, false);*/
-
-
-	ft::map<int, int>	mm;
-
-	for (size_t i = 0; i < 20; i++)
 	{
-		mm[i] = i;
+		std::cout << "Testing constructors, assignment operator, iterators and capacity:\n\n";
+
+		ft::map<int, std::string>	temp;
+		for (size_t i = 0; i < 5; i++)
+		{
+			temp[i] = "some string";
+		}
+
+		ft::map<int, std::string>	map_default; // default constructor
+		ft::map<int, std::string>	map_range(temp.begin(), temp.end());
+		ft::map<int, std::string>	map_copy(map_range);
+		ft::map<int, std::string>	map_assigned;
+		map_assigned = map_copy;
+
+		std::cout << "size of map_default : " << map_default.size() << " | size of map_range : " << map_range.size() << " | size of map_copy : " << map_copy.size() << " | size of map_assigned : " << map_assigned.size() << std::endl;
+		std::cout << "content of map_assigned : \n";
+		for (ft::map<int, std::string>::const_iterator	it = map_assigned.begin(); it != map_assigned.end(); it++)
+		{
+			std::cout << (*it).first << " --> " << (*it).second << std::endl;
+		}
+
+		std::cout << "\niterating through map_range in the reverse order :\n";
+		for (ft::map<int, std::string>::const_reverse_iterator it = map_range.rbegin(); it != map_range.rend(); it++)
+		{
+			std::cout << (*it).first << " --> " << (*it).second << std::endl;
+		}
+
+		std::cout << "\nmap_default.empty() : " << map_default.empty() << std::endl;
+		std::cout << "map_copy.empty() : " << map_copy.empty() << std::endl;
+		std::cout << "Max size of map_default : " << map_default.max_size() << std::endl;
+
+		std::cout << "\n\n";
 	}
 
-	for (ft::map<int, int>::iterator it = mm.begin(); it != mm.end(); it++)
 	{
-		std::cout << (*it).first << std::endl;
+		std::cout << "Testing Element access and modifiers:\n\n";
+
+		ft::map<int, char>	temp;
+		temp[-10] = '~';
+		temp[2] = '1';
+		temp[17] = '?';
+
+		ft::map<int, char>	my_ascii_letters;
+		for (size_t i = 65; i < 70; i++)
+		{
+			my_ascii_letters[i] = i;
+		}
+		std::cout << "inserting single element... Was it already there ? " << !(my_ascii_letters.insert(ft::make_pair<int, char>(33, 33))).second << std::endl; // single element (1)
+		std::cout << "inserting single element... Was it already there ? " << !(my_ascii_letters.insert(ft::make_pair<int, char>(33, 33))).second << std::endl;
+		my_ascii_letters.insert(my_ascii_letters.begin(), ft::make_pair<int, char>(92, 92)); // with hint (2)
+		my_ascii_letters.insert(temp.rbegin(), temp.rend()); // range (3)
+		std::cout << my_ascii_letters[200] << std::endl; // this create an element with key 200 but the 'second' is set to default value (\0);
+
+
+		for (ft::map<int, char>::const_iterator	it = my_ascii_letters.begin(); it != my_ascii_letters.end(); it++)
+		{
+			std::cout << (*it).first << " --> " << (*it).second << std::endl;
+		}
+
 	}
 
-	std::cout << "\n\n";
-
-//	ft::map<int, int>::iterator	itt = mm.end()._inner_node->parent;
-
-	//printBT(mm._tree._root);
-	printBT(mm.end()._inner_node->parent);
-
-	std::cout << "\n\n";
-
-	ft::map<int, int>	mm2 = mm;
-
-	printBT(mm2.end()._inner_node->parent);
-
-	std::cout << "\n\n";
-
-	ft::red_black_tree<char>	rbtchar;
-
-	for (size_t i = 32; i < 100; i++)
-	{
-		rbtchar.insert(i);
-	}
-
-	ft::red_black_tree<char>	rbtcharr = rbtchar;
-
-	for (ft::red_black_tree<char>::const_iterator it = rbtcharr.begin(); it != rbtcharr.end(); it++)
-	{
-		std::cout << *it;
-	}
-	std::cout << std::endl;
 
 
-	//ft::map<char, int> first;
-
-	//first['a'] = 10;
-	//first['b'] = 30;
-	//first['c'] = 50;
-	//first['d'] = 70;
-
-	//ft::map<char, int>	second;
-	//second = first;
-
-	//second['5'] = 50;
-
-	//for (ft::map<char, int>::iterator i = second.begin(); i != second.end(); i++)
-	//{
-	//	std::cout << (*i).first << " -> " << (*i).second << std::endl;
-	//}
-
-	//std::cout << "-----------------\n";
-
-	//for (ft::map<char, int>::reverse_iterator	rit = first.rbegin(); rit != first.rend(); rit++)
-	//{
-	//	std::cout << (*rit).first << " -> " << (*rit).second << std::endl;
-	//}
-
-	//test	t1, t2;
-
-	//ft::map<int, test>	m1, m2;
-
-	//m1[2] = test();
-
-	//std::cout << "t1 == t2 ? " << (t1 == t2) << std::endl;
-
-	//std::cout << "m1 == m2 ? " << (m1 == m2) << std::endl;
-
-	//std::cout << "first > second ? " << (first > second) << std::endl;
-
-	//std::cout << "max size is : " << m1.max_size() << std::endl;
 
 	return 0;
 }
