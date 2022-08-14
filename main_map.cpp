@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/14 17:59:28 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/14 19:01:40 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,175 +95,77 @@ int main ()
 
 		std::cout << "\n\n";
 	}
-
+		//////////////////////////////////////////////
 	{
-		std::cout << "Testing Element access and modifiers:\n\n";
+		std::cout << "Testing Element access, modifiers and operations with fresh new maps:\n\n";
 
 		ft::map<int, char>	temp;
 		temp[-10] = '~';
-		temp[2] = '1';
+		temp[2] = '+';
 		temp[17] = '?';
 
 		ft::map<int, char>	my_ascii_letters;
-		for (size_t i = 65; i < 70; i++)
+		for (size_t i = 65; i < 75; i++)
 		{
 			my_ascii_letters[i] = i;
 		}
-		std::cout << "inserting single element... Was it already there ? " << !(my_ascii_letters.insert(ft::make_pair<int, char>(33, 33))).second << std::endl; // single element (1)
-		std::cout << "inserting single element... Was it already there ? " << !(my_ascii_letters.insert(ft::make_pair<int, char>(33, 33))).second << std::endl;
+		std::cout << "inserting single element with key 33... Was it already there ? " << !(my_ascii_letters.insert(ft::make_pair<int, char>(33, 33))).second << std::endl; // single element (1)
+		std::cout << "inserting single element with key 33... Was it already there ? " << !(my_ascii_letters.insert(ft::make_pair<int, char>(33, 33))).second << std::endl; // second parameter of return of insert single element
+		std::cout << "inserting element with key 34 : " << (*(my_ascii_letters.insert(ft::make_pair<int, char>(34, 34)).first)).second << std::endl; // first parameter of return of insert single element
+		std::cout << "Inserting element with key 92, then range of elements going from 65 to 75\n";
 		my_ascii_letters.insert(my_ascii_letters.begin(), ft::make_pair<int, char>(92, 92)); // with hint (2)
 		my_ascii_letters.insert(temp.rbegin(), temp.rend()); // range (3)
+		std::cout << "Displaying element with key 200 (It's not there yet)\n";
 		std::cout << my_ascii_letters[200] << std::endl; // this create an element with key 200 but the 'second' is set to default value (\0);
 
+		my_ascii_letters.erase(my_ascii_letters.begin()); // erasing first element (key is -10)
+		std::cout << "erasing element with key -100... success ? " << my_ascii_letters.erase(-100) << std::endl;
+		std::cout << "erasing element with key 66... success ? " << my_ascii_letters.erase(66) << std::endl;
 
+		ft::map<int, char>::iterator	it1, it2;
+		it1 = my_ascii_letters.find(71); // find returns an iterator to the found element
+		it2 = my_ascii_letters.find(73);
+
+		std::cout << "erasing range from 71 to 73" << std::endl;
+		my_ascii_letters.erase(it1, it2);
+
+		std::cout << "\nswapping temp with my_ascii_letters and then clear my_ascii_letters" << std::endl;
+		temp.swap(my_ascii_letters);
+		my_ascii_letters.clear();
+		std::cout << "size of my_ascii_letters : " << my_ascii_letters.size() << std::endl;
+		std::cout << "swapping them again..." << std::endl;
+		temp.swap(my_ascii_letters);
+
+		std::cout << "\nHow many elements with key 67 ? " << my_ascii_letters.count(67) << std::endl;
+		std::cout << "How many elements with key 670 ? " << my_ascii_letters.count(670) << std::endl;
+
+		std::cout << "lower_bound with key 70 : " << (*(it1 = my_ascii_letters.lower_bound(70))).first << " --> " << (*it1).second << std::endl;
+		std::cout << "upper_bound with key 70 : " << (*(it1 = my_ascii_letters.upper_bound(70))).first << " --> " << (*it1).second << std::endl;
+		ft::pair<ft::map<int, char>::iterator, ft::map<int, char>::iterator>	eqrange = my_ascii_letters.equal_range(34);
+		std::cout << "equal_range with key 34 goes from (" << (*(eqrange.first)).first << " --> " << (*(eqrange.first)).second << ") to (" << (*(eqrange.second)).first << " --> " << (*(eqrange.second)).second << ")\n";
+
+		std::cout << "\nDisplaying elements in my_ascii_letters : \n";
 		for (ft::map<int, char>::const_iterator	it = my_ascii_letters.begin(); it != my_ascii_letters.end(); it++)
 		{
 			std::cout << (*it).first << " --> " << (*it).second << std::endl;
 		}
 
+		temp[5] = 'j';
+
+		std::cout << "\nmy_ascii_letters == temp ? " << (my_ascii_letters == temp) << std::endl;
+		std::cout << "\nmy_ascii_letters != temp ? " << (my_ascii_letters != temp) << std::endl;
+		std::cout << "\nmy_ascii_letters > temp ? " << (my_ascii_letters > temp) << std::endl;
+		std::cout << "\nmy_ascii_letters < temp ? " << (my_ascii_letters < temp) << std::endl;
+
+		std::cout << "\nmy_ascii_letters == my_ascii_letters ? " << (my_ascii_letters == my_ascii_letters) << std::endl;
+		std::cout << "\nmy_ascii_letters != my_ascii_letters ? " << (my_ascii_letters != my_ascii_letters) << std::endl;
+		std::cout << "\nmy_ascii_letters <= my_ascii_letters ? " << (my_ascii_letters <= my_ascii_letters) << std::endl;
+		std::cout << "\nmy_ascii_letters >= my_ascii_letters ? " << (my_ascii_letters >= my_ascii_letters) << std::endl;
+		std::cout << "\nmy_ascii_letters < my_ascii_letters ? " << (my_ascii_letters < my_ascii_letters) << std::endl;
+		std::cout << "\nmy_ascii_letters > my_ascii_letters ? " << (my_ascii_letters > my_ascii_letters) << std::endl;
+
+
 	}
-
-
-
 
 	return 0;
 }
-
-
-
-//int	main()
-//{
-//	ft::map<char, int> mymap;
-
-//	mymap['a'] = 10;
-//	mymap['b'] = 20;
-//	mymap['c'] = 30;
-
-//	ft::pair<ft::map<char, int>::iterator, ft::map<char, int>::iterator> ret;
-//	ret = mymap.equal_range('b');
-
-//	std::cout << "lower bound points to: ";
-//	std::cout << ret.first->first << " => " << ret.first->second << '\n';
-
-//	std::cout << "upper bound points to: ";
-//	std::cout << ret.second->first << " => " << ret.second->second << '\n';
-
-//	return 0;
-//}
-
-/*
-
-int	main()
-{
-
-
-
-	{
-
-	ft::map<int, int>	mm;
-
-	mm.base()->insert(ft::make_pair<int, int>(5, 5));
-
-	ft::map<int, int>::iterator	itm = mm.begin();
-
-	itm++;
-
-	std::cout << (*itm).first << std::endl;
-
-	ClapTrap		testclap1("un");
-	const ClapTrap	testclap2(testclap1);
-
-	ClapTrap		testclap3(testclap2);
-
-
-	ft::pair<int, ClapTrap>	p1;
-
-
-	ft::pair<int, ClapTrap>	p2;
-
-	p1.first = 4;
-	p1.second = ClapTrap("josh");
-
-	p2.first = 8;
-	p2.second = ClapTrap("Max");
-
-
-	ft::red_black_tree<ClapTrap>	rbtclap;
-
-
-
-	rbtclap.insert(ClapTrap("bob"));
-	rbtclap.insert(ClapTrap("Danny"));
-	rbtclap.insert(ClapTrap("max"));
-
-	ft::red_black_tree<ClapTrap>	copy(rbtclap);
-
-	copy = *(&copy);
-
-	const ft::red_black_node<ClapTrap>	*n = copy._root->find_first_node();
-	//while (copy.find_predecessor(n))
-	//	n = copy.find_predecessor(n);
-	while (n)
-	{
-		std::cout << n->v << std::endl;
-		n = n->find_successor();
-	}
-
-	std::cout << "testing iterators :\n\n";
-
-	ft::bst_iterator<ClapTrap, ft::red_black_node<ClapTrap> >	it(copy._root);
-	ft::bst_iterator<const ClapTrap, ft::red_black_node<ClapTrap> >	cit(it);
-
-
-	*it = ClapTrap("yoppp");
-
-	for (size_t i = 0; i < 5; ++i)
-	{
-		std::cout << *cit << std::endl;
-		++cit;
-	}
-
-	std::cout << std::endl;
-	for (size_t i = 0; i < 5; ++i)
-	{
-		std::cout << *cit << std::endl;
-		cit--;
-	}
-
-
-
-
-	//std::cout << "\ndown here is map declaration\n\n";
-
-	//ft::map<int, ClapTrap> mm;
-
-	//mm.base()->insert(p1);
-	//mm.base()->insert(p2);
-	//mm.base()->insert(ft::make_pair(5, ClapTrap("Denis")));
-
-	//ft::red_black_node<ft::pair<const int, ClapTrap> >	*node = mm.base()->_root;
-
-	//while (mm.base()->find_predecessor(node))
-	//	node = mm.base()->find_predecessor(node);
-
-	//while (node)
-	//{
-	//	std::cout << node->v.second << std::endl;
-	//	node = mm.base()->find_successor(node);
-	//}
-
-(void)p2;
-
-	
-
-//	std::cout << "(p1 > p2) ? " << (p1 > p2) << std::endl;
-
-	std::cout << "a < b ? " << ('a' < 'b') << std::endl; 
-
-	}
-
-
-	return 0;
-}
-
-*/
