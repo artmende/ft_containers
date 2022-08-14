@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 11:19:08 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/04 15:19:29 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/14 19:23:38 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,37 +16,6 @@
 # include <iostream>
 # include <iterator>
 # include "red_black_tree.hpp"
-
-// iterator takes a node of my tree as a parameter.
-// begin is the smallest node
-// end is the biggest node with a special bit set to indicate its past
-// same for rend
-// in private we have 2 things : a pointer to the current node and the bit indicating if we are outside or not
-
-/*
-
-Is default-constructible, copy-constructible, copy-assignable and destructible	X a;
-X b(a);
-b = a;
-Can be compared for equivalence using the equality/inequality operators
-(meaningful when both iterator values iterate over the same underlying sequence).	a == b
-a != b
-Can be dereferenced as an rvalue (if in a dereferenceable state).	*a
-a->m
-For mutable iterators (non-constant iterators):
-Can be dereferenced as an lvalue (if in a dereferenceable state).	*a = t
-Can be incremented (if in a dereferenceable state).
-The result is either also dereferenceable or a past-the-end iterator.
-Two iterators that compare equal, keep comparing equal after being both increased.
-++a
-a++
-*a++
-Can be decremented (if a dereferenceable iterator value precedes it).
---a
-a--
-*a--
-
-*/
 
 namespace ft
 {
@@ -72,11 +41,6 @@ namespace ft
 		bst_iterator &	operator=(bst_iterator const & x) { if (this != &x) {this->_inner_node = x._inner_node;} return (*this); }
 
 		operator bst_iterator<const T, node>() const { return this->_inner_node; } // This is what allow const_iterator to be constructed from iterator and allow them to be compared together
-
-		//const node	*base() const
-		//{
-		//	return (this->_inner_node);
-		//}
 
 		reference	operator*() const
 		{
@@ -118,19 +82,8 @@ namespace ft
 			return (temp);
 		}
 
-		//bool	operator==(bst_iterator const & rhs) const
-		//{
-		//	return (this->_inner_node == rhs._inner_node);
-		//}
-
-		//bool	operator!=(bst_iterator const & rhs) const
-		//{
-		//	return (this->_inner_node != rhs._inner_node);
-		//}
-	
 	//private: // gonna stay public // use in erase method in map
 		const node	*_inner_node;
-
 	};
 
 	template <typename T1, typename NODE1, typename T2, typename NODE2>
