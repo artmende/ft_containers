@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 15:23:34 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/15 16:20:05 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/15 17:26:23 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include "red_black_tree.hpp"
 # include "bst_iterator.hpp"
 # include "reverse_iterator.hpp"
-//# include "lexicographical_compare_equal.hpp"
+# include "lexicographical_compare_equal.hpp"
 
 namespace ft
 {
@@ -29,8 +29,8 @@ namespace ft
 	class set
 	{
 	public:
-		typedef				T											key_type;
-		typedef				T											value_type;
+		typedef				const T											key_type;
+		typedef				const T											value_type;
 		typedef				Compare										key_compare;
 		typedef				Compare										value_compare;
 		typedef				Alloc										allocator_type;
@@ -209,7 +209,7 @@ namespace ft
 
 		void	clear()
 		{
-			ft::set<value_type>	temp;
+			ft::set<T>	temp;
 			this->swap(temp);
 		}
 
@@ -222,7 +222,7 @@ namespace ft
 
 		value_compare	value_comp() const
 		{
-			return (this->_val_comp);
+			return (this->_comp);
 		}
 
 		///////////////////////////	OPERATIONS	////////////////////////////////
@@ -270,10 +270,52 @@ namespace ft
 		{
 			return (this->_alloc);
 		}
-
 	};
+
+	template <class T, class Compare, class Alloc>
+	bool	operator==(const ft::set<T, Compare, Alloc> &lhs, const ft::set<T, Compare, Alloc> &rhs)
+	{
+		if (lhs.size() != rhs.size())
+			return (false);
+		else
+			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+
+	template <class T, class Compare, class Alloc>
+	bool	operator!=(const ft::set<T, Compare, Alloc> &lhs, const ft::set<T, Compare, Alloc> &rhs)
+	{
+		return (!(lhs == rhs));
+	}
+
+	template <class T, class Compare, class Alloc>
+	bool	operator<(const ft::set<T, Compare, Alloc> &lhs, const ft::set<T, Compare, Alloc> &rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+
+	template <class T, class Compare, class Alloc>
+	bool	operator<=(const ft::set<T, Compare, Alloc> &lhs, const ft::set<T, Compare, Alloc> &rhs)
+	{
+		return (lhs == rhs || lhs < rhs);
+	}
+
+	template <class T, class Compare, class Alloc>
+	bool	operator>(const ft::set<T, Compare, Alloc> &lhs, const ft::set<T, Compare, Alloc> &rhs)
+	{
+		return (!(lhs < rhs) && lhs != rhs);
+	}
+
+	template <class T, class Compare, class Alloc>
+	bool	operator>=(const ft::set<T, Compare, Alloc> &lhs, const ft::set<T, Compare, Alloc> &rhs)
+	{
+		return (lhs == rhs || lhs > rhs);
+	}
+
+	template <class T, class Compare, class Alloc>
+	void	swap(ft::set<T, Compare, Alloc> &lhs, ft::set<T, Compare, Alloc> &rhs)
+	{
+		lhs.swap(rhs);
+	}
 }
-
-
 
 #endif
