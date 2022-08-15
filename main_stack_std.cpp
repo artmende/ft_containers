@@ -6,16 +6,16 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 11:31:37 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/10 11:52:25 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/15 15:06:05 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "stack.hpp"
+#include <stack>
+#include <vector>
 #include <math.h>
 
-#ifdef USE_STD
 # define ft std
-#endif
 
 int	main()
 {

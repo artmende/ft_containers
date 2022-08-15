@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_map.cpp                                       :+:      :+:    :+:   */
+/*   main_map_ft.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/15 11:45:34 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/15 15:07:45 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,6 @@
 #include "pair.hpp"
 #include "map.hpp"
 #include "bst_iterator.hpp"
-
-#ifdef USE_STD
-# define ft std
-#endif
 
 int main ()
 {
@@ -33,6 +29,10 @@ int main ()
 		{
 			temp[i] = "some string";
 		}
+
+		ft::map<int, std::string>::iterator	itmodif = temp.begin();
+		++itmodif;
+		(*itmodif).second = "yop";
 
 		ft::map<int, std::string>	map_default;
 		ft::map<int, std::string>	map_range(temp.begin(), temp.end());
