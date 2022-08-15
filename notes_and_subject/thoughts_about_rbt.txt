@@ -1,3 +1,15 @@
+
+RED BLACK PROPERTIES : 
+
+- red node cannot have only 1 child. either 2 or 0.
+- black must always have a sibling, only exception is the root
+
+
+INSERTION :
+Inspired by those videos (Many thanks to them !) : 
+	https://www.youtube.com/playlist?list=PL9xmBV_5YoZNqDI8qfOZgzbqahCUmUEin
+	https://www.youtube.com/watch?v=qA02XWRTBdw
+
 after inserting node, look at the parent of the node just inserted.
 
 recolor means invert the color
@@ -13,30 +25,10 @@ if parent red :
 		* if they form a line : recolor parent and grand parent and rotate GRAND PARENT to direction opposite to new node. no need to recheck anything
 
 
-RED BLACK PROPERTIES : 
 
-- red node cannot have only 1 child. either 2 or 0.
-- black must always have a sibling, only exception is the root
-
-deletion :
-
-Idea : instead of smallest_in_right_subtree, use successor/predecessor by calling the function find_successor or find_predecessor from the node we want to delete
-Idea : simple reconnection like we do now is ok when deleting RED node. Deleting black node we should use successor/predecessor replacement.
-
-Idea : I will have to add a temporary node to be a double black when it's a NIL DB. Have to add a field in node to know if its a temp node or not
-
-the inorder successor or predecessor has to take the place of the node we delete. But successor/predecessor has to take the color of the deleted node.
-
-Let's look at what the successor/predecessor was before it got moved :
-
-	- If successor/predecessor was red node. Nothing to do.
-	- If it was a black node, we now have a 'double black' there
-
-A note on case 6 : the red node that become black is the original sibling far red child before rotation
-Another note on case 6 : deallocate double black if its a temporary node
-
-
-deletion :
+DELETION :
+Inspired by this article (Many thanks to the author !) : https://medium.com/analytics-vidhya/deletion-in-red-black-rb-tree-92301e1474ea
+Please see the summary chart picture attached
 
 If deleted node is leaf : 
 	- If it is RED or root, just delete it. done.
@@ -58,4 +50,7 @@ look at sibling of double black :
 		* if its black, look at the near child of sibling : 
 			+ if it's black, it's case 3
 			+ if it's red, it's case 5
+
+A note on case 6 : the red node that becomes black is the original sibling far red child before rotation
+Another note on case 6 : deallocate and destroy double black if its a temporary node
 

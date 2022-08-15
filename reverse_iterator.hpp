@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 14:37:25 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/04 15:30:44 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/15 11:34:02 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ namespace ft
 
 		reference	operator*() const
 		{
-//			return (*(this->_it));///////////
-//			return (*(this->_it - 1));
+//			return (*(this->_it - 1)); // This doesn't work with bidirectional iterators
 			iterator_type	temp = this->_it;
 			--temp;
 			return (*temp);
@@ -64,13 +63,11 @@ namespace ft
 
 		reference	operator[](int i) const
 		{
-		//	return (this->_it[i]);
 			return (*(this->_it - (i + 1)));
 		}
 
 		pointer	operator->() const
 		{
-//			return (this->_it.base() - 1);
 			iterator_type	temp = this->_it;
 			--temp;
 			return (&(*temp));
@@ -185,7 +182,6 @@ namespace ft
 	{
 		return (b.base() - a.base());
 	}
-
 }
 
 # endif

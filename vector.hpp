@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 15:51:52 by artmende          #+#    #+#             */
-/*   Updated: 2022/07/04 09:19:27 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/15 11:48:04 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,12 @@ namespace	ft
 	private:
 		double const	GROWING_FACTOR;
 		allocator_type	_al;
-//		std::allocator<T>	_al; // delete later
 		value_type*		_inner_array;
 		size_type		_size;
 		size_type		_capacity;
 
 		void	delete_all_data_and_deallocate()
 		{
-			//for (size_t i = 0; i < this->_size; i++)
-			//{
-			//	this->_al.destroy(this->_inner_array + i);
-			//}
 			this->clear();
 			if (this->_capacity)
 				this->_al.deallocate(this->_inner_array, this->_capacity);

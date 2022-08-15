@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 13:45:10 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/14 19:01:40 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/15 11:45:34 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,49 +14,13 @@
 #include <map>
 #include <utility>
 
-#include "ClapTrap.hpp"
 #include "pair.hpp"
 #include "map.hpp"
 #include "bst_iterator.hpp"
 
-# include <vector>
-
 #ifdef USE_STD
 # define ft std
 #endif
-
-struct test
-{
-	bool	operator==(test const & x) const {return (this == &x);}
-	bool	operator<(test const & x) const {return (this < &x);}
-};
-
-
-//template <typename T>
-//void printBT(const std::string& prefix, const ft::red_black_node<T>* node, bool isLeft)
-//{
-//    if( node != NULL )
-//    {
-//        std::cout << prefix;
-
-//        std::cout << (isLeft ? "├──" : "└──" );
-
-//        // print the value of the node
-//        std::cout << node->v.first << (node->color == true ? " black" : " red") << std::endl;
-
-//        // enter the next tree level - left and right branch
-//        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
-//        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
-//    }
-//}
-
-//template <typename T>
-//void printBT(const ft::red_black_node<T>* node)
-//{
-//    printBT("", node, false);    
-//}
-
-
 
 int main ()
 {
@@ -70,7 +34,7 @@ int main ()
 			temp[i] = "some string";
 		}
 
-		ft::map<int, std::string>	map_default; // default constructor
+		ft::map<int, std::string>	map_default;
 		ft::map<int, std::string>	map_range(temp.begin(), temp.end());
 		ft::map<int, std::string>	map_copy(map_range);
 		ft::map<int, std::string>	map_assigned;

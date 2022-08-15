@@ -6,7 +6,7 @@
 /*   By: artmende <artmende@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 15:16:18 by artmende          #+#    #+#             */
-/*   Updated: 2022/08/14 15:37:08 by artmende         ###   ########.fr       */
+/*   Updated: 2022/08/15 11:29:32 by artmende         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,39 +21,23 @@
 # define RED false
 # define BLACK true
 
+// Simple way to iterate in a binary tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
+// Strategy that was used to handle deletion : https://medium.com/analytics-vidhya/deletion-in-red-black-rb-tree-92301e1474ea
+// See the note file for summary of insertion and deletion process.
 
+/*
+	This Red Black Tree has nodes containing a reference to an allocated value type. It is allocated and constructed separately from the node itself.
+	This allows the iterator to store a pointer to a constant node, and still be able to modify the value itself.
+	The tree doesn't have real nullnodes as children of all leaf nodes. Instead the children pointer of leaf node are set to NULL.
+	There is still a 'nullnode' in the tree, that is a separate node that is allocated and constructed at the creation of the tree.
+	It allows iterators to be created even when the tree is empty.
+	The 'end()' iterator always points to this nullnode.
+	The successor of the nullnode is the 'smallest' element in the tree, and its predecessor is the 'largest' one.
+	That makes this tree cyclic, one can iterate indefinitely and cycle through the tree many times.
 
-// iterator through the tree : https://stackoverflow.com/questions/2942517/how-do-i-iterate-over-binary-tree
-// https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
-
-// NEED TO CHANGE THE INSERT FUNCTION TO HAVE ONLY ONE RETURN AND MAKE SURE THE ROOT IS PROPERLY SAVED INSIDE NULLNODE
-
-
-
-//template <typename T>
-//void printBT(const std::string& prefix, const ft::red_black_node<T>* node, bool isLeft)
-//{
-//    if( node != NULL )
-//    {
-//        std::cout << prefix;
-
-//        std::cout << (isLeft ? "├──" : "└──" );
-
-//        // print the value of the node
-//        std::cout << node->v.first << (node->color == true ? " black" : " red") << std::endl;
-
-//        // enter the next tree level - left and right branch
-//        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
-//        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
-//    }
-//}
-
-//template <typename T>
-//void printBT(const ft::red_black_node<T>* node)
-//{
-//    printBT("", node, false);    
-//}
-
+	During the deletion process, some cases require the insertion of a 'double black leaf node'.
+	Those special nodes have a boolean showing they are temporary, and should be deleted at the appropriate time of the rebalancing process.
+*/
 
 namespace ft
 {
@@ -79,8 +63,6 @@ namespace ft
 		red_black_node(red_black_node const & x)
 		: v(x.v), left(x.left), right(x.right), parent(x.parent), nullnode(x.nullnode), color(x.color), is_nullnode(x.is_nullnode), is_temp_node(x.is_temp_node) {}
 		~red_black_node() {}
-
-
 
 /*
 			Next rule: The successor of a node is:
@@ -347,7 +329,6 @@ If you can't go up anymore, then there's no successor
 				this->remove_no_rebalance(node);
 				node = successor;
 			}
-
 			destroy_and_deallocate_node(this->_nullnode);
 		}
 
@@ -1091,3 +1072,58 @@ If you can't go up anymore, then there's no successor
 # undef BLACK
 
 #endif
+
+//		Down here is a code to print a binary tree in the terminal. It's there for debugging purposes.
+//		This code was shared by Adrian Schneider in here : https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
+//		Inspired by the java code of VasiliNovikov in here : https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram-in-java/42449385#42449385
+//		Many thanks to them !
+
+//template <typename T>
+//void printBT(const std::string& prefix, const ft::red_black_node<T>* node, bool isLeft)
+//{
+//    if( node != NULL )
+//    {
+//        std::cout << prefix;
+
+//        std::cout << (isLeft ? "├──" : "└──" );
+
+//        // print the value of the node
+//        std::cout << node->v << std::endl;
+
+//        // enter the next tree level - left and right branch
+//        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
+//        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
+//    }
+//}
+
+//template <typename T> // call this function passing the root node of your binary tree
+//void printBT(const ft::red_black_node<T>* node)
+//{
+//    printBT("", node, false);    
+//}
+
+//	Down there is the same printing function adapted to be used with the tree of map, using a pair. This display the key value and the color of the node
+
+//template <typename T>
+//void printBT(const std::string& prefix, const ft::red_black_node<T>* node, bool isLeft)
+//{
+//    if( node != NULL )
+//    {
+//        std::cout << prefix;
+
+//        std::cout << (isLeft ? "├──" : "└──" );
+
+//        // print the value of the node
+//        std::cout << node->v.first << (node->color == true ? " black" : " red") << std::endl;
+
+//        // enter the next tree level - left and right branch
+//        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
+//        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
+//    }
+//}
+
+//template <typename T>
+//void printBT(const ft::red_black_node<T>* node)
+//{
+//    printBT("", node, false);    
+//}
